@@ -1,0 +1,41 @@
+Master Update Priority TODO
+Generated: 2026-05-29
+
+1) STRATEGIC_CONTEXT.md (highest priority)
+- Fill business priorities (Priority 1/2/3)
+- Fill current objectives (this quarter, this half)
+- Fill constraints (budget, capacity, regulatory, technology)
+- Name stakeholders (executive sponsor, delivery owner, platform owner, critical partners)
+- Add top strategic risks with impact, mitigation, owner
+- Set last updated and next review date
+
+2) AGENTS.md (enforcement defaults)
+- Add/confirm file naming convention for source/notes/output
+- Add mandatory owner/date requirements for outputs
+- Add preferred output bundles per use case (for example CSV + HTML + TXT + PUML)
+
+3) OPERATING_MODEL.md (team-specific operating details)
+- Add real escalation contacts
+- Confirm escalation timing/SLA values
+- Clarify decision rights by role
+- Assign owners for weekly/monthly cadence rituals
+
+4) COMMANDS.md (execution shortcuts)
+- Add command for source + output bundle creation
+- Add command for source CSV to output CSV sync
+- Add command for PI pack generation (CSV + HTML + TXT + PUML)
+
+5) Workflows/roadmap-to-pi-planning.md (path alignment)
+- Update Save Output path to Artifacts/platform-management/roadmaps
+- Confirm workflow output format supports multi-format publish when requested
+
+6) Templates/ (all templates baseline hardening)
+- Set sensible default confidentiality
+- Make owner/approver required guidance explicit
+- Ensure decision needed + next actions sections are present where relevant
+
+Recommended execution order:
+- Complete items 1 to 3 first, then 4 to 6.
+
+Completion check:
+- Every updated file has clear owner guidance, review date guidance, and output destination guidance.

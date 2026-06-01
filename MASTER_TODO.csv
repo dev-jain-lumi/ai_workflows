@@ -1,0 +1,12 @@
+title,context,for whom,by when,knowledge in repo,status,remark
+Dev align with EM on 1-year vs 3-year licensing decision,Confirm preferred contract term with EM,EM Team,asap,Knowledge/product-context/platform-management/license/qlik-tenant-licensing-pov.md,closed,1 year for both
+Dev confirm with Peter Coseman to continue procurement process,Send confirmation and capture procurement next step,Peter Coseman,asap,Knowledge/product-context/platform-management/license/qlik-tenant-licensing-pov.md,open,
+Ask Peter for more context on DNAQ-805 during next 1-1,,Optimization,next 1-1,,open,
+Update LUMI-12237 Confluence page with final PI planning language,Owner requested to refine PI wording before final estimation details,Devashish Jain,,Knowledge/project/hr-office-attendance-reporting/LUMI-12237.notes.md,open,
+Add story-point and estimation detail to LUMI-12237 after PI wording finalization,Blocked until PI planning language is finalized,Devashish Jain,,Knowledge/project/hr-office-attendance-reporting/LUMI-12237.notes.md,open,
+Map business owner for each impacted S4Luminus report use case,Needed for prioritization and planning,Devashish Jain + Hans,,Knowledge/project/S4Luminus/S4Luminus.notes.md,closed,not needed
+Get EL change list from Bart de Wal and align impact set,Input for EL to AL/PL impact planning,Jan Floren,,Knowledge/project/S4Luminus/S4Luminus.notes.md,open,
+Get Jan Floren impacted Qlik report list and cross-check with AL/PL dependencies,Build final impacted use-case inventory,Jan Floren,,Knowledge/project/S4Luminus/S4Luminus.notes.md,open,
+Confirm SAS report dependency from AL layer with Hans,Clarify AL dependency scope for migration/testing,Hans,,Knowledge/project/S4Luminus/S4Luminus.notes.md,closed,Jan to align with Hans
+Define Q3/Q4 critical prioritized scope for S4Luminus use cases,Examples mentioned: utility contracts and churn,Devashish Jain + Hans,,Knowledge/project/S4Luminus/S4Luminus.notes.md,open,
+Set up separate linked end-to-end test environment for S4Luminus flow,Critical dependency before PI4 testing,Platform + DWH teams,,Knowledge/project/S4Luminus/S4Luminus.source.md,open,
