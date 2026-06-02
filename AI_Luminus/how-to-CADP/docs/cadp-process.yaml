@@ -1,348 +1,392 @@
 cadp_process:
   source_reference:
-    title: Intro to CADP - Part 1
+    title: Process-Tool Flow
+    source_file: Process-Tool Flow.xlsx
     evidence_note: >
-      The available transcript confirms the data product taxonomy and that the first session was
-      introductory. Detailed CADP creation steps below combine the uploaded working files with a
-      practical enriched operating model.
+      This YAML is aligned to the CSV matrix maintained in the Excel file in this folder.
+      Steps 0-14 below are treated as the authoritative CADP process.
 
   practical_definition:
     cadp: Consumer-Aligned Data Product
     meaning: >
-      A CADP is a governed, consumer-oriented data product that transforms approved source data
-      into stable, business-friendly datasets for analytics, reporting, or downstream consumption.
-    mental_model: A CADP is a data API for business consumers.
-    key_difference_from_sadp: >
-      SADPs expose source-aligned data; CADPs expose consumer-aligned business concepts.
-    non_goals:
-      - Ingesting raw data from source systems.
-      - Changing the source application.
-      - Modifying upstream SADPs.
-      - Letting consumers directly depend on raw source structures.
-      - Publishing unstable development tables as official products.
+      A governed, consumer-facing data product built from approved upstream products and
+      exposed through controlled metadata, access, and publication flows.
+    key_difference_from_sadp: SADP is source-aligned input; CADP is consumer-aligned output.
 
-  prerequisites:
-    mandatory:
-      - Purpose exists and is approved.
-      - GitLab repository exists.
-      - ONA access works.
-      - Conveyor project exists.
-      - Snowflake access works.
-      - Required SADP read access is approved.
-      - Developer can connect, run, test, and push code.
-    practical_note: >
-      The transcript explicitly says teams should first make sure the environment works,
-      the project exists, and people can connect before going deeper into coding.
-
-  ownership_model:
-    Product_Owner_or_Purpose_Owner:
-      responsible_for:
-        - Defining CADP business need.
-        - Clarifying consumers and use case.
-        - Submitting or coordinating purpose request.
-        - Ensuring the CADP has business ownership.
-        - Prioritizing scope and accepting output.
-      not_responsible_for:
-        - Platform provisioning internals.
-        - Owning upstream SADPs unless also source owner.
-
-    Architects:
-      responsible_for:
-        - Reviewing purpose and architecture fit.
-        - Checking governance and naming alignment.
-        - Challenging incorrect product boundaries.
-      not_responsible_for:
-        - Writing CADP model SQL.
-
-    Platform_Team:
-      responsible_for:
-        - Provisioning repository, orchestration, roles, schemas, and technical access.
-        - Maintaining platform tools.
-        - Supporting setup issues.
-      not_responsible_for:
-        - Defining business grain and measures.
-
-    CADP_Developer:
-      responsible_for:
-        - Building DBT models.
-        - Writing tests.
-        - Validating outputs.
-        - Committing code.
-        - Fixing pipeline issues within CADP logic.
-      not_responsible_for:
-        - Approving upstream data access.
-        - Owning source data semantics unless delegated.
-
-    Data_Product_Manager:
-      responsible_for:
-        - Managing data agreements.
-        - Coordinating product registration.
-        - Supporting publication metadata.
-      not_responsible_for:
-        - Replacing business ownership of the CADP.
-
-    SADP_Owner:
-      responsible_for:
-        - Owning upstream source-aligned product.
-        - Reviewing and approving access requests.
-        - Explaining source limitations where needed.
-      not_responsible_for:
-        - Building downstream CADP consumer model.
-
-    Consumer_Team:
-      responsible_for:
-        - Explaining consumption needs.
-        - Validating whether CADP output is usable.
-        - Requesting access through the portal.
-      not_responsible_for:
-        - Joining raw SADP tables themselves if CADP is the intended product.
-
-  design_principles:
-    - Consumer-first, not source-first.
-    - Stable business contract over raw technical fidelity.
-    - Clear grain before SQL implementation.
-    - Minimal necessary tables, not a data dump.
-    - Business-friendly names and documented semantics.
-    - Tests are part of the product, not optional decoration.
-    - DEV validation must happen before published release.
-    - Upstream source ownership and downstream consumer ownership must remain clear.
+  process_matrix_columns:
+    - Step
+    - Process Step
+    - Developer Objective
+    - Process Steps
+    - Main Output / Gate
+    - Data Product Portal
+    - Data Product Manager (DPM)
+    - Snowflake
+    - Ona / VS Code
+    - GitLab
+    - Vulcan
+    - GitLab CI/CD
+    - Conveyor / Airflow
+    - DBT
+    - Soda
 
   end_to_end_workflow:
+    - step: 0
+      process_step: Onboard with NEO Platform
+      developer_objective: >
+        Get LIAM, Snowflake, and GitLab access so development can start in the NEO ecosystem.
+      process_steps:
+        - Request LIAM permission package via iam.luminus.be (or 4me self-service request).
+        - Verify Snowflake email and login.
+        - Confirm GitLab SSO access.
+        - Ensure all three access points are active.
+      main_output_gate: Active LIAM roles, verified Snowflake login, confirmed GitLab SSO.
+      technology_support:
+        Data Product Portal: not_applicable
+        Data Product Manager (DPM): not_applicable
+        Snowflake: Verify email mapping, login, and default role.
+        Ona / VS Code: not_applicable
+        GitLab: Confirm SSO login and identity provider group mapping.
+        Vulcan: not_applicable
+        GitLab CI/CD: not_applicable
+        Conveyor / Airflow: not_applicable
+        DBT: not_applicable
+        Soda: not_applicable
+
     - step: 1
-      phase: Business intake
-      name: Define CADP use case
-      primary_actor: Product Owner / Purpose Owner
-      activities:
-        - Define why the CADP is needed.
-        - Identify target consumers.
-        - Identify reports, dashboards, ML, or operational use cases.
-        - Define expected refresh cadence.
-        - Define critical business questions.
-      output:
-        - CADP use-case statement
-        - Initial consumer scope
-        - Initial data scope
+      process_step: Request / Join a Purpose
+      developer_objective: >
+        Join or create a Purpose that defines PBAC boundaries for accessible databases and schemas.
+      process_steps:
+        - Submit 4me NEO Purpose Request.
+        - Purpose owner approves membership.
+        - PBAC roles are assigned.
+        - Purpose-specific Snowflake assets become available.
+      main_output_gate: Approved Purpose membership with assigned PBAC roles.
+      technology_support:
+        Data Product Portal: not_applicable
+        Data Product Manager (DPM): Purpose created/confirmed and membership approved.
+        Snowflake: Purpose-specific databases/schemas become accessible after role assignment.
+        Ona / VS Code: not_applicable
+        GitLab: not_applicable
+        Vulcan: not_applicable
+        GitLab CI/CD: not_applicable
+        Conveyor / Airflow: not_applicable
+        DBT: not_applicable
+        Soda: not_applicable
 
     - step: 2
-      phase: Governance
-      name: Create or confirm purpose
-      primary_actor: Product Owner / Purpose Owner
-      supporting_actors:
-        - Architects
-        - Platform team
-      activities:
-        - Submit purpose request.
-        - Define owner and contributors.
-        - Select required platform tools.
-        - Validate naming and governance rules.
-      output:
-        - Approved purpose
+      process_step: Onboard with GitLab
+      developer_objective: >
+        Get GitLab team access and align with repo conventions, branching, and MR standards.
+      process_steps:
+        - Confirm GitLab SSO login.
+        - Request team group membership.
+        - Clone starter/template repository.
+        - Review branch and MR conventions.
+        - Understand pipeline layout in repo.
+      main_output_gate: Working GitLab access and clear repo operating conventions.
+      technology_support:
+        Data Product Portal: not_applicable
+        Data Product Manager (DPM): not_applicable
+        Snowflake: not_applicable
+        Ona / VS Code: not_applicable
+        GitLab: Team group joined, repo cloned, branching/MR standards understood.
+        Vulcan: not_applicable
+        GitLab CI/CD: Familiarity with repo CI/CD structure.
+        Conveyor / Airflow: not_applicable
+        DBT: not_applicable
+        Soda: not_applicable
 
     - step: 3
-      phase: Provisioning
-      name: Provision technical workspace
-      primary_actor: Platform automation / Platform team
-      tools:
-        - GitLab
-        - Conveyor
-        - Snowflake
-      activities:
-        - Create GitLab repository.
-        - Create Conveyor project.
-        - Provision Snowflake roles and schemas.
-        - Bind access between tools.
-      output:
-        - Empty but ready CADP workspace
+      process_step: Set up Ona / VS Code Workspace
+      developer_objective: >
+        Connect IDE to Snowflake and GitLab to enable SQL, YAML, and dbt development.
+      process_steps:
+        - Open Ona/VS Code workspace.
+        - Configure Snowflake account/role/warehouse/database.
+        - Connect to GitLab repository.
+        - Validate SQL execution in target environment.
+        - Validate dbt run and dbt test locally.
+      main_output_gate: IDE connected to Snowflake/GitLab with working SQL and dbt commands.
+      technology_support:
+        Data Product Portal: not_applicable
+        Data Product Manager (DPM): not_applicable
+        Snowflake: Validate role, warehouse, compute, database, and target schemas.
+        Ona / VS Code: Configure workspace and run SQL/dbt commands.
+        GitLab: Repository connected and usable from IDE.
+        Vulcan: not_applicable
+        GitLab CI/CD: not_applicable
+        Conveyor / Airflow: not_applicable
+        DBT: Local command execution validated.
+        Soda: not_applicable
 
     - step: 4
-      phase: Setup
-      name: Verify developer access
-      primary_actor: CADP developer
-      tools:
-        - ONA
-        - GitLab
-        - Snowflake
-        - Conveyor
-      activities:
-        - Open repository in ONA.
-        - Confirm GitLab clone/push works.
-        - Confirm Snowflake connection works.
-        - Confirm Conveyor project is accessible.
-      output:
-        - Developer-ready setup
+      process_step: Discover Upstream Data Products
+      developer_objective: >
+        Identify upstream SADP/ADP/CADP inputs that best match consumer use case requirements.
+      process_steps:
+        - Search Data Product Portal catalog.
+        - Compare products by grain, coverage, cadence, ownership.
+        - Review metadata and agreement context.
+        - Shortlist candidate upstream products and support routes.
+      main_output_gate: Shortlist of relevant upstream products with owner/grain/cadence.
+      technology_support:
+        Data Product Portal: Search and compare upstream products.
+        Data Product Manager (DPM): Check owner, metadata, agreements, support routes.
+        Snowflake: Upstream public schemas exist (access may still be pending).
+        Ona / VS Code: not_applicable
+        GitLab: not_applicable
+        Vulcan: not_applicable
+        GitLab CI/CD: not_applicable
+        Conveyor / Airflow: not_applicable
+        DBT: not_applicable
+        Soda: not_applicable
 
     - step: 5
-      phase: Source access
-      name: Request SADP agreements
-      primary_actor: Product Owner / Data Product Manager
-      supporting_actors:
-        - SADP owner
-        - Platform access team
-      tools:
-        - Data Product Manager
-        - Snowflake
-      activities:
-        - Identify required SADPs.
-        - Request data agreements.
-        - SADP owner reviews and approves.
-        - Read permissions are applied.
-      output:
-        - Approved SADP read access
+      process_step: Request Upstream Data Product Access
+      developer_objective: >
+        Obtain approved PBAC read access to all required upstream public schemas.
+      process_steps:
+        - Raise access requests from product entries in Portal.
+        - Purpose owner approves data agreements.
+        - Assign schema-level PBAC read roles.
+        - Verify access by querying upstream tables.
+      main_output_gate: Approved agreements and working read permissions on required inputs.
+      technology_support:
+        Data Product Portal: Access request initiation point.
+        Data Product Manager (DPM): Manage approval workflow and metadata linkage.
+        Snowflake: Apply PBAC roles and verify read access.
+        Ona / VS Code: not_applicable
+        GitLab: Track references/implementation links if needed.
+        Vulcan: not_applicable
+        GitLab CI/CD: not_applicable
+        Conveyor / Airflow: not_applicable
+        DBT: not_applicable
+        Soda: not_applicable
 
     - step: 6
-      phase: Design
-      name: Define CADP contract
-      primary_actor: Product Owner + CADP developer
-      activities:
-        - Define target output tables.
-        - Define grain for every fact table.
-        - Define dimensions and keys.
-        - Define measures and calculation logic.
-        - Define naming conventions.
-        - Define quality checks.
-      output:
-        - CADP contract
-        - Fact and dimension model design
+      process_step: Inspect Upstream Data Product Content
+      developer_objective: >
+        Profile structure, grain, keys, cadence, and quality to avoid build surprises.
+      process_steps:
+        - Review product guidance and refresh patterns.
+        - Inspect tables/columns/types/keys.
+        - Profile nulls, duplicates, cardinality, edge cases.
+        - Evaluate join feasibility across products.
+        - Document findings and quality concerns.
+      main_output_gate: Source assessment with quality notes and join feasibility.
+      technology_support:
+        Data Product Portal: Review description, cadence, and usage guidance.
+        Data Product Manager (DPM): Validate ownership and prerequisite access status.
+        Snowflake: Inspect upstream tables, keys, types, and sample data.
+        Ona / VS Code: Run exploratory profiling SQL.
+        GitLab: Store profiling notes if useful.
+        Vulcan: not_applicable
+        GitLab CI/CD: not_applicable
+        Conveyor / Airflow: not_applicable
+        DBT: not_applicable
+        Soda: not_applicable
 
     - step: 7
-      phase: Development
-      name: Initialize CADP template
-      primary_actor: CADP developer
-      tools:
-        - ONA
-        - GitLab
-        - CADP Template
-        - DBT
-        - Vulkan
-      activities:
-        - Create feature branch.
-        - Initialize standard CADP structure.
-        - Confirm DBT project runs.
-        - Confirm configuration files are present.
-      output:
-        - Standardized CADP codebase
+      process_step: Define CADP Design
+      developer_objective: >
+        Define CADP contract before coding: grain, facts/dimensions, tests, naming, publish intent.
+      process_steps:
+        - Check for existing products to avoid duplication.
+        - Define grain, facts, dimensions, keys, naming.
+        - Define dbt tests and materializations.
+        - Document decisions in ADR/design notes.
+        - Plan publish exposure in public schema.
+      main_output_gate: CADP design blueprint documented and agreed.
+      technology_support:
+        Data Product Portal: Check existing products and naming alignment.
+        Data Product Manager (DPM): Define metadata/ownership/publication expectations.
+        Snowflake: Analyze source structure and feasible joins/measures.
+        Ona / VS Code: Draft ERDs, notes, and exploratory queries.
+        GitLab: Store ADRs and design artifacts.
+        Vulcan: Identify runtime and publish configuration requirements.
+        GitLab CI/CD: not_applicable
+        Conveyor / Airflow: not_applicable
+        DBT: Define target models and test strategy.
+        Soda: Define contract expectations for downstream quality gates.
 
     - step: 8
-      phase: Development
-      name: Build DBT models
-      primary_actor: CADP developer
-      tools:
-        - ONA
-        - DBT
-        - Snowflake
-      activities:
-        - Build staging models from SADPs.
-        - Build intermediate models for reusable logic.
-        - Build dimensions.
-        - Build facts.
-        - Add DBT tests.
-        - Run locally against DEV/private schema.
-      output:
-        - Validated development models
+      process_step: Build Transformation Logic
+      developer_objective: >
+        Implement dbt model layers (stg -> int -> marts) with tests and config.
+      process_steps:
+        - Build stg_ models (clean/rename/cast).
+        - Build int_ models (joins and business logic).
+        - Build fct_ and dim_ marts.
+        - Configure model materializations.
+        - Add schema/custom dbt tests.
+        - Iterate in DEV schema P_{PURPOSE}.
+      main_output_gate: Working DEV models with testable outputs.
+      technology_support:
+        Data Product Portal: not_applicable
+        Data Product Manager (DPM): not_applicable
+        Snowflake: Execute models and persist DEV outputs for iteration.
+        Ona / VS Code: Write/run/debug SQL, YAML, and dbt config.
+        GitLab: Version changes continuously in feature branch.
+        Vulcan: Define runtime and publish behavior in project files.
+        GitLab CI/CD: Prepare automated checks for merge/deploy.
+        Conveyor / Airflow: not_applicable
+        DBT: Build staging/intermediate/fact/dim models with tests.
+        Soda: not_applicable
 
     - step: 9
-      phase: Validation
-      name: Validate data product quality
-      primary_actor: CADP developer + Product Owner
-      tools:
-        - Snowflake
-        - DBT
-      checks:
-        - Row counts are explainable.
-        - Grain is correct.
-        - Primary keys are unique where required.
-        - Critical columns are not null.
-        - Joins do not duplicate measures.
-        - Measures reconcile with trusted references.
-        - Performance is acceptable.
-        - Consumer semantics are clear.
-      output:
-        - Accepted DEV model
+      process_step: Validate CADP Output
+      developer_objective: >
+        Prove quality, correctness, reconciliation, and performance before deployment.
+      process_steps:
+        - Run dbt tests (uniqueness/not_null/relationships/accepted_values/custom).
+        - Validate joins, duplicates, nulls, orphan keys, row counts.
+        - Reconcile against trusted upstream totals.
+        - Check performance and materialization behavior.
+        - Run Soda contracts and resolve defects.
+      main_output_gate: Accepted DEV output with dbt tests and Soda contracts passing.
+      technology_support:
+        Data Product Portal: not_applicable
+        Data Product Manager (DPM): Support publication readiness if validation passes.
+        Snowflake: Validate data quality and performance in DEV.
+        Ona / VS Code: Debug and reconcile unexpected results.
+        GitLab: Track fixes in reviewable branch history.
+        Vulcan: Adjust runtime/materialization config as needed.
+        GitLab CI/CD: Run branch-level validation where available.
+        Conveyor / Airflow: not_applicable
+        DBT: Execute tests and semantic validation checks.
+        Soda: Run data contracts and review Soda Cloud outcomes.
 
     - step: 10
-      phase: Deployment
-      name: Commit and deploy
-      primary_actor: CADP developer
-      supporting_actors:
-        - CI/CD pipeline
-        - Conveyor
-      tools:
-        - GitLab
-        - Conveyor
-        - Snowflake
-      activities:
-        - Commit code.
-        - Push branch.
-        - Create merge request if required.
-        - Run CI/CD checks.
-        - Deploy pipeline configuration.
-        - Conveyor executes DBT jobs.
-      output:
-        - CADP tables built in controlled target environment
+      process_step: Register CADP in Data Product Manager
+      developer_objective: >
+        Register CADP and provision public schema before CI/CD deploy targeting can succeed.
+      process_steps:
+        - Create CADP entry in DPM.
+        - Define schema naming convention (<purpose>__<data_id>).
+        - Configure ownership, metadata, support route.
+        - Trigger public schema provisioning in Snowflake.
+        - Update Vulcan config with data product ID.
+      main_output_gate: Registered CADP with provisioned public schema and linked Vulcan config.
+      technology_support:
+        Data Product Portal: not_applicable
+        Data Product Manager (DPM): Create product entry and provision public schema workflow.
+        Snowflake: Provision public schema for publication target.
+        Ona / VS Code: not_applicable
+        GitLab: not_applicable
+        Vulcan: Reference registered data product ID in project files.
+        GitLab CI/CD: not_applicable
+        Conveyor / Airflow: not_applicable
+        DBT: not_applicable
+        Soda: not_applicable
 
     - step: 11
-      phase: Publication
-      name: Register and publish CADP
-      primary_actor: Product Owner / Data Product Manager
-      tools:
-        - Data Product Manager
-        - Data Product Portal
-      activities:
-        - Register product metadata.
-        - Document owner, purpose, tables, fields, refresh, and access rules.
-        - Publish product entry.
-        - Enable consumer access requests.
-      output:
-        - Discoverable, governed CADP
+      process_step: Deploy CADP Pipeline
+      developer_objective: >
+        Move approved logic to controlled deployment and make runtime execution ready.
+      process_steps:
+        - Finalize branch code/config and ensure checks pass.
+        - Create MR, address feedback, obtain approvals.
+        - Merge to main/approved branch.
+        - Trigger CI/CD validation/build/deploy.
+        - Verify deployed runtime/pipeline configuration.
+      main_output_gate: Successful CI/CD deploy with executable production configuration.
+      technology_support:
+        Data Product Portal: not_applicable
+        Data Product Manager (DPM): not_applicable
+        Snowflake: Receive deployed definitions and target objects.
+        Ona / VS Code: Final release handoff and validation support.
+        GitLab: MR review, approvals, and merge control.
+        Vulcan: Provide runtime schedule/dependency/parameter config.
+        GitLab CI/CD: Validate and deploy pipeline/config.
+        Conveyor / Airflow: Register DAG/job definition.
+        DBT: Deployed project ready for runtime execution.
+        Soda: Optional pre-publish gating checks in deployment flow.
 
     - step: 12
-      phase: Operations
-      name: Operate and maintain
-      primary_actor: CADP owner + CADP developer
-      tools:
-        - Conveyor
-        - Snowflake
-        - GitLab
-        - Data Product Portal
-      activities:
-        - Monitor pipeline runs.
-        - Investigate failures.
-        - Manage changes through GitLab.
-        - Keep documentation updated.
-        - Coordinate breaking changes with consumers.
-      output:
-        - Reliable data product lifecycle
+      process_step: Run Scheduled Refresh
+      developer_objective: >
+        Execute recurring refreshes using event-driven triggers and operational monitoring.
+      process_steps:
+        - Configure schedule_type: events in Vulcan.
+        - Verify first production run.
+        - Monitor ongoing runs and alerting.
+        - Handle reruns/backfills as required.
+      main_output_gate: Stable recurring production refresh with monitoring and alertability.
+      technology_support:
+        Data Product Portal: not_applicable
+        Data Product Manager (DPM): not_applicable
+        Snowflake: Read upstream public schemas and write refreshed private outputs.
+        Ona / VS Code: not_applicable
+        GitLab: Remains source of truth for deployed logic.
+        Vulcan: Supply event-trigger schedule and runtime parameters.
+        GitLab CI/CD: not_applicable
+        Conveyor / Airflow: Schedule/trigger/monitor/rerun/backfill jobs.
+        DBT: Execute transformation logic per run.
+        Soda: Validate quality contracts per run.
+
+    - step: 13
+      process_step: Publish CADP (Write-Audit-Publish)
+      developer_objective: >
+        Publish safely by gating promotion on Soda contracts using WAP semantics.
+      process_steps:
+        - Write output to private schema P_{PURPOSE}.
+        - Audit with Soda data contracts.
+        - If pass, zero-copy clone to public schema atomically.
+        - If fail, block publish and alert.
+      main_output_gate: Published public CADP via atomic zero-copy clone after Soda pass.
+      technology_support:
+        Data Product Portal: not_applicable
+        Data Product Manager (DPM): Track publication status and lineage.
+        Snowflake: Private write, audited quality, atomic clone to public schema.
+        Ona / VS Code: not_applicable
+        GitLab: not_applicable
+        Vulcan: Configure WAP write/audit/publish workflow.
+        GitLab CI/CD: Trigger publish step after Soda pass.
+        Conveyor / Airflow: Orchestrate publish execution path if configured.
+        DBT: Source objects for publish are dbt-built outputs.
+        Soda: Contracts gate publish; failures block promotion and raise visibility.
+
+    - step: 14
+      process_step: Register and Expose CADP for Consumers
+      developer_objective: >
+        Make CADP discoverable, documented, and consumable through governed access flow.
+      process_steps:
+        - Expose CADP in Data Product Portal.
+        - Complete metadata: owner, support, cadence, grain, key columns, usage.
+        - Define PBAC-based access path.
+        - Optionally store versioned docs in GitLab.
+        - Announce availability to consumer teams.
+      main_output_gate: Published discoverable CADP with governed access and complete metadata.
+      technology_support:
+        Data Product Portal: Consumer discovery and access-request entry.
+        Data Product Manager (DPM): Register metadata, ownership, support, cadence, grant process.
+        Snowflake: Host final public schema tables/views for consumption.
+        Ona / VS Code: not_applicable
+        GitLab: Optional versioned documentation storage.
+        Vulcan: Optional publish-specific settings.
+        GitLab CI/CD: not_applicable
+        Conveyor / Airflow: not_applicable
+        DBT: Published assets are backed by dbt-modeled outputs.
+        Soda: not_applicable
 
   acceptance_criteria:
     technical:
-      - DBT models run successfully.
-      - DBT tests pass.
-      - Pipeline deploys through CI/CD.
-      - Conveyor run completes.
-      - Published objects exist in Snowflake.
-    business:
-      - Grain is explicitly documented.
-      - Measures are validated.
-      - Business names are understandable.
-      - Consumers can use the product without knowing source-system complexity.
+      - NEO onboarding (LIAM + Snowflake + GitLab SSO) complete before development.
+      - Purpose and PBAC roles are approved before upstream access.
+      - Upstream read access is approved and queryable before CADP build.
+      - DBT tests pass before deployment.
+      - Soda contracts pass before publish.
+      - WAP publish uses atomic zero-copy clone from private to public schema.
+      - Scheduled refreshes run successfully with monitoring and alerting.
     governance:
-      - SADP access is approved.
-      - CADP metadata is registered.
-      - Owner and support route are clear.
-      - Product is discoverable through the portal.
-
-  common_mistakes:
-    - Treating CADP as a direct copy of SADP.
-    - Starting SQL before defining grain.
-    - Exposing too many source-level tables.
-    - Missing ownership between Product Owner, CADP developer, and SADP owner.
-    - Assuming local ONA runs publish to consumers.
-    - Forgetting data agreements.
-    - Forgetting metadata registration.
-    - Not validating joins and duplicate rows.
-    - Using technical source names in consumer-facing tables.
+      - CADP registration in DPM is complete before production publish.
+      - Ownership, support route, and metadata are complete before consumer exposure.
+      - CADP is discoverable in Portal with governed access path.
 
   one_line_summary: >
-    CADP creation is a governed product-delivery process: define purpose, provision tools,
-    approve SADP access, build DBT models, validate in Snowflake, deploy through Conveyor,
-    and publish through the data product governance layer.
+    The authoritative CADP process starts with NEO/PBAC onboarding, discovers and approves
+    upstream inputs, builds and validates dbt outputs with Soda quality gates, deploys via
+    GitLab CI/CD and Conveyor, publishes through WAP in Snowflake, and exposes the final
+    product through DPM and the Data Product Portal.

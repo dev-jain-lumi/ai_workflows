@@ -1,0 +1,151 @@
+@startuml cadp_tooling_architecture
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Work Sans"
+skinparam defaultFontSize 13
+skinparam ArrowColor #111111
+skinparam ArrowThickness 1
+skinparam ArrowFontColor #111111
+skinparam ArrowFontBackgroundColor #EAF5E5
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam nodesep 70
+skinparam ranksep 90
+
+<style>
+diagram {
+  Padding 8
+}
+</style>
+
+skinparam Rectangle {
+  BackgroundColor #3D7A25
+  BorderColor #2C591B
+  FontColor #FFFFFF
+  RoundCorner 8
+}
+
+skinparam Frame {
+  BackgroundColor #FFFFFF
+  BorderColor #9CCB89
+  BorderThickness 2
+  FontColor #2A2F36
+  RoundCorner 8
+}
+
+skinparam Database {
+  BackgroundColor #EAF5E5
+  BorderColor #2C591B
+  FontColor #1F2A1F
+}
+
+skinparam Note {
+  BackgroundColor #EAF5E5
+  BorderColor #9CCB89
+  FontColor #2A2F36
+}
+
+left to right direction
+title CADP Tooling Architecture
+
+' =========================================================
+' LAYER 1 - GOVERNANCE
+' =========================================================
+
+frame "Governance + Discovery" as GOV {
+  rectangle "Data Product\nPortal" as PORTAL #2B6CB0
+  rectangle "Data Product\nManager" as DPM #2F855A
+
+  PORTAL -[hidden]down-> DPM
+}
+
+' =========================================================
+' LAYER 2 - DEVELOPMENT
+' =========================================================
+
+frame "Developer Workspace" as DEV {
+  rectangle "ONA / VS Code\nDeveloper IDE" as IDE #805AD5
+  rectangle "GitLab\nSource Control" as GL #DD6B20
+
+  IDE -[hidden]down-> GL
+}
+
+' =========================================================
+' LAYER 3 - BUILD + RUNTIME
+' =========================================================
+
+frame "Build + Runtime" as BUILD {
+  rectangle "Vulcan\nRuntime Config" as VUL #B83280
+  rectangle "GitLab CI/CD\nDeployment Pipeline" as CICD #C05621
+  rectangle "Conveyor / Airflow\nOrchestration" as CON #2C7A7B
+
+  VUL -[hidden]down-> CICD
+  CICD -[hidden]down-> CON
+}
+
+' =========================================================
+' LAYER 4 - TRANSFORMATION + QUALITY
+' =========================================================
+
+frame "Transformation + Quality" as TRANS {
+  rectangle "DBT\nModels + Tests" as DBT #6B46C1
+  rectangle "Soda\nData Quality Checks" as SODA #D53F8C
+
+  DBT -[hidden]down-> SODA
+}
+
+' =========================================================
+' LAYER 5 - DATA PLATFORM
+' =========================================================
+
+frame "Data Platform" as DATA {
+  database "Snowflake\nSchemas, Tables, Views" as SF #E6F0FF
+}
+
+' Layer spacing anchors
+GOV -[hidden]right-> DEV
+DEV -[hidden]right-> BUILD
+BUILD -[hidden]right-> TRANS
+TRANS -[hidden]right-> DATA
+
+' =========================================================
+' MAIN FLOW
+' =========================================================
+
+PORTAL -[#2F855A]-> DPM : <i>access request\nmetadata</i>
+DPM -[#2F855A]-> SF : <i>schema + grants</i>
+
+IDE -[#2F855A]-> GL : <i>commit / push</i>
+GL -[#1D4E89]-> IDE : <i>pull / clone</i>
+
+IDE -[#2F855A]-> DBT : <i>develop models</i>
+IDE -[#2F855A]-> VUL : <i>edit config</i>
+VUL -[#1D4E89]-> GL : <i>version config</i>
+
+GL -[#2F855A]-> CICD : <i>trigger pipeline</i>
+VUL -[#2F855A]-> CICD : <i>runtime params</i>
+CICD -[#2F855A]-> CON : <i>deploy jobs</i>
+CON -[#1D4E89]-> DBT : <i>run models</i>
+
+DBT -[#2F855A]-> SF : <i>write outputs</i>
+DBT -[#2F855A]-> SODA : <i>quality rules</i>
+SODA -[#2F855A]-> SF : <i>audit data</i>
+SODA -[#1D4E89]-> CICD : <i>quality gate</i>
+CICD -[#2F855A]-> SF : <i>publish step</i>
+SF -[#2F855A]-> SF : <i>atomic clone</i>
+
+SF -[#1D4E89]-> PORTAL : <i>expose products</i>
+DPM -[#1D4E89]-> PORTAL : <i>publish metadata</i>
+
+note bottom of DATA
+Snowflake stores both upstream SADP data
+and published CADP outputs.
+end note
+
+note bottom of TRANS
+DBT transforms data.
+Soda validates data quality.
+end note
+
+@enduml
