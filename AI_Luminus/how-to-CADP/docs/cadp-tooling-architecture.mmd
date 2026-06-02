@@ -1,0 +1,109 @@
+flowchart LR
+  %% =========================================================
+  %% LAYERS
+  %% =========================================================
+
+  subgraph GOV["Governance + Discovery"]
+    PORTAL["Data Product<br/>Portal"]
+    DPM["Data Product<br/>Manager"]
+  end
+
+  subgraph DEV["Developer Workspace"]
+    IDE["ONA / VS Code<br/>Developer IDE"]
+    GL["GitLab<br/>Source Control"]
+  end
+
+  subgraph BUILD["Build + Runtime"]
+    VUL["Vulcan<br/>Runtime Config"]
+    CICD["GitLab CI/CD<br/>Deployment Pipeline"]
+    CON["Conveyor / Airflow<br/>Orchestration"]
+  end
+
+  subgraph TRANS["Transformation + Quality"]
+    DBT["DBT<br/>Models + Tests"]
+    SODA["Soda<br/>Data Quality Checks"]
+  end
+
+  subgraph DATA["Data Platform"]
+    SF[("Snowflake<br/>Schemas, Tables, Views")]
+  end
+
+  %% =========================================================
+  %% MAIN FLOW
+  %% =========================================================
+
+  PORTAL -->|"*access request<br/>metadata*"| DPM
+  DPM -->|"*schema + grants*"| SF
+
+  IDE -->|"*commit / push*"| GL
+  GL -->|"*pull / clone*"| IDE
+
+  IDE -->|"*develop models*"| DBT
+  IDE -->|"*edit config*"| VUL
+  VUL -->|"*version config*"| GL
+
+  GL -->|"*trigger pipeline*"| CICD
+  VUL -->|"*runtime params*"| CICD
+  CICD -->|"*deploy jobs*"| CON
+  CON -->|"*run models*"| DBT
+
+  DBT -->|"*write outputs*"| SF
+  DBT -->|"*quality rules*"| SODA
+  SODA -->|"*audit data*"| SF
+  SODA -->|"*quality gate*"| CICD
+  CICD -->|"*publish step*"| SF
+
+  SF -->|"*expose products*"| PORTAL
+  DPM -->|"*publish metadata*"| PORTAL
+  SF -->|"*atomic clone*"| SF
+
+  %% =========================================================
+  %% STYLES
+  %% =========================================================
+
+  classDef frame fill:#FFFFFF,stroke:#9CCB89,stroke-width:2px,color:#2A2F36;
+  classDef portal fill:#2B6CB0,stroke:#2C591B,color:#FFFFFF;
+  classDef dpm fill:#2F855A,stroke:#2C591B,color:#FFFFFF;
+  classDef ide fill:#805AD5,stroke:#2C591B,color:#FFFFFF;
+  classDef gitlab fill:#DD6B20,stroke:#2C591B,color:#FFFFFF;
+  classDef vulcan fill:#B83280,stroke:#2C591B,color:#FFFFFF;
+  classDef cicd fill:#C05621,stroke:#2C591B,color:#FFFFFF;
+  classDef conveyor fill:#2C7A7B,stroke:#2C591B,color:#FFFFFF;
+  classDef dbt fill:#6B46C1,stroke:#2C591B,color:#FFFFFF;
+  classDef soda fill:#D53F8C,stroke:#2C591B,color:#FFFFFF;
+  classDef snowflake fill:#E6F0FF,stroke:#2C591B,color:#1F2A1F;
+
+  class GOV,DEV,BUILD,TRANS,DATA frame;
+  class PORTAL portal;
+  class DPM dpm;
+  class IDE ide;
+  class GL gitlab;
+  class VUL vulcan;
+  class CICD cicd;
+  class CON conveyor;
+  class DBT dbt;
+  class SODA soda;
+  class SF snowflake;
+
+  %% Forward integration links
+  linkStyle 0 stroke:#2F855A,color:#111111,stroke-width:2px;
+  linkStyle 1 stroke:#2F855A,color:#111111,stroke-width:2px;
+  linkStyle 2 stroke:#2F855A,color:#111111,stroke-width:2px;
+  linkStyle 4 stroke:#2F855A,color:#111111,stroke-width:2px;
+  linkStyle 5 stroke:#2F855A,color:#111111,stroke-width:2px;
+  linkStyle 7 stroke:#2F855A,color:#111111,stroke-width:2px;
+  linkStyle 8 stroke:#2F855A,color:#111111,stroke-width:2px;
+  linkStyle 9 stroke:#2F855A,color:#111111,stroke-width:2px;
+  linkStyle 11 stroke:#2F855A,color:#111111,stroke-width:2px;
+  linkStyle 12 stroke:#2F855A,color:#111111,stroke-width:2px;
+  linkStyle 13 stroke:#2F855A,color:#111111,stroke-width:2px;
+  linkStyle 15 stroke:#2F855A,color:#111111,stroke-width:2px;
+  linkStyle 18 stroke:#2F855A,color:#111111,stroke-width:2px;
+
+  %% Backward/feedback links
+  linkStyle 3 stroke:#1D4E89,color:#111111,stroke-width:2px;
+  linkStyle 6 stroke:#1D4E89,color:#111111,stroke-width:2px;
+  linkStyle 10 stroke:#1D4E89,color:#111111,stroke-width:2px;
+  linkStyle 14 stroke:#1D4E89,color:#111111,stroke-width:2px;
+  linkStyle 16 stroke:#1D4E89,color:#111111,stroke-width:2px;
+  linkStyle 17 stroke:#1D4E89,color:#111111,stroke-width:2px;
