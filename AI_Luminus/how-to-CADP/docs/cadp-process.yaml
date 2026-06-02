@@ -1,0 +1,348 @@
+cadp_process:
+  source_reference:
+    title: Intro to CADP - Part 1
+    evidence_note: >
+      The available transcript confirms the data product taxonomy and that the first session was
+      introductory. Detailed CADP creation steps below combine the uploaded working files with a
+      practical enriched operating model.
+
+  practical_definition:
+    cadp: Consumer-Aligned Data Product
+    meaning: >
+      A CADP is a governed, consumer-oriented data product that transforms approved source data
+      into stable, business-friendly datasets for analytics, reporting, or downstream consumption.
+    mental_model: A CADP is a data API for business consumers.
+    key_difference_from_sadp: >
+      SADPs expose source-aligned data; CADPs expose consumer-aligned business concepts.
+    non_goals:
+      - Ingesting raw data from source systems.
+      - Changing the source application.
+      - Modifying upstream SADPs.
+      - Letting consumers directly depend on raw source structures.
+      - Publishing unstable development tables as official products.
+
+  prerequisites:
+    mandatory:
+      - Purpose exists and is approved.
+      - GitLab repository exists.
+      - ONA access works.
+      - Conveyor project exists.
+      - Snowflake access works.
+      - Required SADP read access is approved.
+      - Developer can connect, run, test, and push code.
+    practical_note: >
+      The transcript explicitly says teams should first make sure the environment works,
+      the project exists, and people can connect before going deeper into coding.
+
+  ownership_model:
+    Product_Owner_or_Purpose_Owner:
+      responsible_for:
+        - Defining CADP business need.
+        - Clarifying consumers and use case.
+        - Submitting or coordinating purpose request.
+        - Ensuring the CADP has business ownership.
+        - Prioritizing scope and accepting output.
+      not_responsible_for:
+        - Platform provisioning internals.
+        - Owning upstream SADPs unless also source owner.
+
+    Architects:
+      responsible_for:
+        - Reviewing purpose and architecture fit.
+        - Checking governance and naming alignment.
+        - Challenging incorrect product boundaries.
+      not_responsible_for:
+        - Writing CADP model SQL.
+
+    Platform_Team:
+      responsible_for:
+        - Provisioning repository, orchestration, roles, schemas, and technical access.
+        - Maintaining platform tools.
+        - Supporting setup issues.
+      not_responsible_for:
+        - Defining business grain and measures.
+
+    CADP_Developer:
+      responsible_for:
+        - Building DBT models.
+        - Writing tests.
+        - Validating outputs.
+        - Committing code.
+        - Fixing pipeline issues within CADP logic.
+      not_responsible_for:
+        - Approving upstream data access.
+        - Owning source data semantics unless delegated.
+
+    Data_Product_Manager:
+      responsible_for:
+        - Managing data agreements.
+        - Coordinating product registration.
+        - Supporting publication metadata.
+      not_responsible_for:
+        - Replacing business ownership of the CADP.
+
+    SADP_Owner:
+      responsible_for:
+        - Owning upstream source-aligned product.
+        - Reviewing and approving access requests.
+        - Explaining source limitations where needed.
+      not_responsible_for:
+        - Building downstream CADP consumer model.
+
+    Consumer_Team:
+      responsible_for:
+        - Explaining consumption needs.
+        - Validating whether CADP output is usable.
+        - Requesting access through the portal.
+      not_responsible_for:
+        - Joining raw SADP tables themselves if CADP is the intended product.
+
+  design_principles:
+    - Consumer-first, not source-first.
+    - Stable business contract over raw technical fidelity.
+    - Clear grain before SQL implementation.
+    - Minimal necessary tables, not a data dump.
+    - Business-friendly names and documented semantics.
+    - Tests are part of the product, not optional decoration.
+    - DEV validation must happen before published release.
+    - Upstream source ownership and downstream consumer ownership must remain clear.
+
+  end_to_end_workflow:
+    - step: 1
+      phase: Business intake
+      name: Define CADP use case
+      primary_actor: Product Owner / Purpose Owner
+      activities:
+        - Define why the CADP is needed.
+        - Identify target consumers.
+        - Identify reports, dashboards, ML, or operational use cases.
+        - Define expected refresh cadence.
+        - Define critical business questions.
+      output:
+        - CADP use-case statement
+        - Initial consumer scope
+        - Initial data scope
+
+    - step: 2
+      phase: Governance
+      name: Create or confirm purpose
+      primary_actor: Product Owner / Purpose Owner
+      supporting_actors:
+        - Architects
+        - Platform team
+      activities:
+        - Submit purpose request.
+        - Define owner and contributors.
+        - Select required platform tools.
+        - Validate naming and governance rules.
+      output:
+        - Approved purpose
+
+    - step: 3
+      phase: Provisioning
+      name: Provision technical workspace
+      primary_actor: Platform automation / Platform team
+      tools:
+        - GitLab
+        - Conveyor
+        - Snowflake
+      activities:
+        - Create GitLab repository.
+        - Create Conveyor project.
+        - Provision Snowflake roles and schemas.
+        - Bind access between tools.
+      output:
+        - Empty but ready CADP workspace
+
+    - step: 4
+      phase: Setup
+      name: Verify developer access
+      primary_actor: CADP developer
+      tools:
+        - ONA
+        - GitLab
+        - Snowflake
+        - Conveyor
+      activities:
+        - Open repository in ONA.
+        - Confirm GitLab clone/push works.
+        - Confirm Snowflake connection works.
+        - Confirm Conveyor project is accessible.
+      output:
+        - Developer-ready setup
+
+    - step: 5
+      phase: Source access
+      name: Request SADP agreements
+      primary_actor: Product Owner / Data Product Manager
+      supporting_actors:
+        - SADP owner
+        - Platform access team
+      tools:
+        - Data Product Manager
+        - Snowflake
+      activities:
+        - Identify required SADPs.
+        - Request data agreements.
+        - SADP owner reviews and approves.
+        - Read permissions are applied.
+      output:
+        - Approved SADP read access
+
+    - step: 6
+      phase: Design
+      name: Define CADP contract
+      primary_actor: Product Owner + CADP developer
+      activities:
+        - Define target output tables.
+        - Define grain for every fact table.
+        - Define dimensions and keys.
+        - Define measures and calculation logic.
+        - Define naming conventions.
+        - Define quality checks.
+      output:
+        - CADP contract
+        - Fact and dimension model design
+
+    - step: 7
+      phase: Development
+      name: Initialize CADP template
+      primary_actor: CADP developer
+      tools:
+        - ONA
+        - GitLab
+        - CADP Template
+        - DBT
+        - Vulkan
+      activities:
+        - Create feature branch.
+        - Initialize standard CADP structure.
+        - Confirm DBT project runs.
+        - Confirm configuration files are present.
+      output:
+        - Standardized CADP codebase
+
+    - step: 8
+      phase: Development
+      name: Build DBT models
+      primary_actor: CADP developer
+      tools:
+        - ONA
+        - DBT
+        - Snowflake
+      activities:
+        - Build staging models from SADPs.
+        - Build intermediate models for reusable logic.
+        - Build dimensions.
+        - Build facts.
+        - Add DBT tests.
+        - Run locally against DEV/private schema.
+      output:
+        - Validated development models
+
+    - step: 9
+      phase: Validation
+      name: Validate data product quality
+      primary_actor: CADP developer + Product Owner
+      tools:
+        - Snowflake
+        - DBT
+      checks:
+        - Row counts are explainable.
+        - Grain is correct.
+        - Primary keys are unique where required.
+        - Critical columns are not null.
+        - Joins do not duplicate measures.
+        - Measures reconcile with trusted references.
+        - Performance is acceptable.
+        - Consumer semantics are clear.
+      output:
+        - Accepted DEV model
+
+    - step: 10
+      phase: Deployment
+      name: Commit and deploy
+      primary_actor: CADP developer
+      supporting_actors:
+        - CI/CD pipeline
+        - Conveyor
+      tools:
+        - GitLab
+        - Conveyor
+        - Snowflake
+      activities:
+        - Commit code.
+        - Push branch.
+        - Create merge request if required.
+        - Run CI/CD checks.
+        - Deploy pipeline configuration.
+        - Conveyor executes DBT jobs.
+      output:
+        - CADP tables built in controlled target environment
+
+    - step: 11
+      phase: Publication
+      name: Register and publish CADP
+      primary_actor: Product Owner / Data Product Manager
+      tools:
+        - Data Product Manager
+        - Data Product Portal
+      activities:
+        - Register product metadata.
+        - Document owner, purpose, tables, fields, refresh, and access rules.
+        - Publish product entry.
+        - Enable consumer access requests.
+      output:
+        - Discoverable, governed CADP
+
+    - step: 12
+      phase: Operations
+      name: Operate and maintain
+      primary_actor: CADP owner + CADP developer
+      tools:
+        - Conveyor
+        - Snowflake
+        - GitLab
+        - Data Product Portal
+      activities:
+        - Monitor pipeline runs.
+        - Investigate failures.
+        - Manage changes through GitLab.
+        - Keep documentation updated.
+        - Coordinate breaking changes with consumers.
+      output:
+        - Reliable data product lifecycle
+
+  acceptance_criteria:
+    technical:
+      - DBT models run successfully.
+      - DBT tests pass.
+      - Pipeline deploys through CI/CD.
+      - Conveyor run completes.
+      - Published objects exist in Snowflake.
+    business:
+      - Grain is explicitly documented.
+      - Measures are validated.
+      - Business names are understandable.
+      - Consumers can use the product without knowing source-system complexity.
+    governance:
+      - SADP access is approved.
+      - CADP metadata is registered.
+      - Owner and support route are clear.
+      - Product is discoverable through the portal.
+
+  common_mistakes:
+    - Treating CADP as a direct copy of SADP.
+    - Starting SQL before defining grain.
+    - Exposing too many source-level tables.
+    - Missing ownership between Product Owner, CADP developer, and SADP owner.
+    - Assuming local ONA runs publish to consumers.
+    - Forgetting data agreements.
+    - Forgetting metadata registration.
+    - Not validating joins and duplicate rows.
+    - Using technical source names in consumer-facing tables.
+
+  one_line_summary: >
+    CADP creation is a governed product-delivery process: define purpose, provision tools,
+    approve SADP access, build DBT models, validate in Snowflake, deploy through Conveyor,
+    and publish through the data product governance layer.

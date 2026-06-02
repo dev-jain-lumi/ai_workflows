@@ -1,0 +1,235 @@
+cadp_modelling:
+  purpose: >
+    Define how a Consumer-Aligned Data Product should be modelled so that consumers receive
+    stable, understandable, analytics-ready datasets instead of raw source structures.
+
+  modelling_philosophy:
+    core_idea: Model from the consumer question backward, not from the source table forward.
+    preferred_pattern: Dimensional modelling with clear facts, dimensions, grains, and measures.
+    mental_model: CADP equals a stable business contract implemented as DBT models.
+
+  layers:
+    staging:
+      purpose: Clean and standardize upstream SADP data.
+      source: SADP tables/views
+      characteristics:
+        - One-to-one or close-to-source structure.
+        - Renamed columns.
+        - Standardized data types.
+        - Removed or hidden technical noise.
+        - Minimal business transformation.
+      examples:
+        - stg_salesforce_contracts
+        - stg_sap_customers
+        - stg_sap_products
+      should_not:
+        - Implement complex business metrics.
+        - Aggregate heavily.
+        - Become the final consumer table.
+
+    intermediate:
+      purpose: Centralize reusable business logic.
+      characteristics:
+        - Combines multiple staging models.
+        - Applies derived fields.
+        - Resolves complex joins.
+        - Prepares reusable logic for facts and dimensions.
+      examples:
+        - int_contract_status_history
+        - int_customer_account_mapping
+        - int_daily_revenue_base
+      should_not:
+        - Be exposed directly to consumers by default.
+        - Contain poorly documented business rules.
+
+    dimensions:
+      purpose: Describe stable business entities.
+      grain: One row per business entity or per valid entity version.
+      characteristics:
+        - Descriptive attributes.
+        - Stable business keys.
+        - Used to slice and filter facts.
+      examples:
+        - dim_customer
+        - dim_contract
+        - dim_product
+        - dim_date
+        - dim_region
+      tests:
+        - not_null on key columns
+        - unique on primary key
+      should_not:
+        - Contain additive measures.
+        - Duplicate rows unintentionally.
+
+    facts:
+      purpose: Store measurable business events or snapshots at a clearly defined grain.
+      grain: Must be explicitly documented before implementation.
+      characteristics:
+        - Contains keys to dimensions.
+        - Contains measures.
+        - Represents events, transactions, balances, or periodic snapshots.
+      examples:
+        - fact_contract_daily
+        - fact_sales_order
+        - fact_revenue_monthly
+        - fact_usage_event
+      tests:
+        - not_null on critical keys
+        - accepted relationships to dimensions
+        - duplicate check for declared grain
+      should_not:
+        - Mix multiple grains in one table.
+        - Hide duplicated measures caused by joins.
+        - Contain unclear calculated fields.
+
+  grain_patterns:
+    transaction_fact:
+      definition: One row per business event.
+      example: One row per order line.
+      good_for:
+        - Detailed analysis
+        - Drill-down reporting
+    periodic_snapshot_fact:
+      definition: One row per entity per time period.
+      example: One row per contract per day.
+      good_for:
+        - Daily balances
+        - Status tracking
+        - Trend reporting
+    accumulating_snapshot_fact:
+      definition: One row per process instance, updated as milestones complete.
+      example: One row per onboarding case.
+      good_for:
+        - Funnel tracking
+        - Process lifecycle reporting
+
+  mandatory_design_questions:
+    business_questions:
+      - What decisions will this CADP support?
+      - Who are the consumers?
+      - What dashboards or applications will use it?
+      - What refresh frequency is needed?
+    modelling_questions:
+      - What are the facts?
+      - What are the dimensions?
+      - What is the grain of each fact?
+      - Which keys identify each business entity?
+      - Which measures must reconcile with existing trusted numbers?
+    governance_questions:
+      - Which SADPs are required?
+      - Who owns those SADPs?
+      - Are data agreements approved?
+      - Which fields are sensitive or access-controlled?
+      - Who owns the published CADP?
+
+  example_contract:
+    cadp_name: cadp_contract_performance
+    consumers:
+      - Qlik dashboard
+      - Finance reporting
+      - Commercial analytics
+    refresh_cadence: daily
+    source_products:
+      - sadp_salesforce_contracts
+      - sadp_sap_customers
+      - sadp_sap_finance
+    output_tables:
+      - table: dim_customer
+        grain: one row per customer
+        primary_key: customer_key
+        key_attributes:
+          - customer_id
+          - customer_name
+          - country
+          - segment
+      - table: dim_contract
+        grain: one row per contract
+        primary_key: contract_key
+        key_attributes:
+          - contract_id
+          - contract_type
+          - contract_status
+          - start_date
+          - end_date
+      - table: fact_contract_daily
+        grain:
+          - contract_key
+          - date_key
+        measures:
+          - daily_revenue
+          - daily_margin
+          - active_contract_count
+        foreign_keys:
+          - contract_key
+          - customer_key
+          - date_key
+
+  dbt_project_structure:
+    models:
+      staging:
+        description: SADP-specific cleaning and standardization.
+        example_files:
+          - stg_salesforce_contracts.sql
+          - stg_sap_customers.sql
+      intermediate:
+        description: Reusable joins and business logic.
+        example_files:
+          - int_contract_customer_mapping.sql
+          - int_contract_daily_base.sql
+      marts:
+        dimensions:
+          description: Final consumer dimensions.
+          example_files:
+            - dim_customer.sql
+            - dim_contract.sql
+        facts:
+          description: Final consumer facts.
+          example_files:
+            - fact_contract_daily.sql
+    tests:
+      generic:
+        - not_null
+        - unique
+        - relationships
+        - accepted_values
+      custom:
+        - no_duplicate_grain
+        - measure_reconciliation
+        - valid_date_ranges
+
+  validation_checklist:
+    before_build:
+      - Consumer need is clear.
+      - Source SADPs are identified.
+      - Data agreements are requested or approved.
+      - Fact grain is documented.
+      - Target table list is agreed.
+    during_build:
+      - Staging models are readable and typed.
+      - Intermediate logic is reusable.
+      - Dimensions have stable keys.
+      - Facts do not mix grains.
+      - Tests are added with models.
+    before_publish:
+      - DBT run passes.
+      - DBT tests pass.
+      - Snowflake outputs are inspected.
+      - Row counts are explainable.
+      - Measures reconcile.
+      - Product metadata is ready.
+      - Consumers validate sample output.
+
+  anti_patterns:
+    - Building final facts directly from raw SADP tables.
+    - Creating one CADP table per source table.
+    - Letting Qlik/report developers fix data model issues downstream.
+    - Publishing without a clear grain.
+    - Creating dimensions with duplicate entity rows unintentionally.
+    - Using source-system abbreviations as consumer-facing names.
+    - Treating DBT tests as optional.
+    - Publishing DEV outputs as if they are governed products.
+
+  one_line_summary: >
+    CADP modelling means turning approved SADP inputs into stable fact and dimension tables
+    with explicit grain, business-friendly semantics, and tested data quality.

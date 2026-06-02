@@ -1,0 +1,79 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Work Sans"
+skinparam defaultFontSize 13
+skinparam ArrowColor #4F9E30
+skinparam ArrowThickness 1
+
+skinparam Participant {
+  BackgroundColor #3D7A25
+  BorderColor #2C591B
+  FontColor #FFFFFF
+}
+
+skinparam Note {
+  BackgroundColor #EAF5E5
+  BorderColor #9CCB89
+  FontColor #2A2F36
+}
+
+hide footbox
+title CADP Creation And Publication Flow
+
+actor "Product Owner" as PO
+participant "Purpose Request System" as PRS
+participant "Architects" as ARC
+participant "Platform Automation" as PA
+participant "GitLab" as GL
+participant "ONA" as ONA
+participant "Data Product Manager" as DPM
+participant "SADP Owner" as SADP
+participant "Conveyor (Airflow)" as CON
+participant "Snowflake" as SF
+participant "Data Product Portal" as PORTAL
+
+group Purpose and governance
+  PO -> PRS : Submit purpose request
+  PRS -> ARC : Governance review
+  ARC -> PA : Approve provisioning
+end
+
+group Platform provisioning
+  PA -> GL : Create purpose repository
+  PA -> CON : Create Conveyor project
+  PA -> SF : Provision roles and schemas
+end
+
+group Development and initialization
+  PO -> ONA : Open cloud development workspace
+  ONA -> GL : Clone repository
+  note over ONA
+    ONA workspaces are ephemeral.
+    Commit and push frequently.
+  end note
+end
+
+group Access agreements
+  PO -> DPM : Request data agreements
+  DPM -> SADP : Request SADP approval
+  SADP -> DPM : Approve agreement
+  DPM -> SF : Apply read permissions
+end
+
+group Build and deployment
+  GL -> CON : Trigger CI/CD deployment
+  CON -> SF : Run DBT transformations
+  CON -> SF : Publish CADP tables
+end
+
+group Registration and discovery
+  PO -> DPM : Register CADP metadata
+  DPM -> PORTAL : Publish product entry
+  note over PORTAL
+    CADP becomes discoverable.
+    Consumers can request access.
+  end note
+end
+
+@enduml

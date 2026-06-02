@@ -1,0 +1,37 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Work Sans"
+skinparam defaultFontSize 13
+skinparam ArrowColor #4F9E30
+skinparam ArrowThickness 1
+
+skinparam Rectangle {
+  BackgroundColor #3D7A25
+  BorderColor #2C591B
+  FontColor #FFFFFF
+  RoundCorner 6
+}
+
+left to right direction
+title CADP Executive Overview
+
+rectangle "Purpose\n(governance container)" as P
+rectangle "Provisioning\nGitLab + Conveyor + Snowflake" as PROV
+rectangle "Development\nONA + CADP Template" as DEV
+rectangle "Data Agreements\nSADP read access" as AGRE
+rectangle "Model + Deploy\nDBT + Vulkan + CI/CD + Conveyor" as RUN
+rectangle "Publish\nData Product Manager + Portal" as PUB
+
+P -[#4F9E30]-> PROV
+PROV -[#4F9E30]-> DEV
+DEV -[#4F9E30]-> AGRE
+AGRE -[#4F9E30]-> RUN
+RUN -[#4F9E30]-> PUB
+
+note bottom of PUB
+Governed and discoverable
+consumer-ready CADP
+end note
+
+@enduml

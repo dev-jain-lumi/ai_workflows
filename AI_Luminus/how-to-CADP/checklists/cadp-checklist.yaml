@@ -1,0 +1,33 @@
+cadp_checklist:
+  before_setup:
+    - Purpose approved
+    - Owner and contributors confirmed
+    - Repository and project access verified
+    - Required SADPs identified
+    - Data agreements requested
+
+  before_build:
+    - Data agreements granted
+    - Fact grain defined
+    - Dimension keys defined
+    - Output table list agreed with consumers
+
+  during_build:
+    - Staging models created
+    - Intermediate logic documented
+    - Facts and dimensions implemented
+    - DBT tests added
+    - Local run and test completed
+
+  before_publish:
+    - Row counts are explainable
+    - Grain duplicates checked
+    - Key null checks passed
+    - Measures reconciled with reference numbers
+    - Metadata prepared for registration
+
+  publish_and_operate:
+    - Published via Conveyor
+    - Product entry visible in portal
+    - Consumer access flow verified
+    - Monitoring and support owner assigned
