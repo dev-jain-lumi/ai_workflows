@@ -1,0 +1,187 @@
+
+Room-BXL-6p-3.21-Jacques-Borlee
+0 minutes 3 seconds0:03
+Room-BXL-6p-3.21-Jacques-Borlee 0 minutes 3 seconds
+your snowflake conveyor and so on. So we, as I said before, we don't want to overwhelm you. It's really like having access to everything and then we'll, and then you can already, if you have time, if times allows it, already look into it by yourself or you will have some support from us again.
+Room-BXL-6p-3.21-Jacques-Borlee 0 minutes 23 seconds
+I will see, but yeah, for now, we just want to set up the basis.
+Room-BXL-6p-3.21-Jacques-Borlee 0 minutes 28 seconds
+Yeah, the program is, yeah, maybe we will describe what is a CADP shortly, because you may not know, you have never worked, I guess, with this new approach. And then we'll go through the, very quickly through the different tools, and then we will do
+Room-BXL-6p-3.21-Jacques-Borlee 0 minutes 48 seconds
+really a, let's say, a real test to see like if that's, if you already really have access into it. And that's mainly it. And then we'll have a last thing, it's the AI assisted coding. That's something we'll also show.
+Room-BXL-6p-3.21-Jacques-Borlee 1 minute 7 seconds
+But again, very briefly, and I will do a short date on that one.
+Room-BXL-6p-3.21-Jacques-Borlee 1 minute 12 seconds
+Kai.
+Room-BXL-6p-3.21-Jacques-Borlee 1 minute 13 seconds
+So what is a CDP?
+Room-BXL-6p-3.21-Jacques-Borlee 1 minute 18 seconds
+Yeah, so basically, we use, within Neo, we use the concept of data products. And as you can see there, we have three types of data products, the source aligned data product, the aggregate data product, and the consumer aligned data products. So we have three types of data products.
+Room-BXL-6p-3.21-Jacques-Borlee 1 minute 39 seconds
+The first one, which is also called SADP, because yeah, that makes it too long to every time I pronounce it full name. Basically, we there we just ingest data, raw data from the source. It can be Salesforce, it can be SAP, it can be any other system.
+Room-BXL-6p-3.21-Jacques-Borlee 1 minute 59 seconds
+And usually, typically, this source line data products are owned by the use cases team, the DNA use cases team, like retail optimization and so on.
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 50 minutes 27 seconds
+Relevant and interesting for you guys to have this first session, does it make sense to? Is it clear? Yeah, that's the most important, is it? Yeah, I think I have a better understanding where every tool positions itself, and I think that's a good starting point. Yeah, that was the purpose. We I tried to I tried to avoid to go too much into detail, but and L.A. is understandable.
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 50 minutes 52 seconds
+Are you going as well? OK, but that's OK.
+AE
+Abaneh, Eleyeh
+1 hour 50 minutes 56 seconds1:50:56
+Abaneh, Eleyeh 1 hour 50 minutes 56 seconds
+For me, I missed a part of the session, so I'll have to look back at the recording, but I think high level I understood the main concepts.
+
+Room-BXL-6p-3.21-Jacques-Borlee
+1 hour 51 minutes1:51:00
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 51 minutes
+Yeah.
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 51 minutes 3 seconds
+Okay, okay, because that was indeed the main goal of this first session, then now it will be the next one. But indeed, I would say before we go into another session, everyone should have their setup ready. So making sure that you have like the environment working, make sure they have the project, you can connect to it and all that.
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 51 minutes 22 seconds
+Before.
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 51 minutes 24 seconds
+going more into coding. So if you advance on your site already and you can start playing around, yeah, don't hesitate to do that. But that would be the goal of the next session also. And I don't know, Jan, if you...
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 51 minutes 39 seconds
+If you want to add anything to that or maybe we can align after on how we can organize that one because you were saying that we were planning for the STP part to go more into detail with Eleyeh and Tyson. But I don't know if at this point we should maybe split or keep one. I don't know. That's something that we can look into with you and Anas to see how we can organize that now.
+
+Nguyen, Thai-Son
+1 hour 51 minutes 44 seconds1:51:44
+Nguyen, Thai-Son 1 hour 51 minutes 44 seconds
+Yep.
+Nguyen, Thai-Son 1 hour 51 minutes 48 seconds
+Yeah.
+Nguyen, Thai-Son 1 hour 51 minutes 50 seconds
+But.
+
+Room-BXL-6p-3.21-Jacques-Borlee
+1 hour 52 minutes1:52:00
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 52 minutes
+Yeah.
+CJ
+Claes, Jan
+1 hour 52 minutes1:52:00
+Claes, Jan 1 hour 52 minutes
+Yeah, we can align it on the follow-up later. It was a good introduction about the tools, but to use this to create a CADP, I think we still need some sessions before we're at that stage.
+
+Mahrouch, Salim
+1 hour 52 minutes 1 second1:52:01
+Mahrouch, Salim 1 hour 52 minutes 1 second
+Sure.
+
+Room-BXL-6p-3.21-Jacques-Borlee
+1 hour 52 minutes 5 seconds1:52:05
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 52 minutes 5 seconds
+Alright.
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 52 minutes 15 seconds
+Yeah, yeah, yes.
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 52 minutes 19 seconds
+Yeah, that's definitely true, and we know that we are just opening the books now, so yeah, there are still things to see, so I will look, we can, yeah, we can use our chats afterwards just to see. I see some availability on Wednesday afternoon, maybe for next session, but that means that...
+
+Mahrouch, Salim
+1 hour 52 minutes 19 seconds1:52:19
+Mahrouch, Salim 1 hour 52 minutes 19 seconds
+Yeah.
+CJ
+Claes, Jan
+1 hour 52 minutes 20 seconds1:52:20
+Claes, Jan 1 hour 52 minutes 20 seconds
+My opinion.
+
+Room-BXL-6p-3.21-Jacques-Borlee
+1 hour 52 minutes 39 seconds1:52:39
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 52 minutes 39 seconds
+For one that will be there.
+
+Mahrouch, Salim
+1 hour 52 minutes 40 seconds1:52:40
+Mahrouch, Salim 1 hour 52 minutes 40 seconds
+One, one thing, Pierre, Pierre, one thing, sorry, just to interrupt you here. So, I think I think this is good, really, we're talking about this. So, today's session is really like to position which tool it is for what, and I think the goal of this is really fulfilled. However, we'll need some time to, you know, to...
+
+Room-BXL-6p-3.21-Jacques-Borlee
+1 hour 52 minutes 42 seconds1:52:42
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 52 minutes 42 seconds
+Yeah.
+
+Mahrouch, Salim
+1 hour 52 minutes 58 seconds1:52:58
+Mahrouch, Salim 1 hour 52 minutes 58 seconds
+play with this and do the setup and connect and create the project, etc. So I think Wednesday, we're talking about like 2 days, it's quite early for that. And also I'm giving training the whole day. So I think it will be really reasonable to leave at least one week in between to.
+
+Room-BXL-6p-3.21-Jacques-Borlee
+1 hour 53 minutes 12 seconds1:53:12
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 53 minutes 12 seconds
+Okay.
+
+Mahrouch, Salim
+1 hour 53 minutes 18 seconds1:53:18
+Mahrouch, Salim 1 hour 53 minutes 18 seconds
+Give us some time, and also for ADA and Thai Son to to to review this.
+
+Room-BXL-6p-3.21-Jacques-Borlee
+1 hour 53 minutes 21 seconds1:53:21
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 53 minutes 21 seconds
+Yeah.
+
+Mahrouch, Salim
+1 hour 53 minutes 23 seconds1:53:23
+Mahrouch, Salim 1 hour 53 minutes 23 seconds
+I wouldn't put that, yeah, I think I think it's too early to do that like this week. It's my point, it's my opinion.
+
+Room-BXL-6p-3.21-Jacques-Borlee
+1 hour 53 minutes 24 seconds1:53:24
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 53 minutes 24 seconds
+That's okay.
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 53 minutes 29 seconds
+It's a proposal and it's good that you have a counter proposal. So then that's, yeah, let's do that. And Tyson, I'll reach out to you after we are being kicked out of the room at this 15, 30 to check again the setup. We can stop the recording so you have access to the recording.
+
+Nguyen, Thai-Son
+1 hour 53 minutes 41 seconds1:53:41
+Nguyen, Thai-Son 1 hour 53 minutes 41 seconds
+Yeah.
+Nguyen, Thai-Son 1 hour 53 minutes 46 seconds
+Okay, yeah.
+
+Room-BXL-6p-3.21-Jacques-Borlee
+1 hour 53 minutes 48 seconds1:53:48
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 53 minutes 48 seconds
+And, and I will use the chat to see how some proposal for the next session, and then we'll take it from there. I just want one last point, guys. I turned on the facilitator and co-pilot, so if you have license, I hope AI has listened very well to our conversation, so you can ask question about this meeting to.
+
+Nguyen, Thai-Son
+1 hour 53 minutes 55 seconds1:53:55
+Nguyen, Thai-Son 1 hour 53 minutes 55 seconds
+Yep, thank you. Thank you.
+
+Room-BXL-6p-3.21-Jacques-Borlee
+1 hour 54 minutes 7 seconds1:54:07
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 54 minutes 7 seconds
+and will explain you which tool and where, how they are positioned. If it, that's why I was asking Jan and everyone to explain the process so we can refer to this process through here. Yeah. Please use that. Okay.
+
+Mahrouch, Salim
+1 hour 54 minutes 13 seconds1:54:13
+Mahrouch, Salim 1 hour 54 minutes 13 seconds
+That kind of help, yeah.
+
+Room-BXL-6p-3.21-Jacques-Borlee
+1 hour 54 minutes 20 seconds1:54:20
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 54 minutes 20 seconds
+Thank you. Thank you very much. Thank you. Thank you, everyone.
+
+Mahrouch, Salim
+1 hour 54 minutes 20 seconds1:54:20
+Mahrouch, Salim 1 hour 54 minutes 20 seconds
+Cool. Thank you everyone. Thank you. Thank you so much. Bye-bye.
+
+Nguyen, Thai-Son
+1 hour 54 minutes 21 seconds1:54:21
+Nguyen, Thai-Son 1 hour 54 minutes 21 seconds
+Thank you very much. See you. Bye bye.
+CJ
+Claes, Jan
+1 hour 54 minutes 24 seconds1:54:24
+Claes, Jan 1 hour 54 minutes 24 seconds
+Bye.
+
+Room-BXL-6p-3.21-Jacques-Borlee
+1 hour 54 minutes 24 seconds1:54:24
+Room-BXL-6p-3.21-Jacques-Borlee 1 hour 54 minutes 24 seconds
+Bye-bye. I booked three.
