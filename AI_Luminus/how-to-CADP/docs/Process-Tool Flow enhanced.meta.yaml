@@ -1,0 +1,32 @@
+title: "CADP Process-Tool Flow Matrix (Enhanced)"
+date: "2026-06-03"
+owner: Devashish Jain
+status: approved
+confidentiality: internal
+canonical_source: cadp-process.yaml
+canonical_note: >
+  This CSV is a matrix-view derived artifact.
+  The canonical source of truth for all CADP process content is cadp-process.yaml.
+  Update cadp-process.yaml first, then re-derive this CSV to stay in sync.
+  Column DBT in original CSV has been renamed to dbt in the YAML.
+derived_from:
+  - "cadp-process.yaml — single source of truth"
+format_note: >
+  Saved with UTF-8 BOM for Excel compatibility. All special characters are ASCII-clean
+  (no em dashes, en dashes, or Unicode arrows).
+columns:
+  - Step
+  - Process Step
+  - Developer Objective
+  - Process Steps
+  - Main Output / Gate
+  - Data Product Portal
+  - Data Product Manager (DPM)
+  - Snowflake
+  - Ona / VS Code
+  - GitLab
+  - Vulcan
+  - GitLab CI/CD
+  - Conveyor / Airflow
+  - dbt
+  - Soda

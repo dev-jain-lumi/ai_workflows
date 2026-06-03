@@ -1,0 +1,652 @@
+[meta]
+title = "CADP End-to-End Process Guide"
+subtitle = "Consumer-Aligned Data Product - NEO Platform"
+version = "v3 merged - June 2026"
+note = "Steps 0-14 cover the full CADP lifecycle. Steps 4-6 are significantly faster when the upstream SADP already exists."
+canonical_source = "cadp-process.yaml"
+canonical_note = "This TOML is a derived representation for HTML rendering. The canonical source of truth is cadp-process.yaml in this folder. Update the YAML first, then sync changes here."
+
+# ─────────────────────────────────────────────
+# PHASE 1: PLATFORM ACCESS  (Steps 0–3)
+# ─────────────────────────────────────────────
+
+[[steps]]
+id = 0
+phase = "Platform Access"
+title = "Onboard with NEO Platform"
+goal = "Get LIAM, Snowflake, and GitLab access so development can start in the NEO ecosystem."
+gate = "Active LIAM roles, verified Snowflake login, and confirmed GitLab SSO access."
+process = [
+  "Request LIAM permission package via iam.luminus.be (4me self-service)",
+  "Verify Snowflake email mapping and confirm login",
+  "Confirm GitLab SSO access",
+  "Ensure all three access points are active before proceeding"
+]
+
+  [[steps.tools]]
+  name = "LIAM / 4me"
+  actions = [
+    "Open iam.luminus.be or raise a 4me self-service request",
+    "Request the NEO platform permission package",
+    "Await approval and confirm active roles"
+  ]
+
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = [
+    "Navigate to the NEO Snowflake URL",
+    "Log in using SSO credentials",
+    "Confirm email mapping and default role work"
+  ]
+
+  [[steps.tools]]
+  name = "GitLab"
+  actions = [
+    "Navigate to the NEO GitLab instance",
+    "Confirm SSO login works",
+    "Verify your user appears in the correct identity provider group"
+  ]
+
+[[steps]]
+id = 1
+phase = "Platform Access"
+title = "Request or Join a Purpose"
+goal = "Join or create a Purpose that defines PBAC boundaries for accessible databases and schemas."
+gate = "Approved Purpose membership with assigned PBAC roles and accessible Purpose-specific Snowflake databases and schemas."
+process = [
+  "Submit 4me self-service request for NEO Purpose (or join an existing one)",
+  "Purpose owner reviews and approves membership",
+  "PBAC roles are assigned to the developer",
+  "Purpose-specific Snowflake databases and schemas become available"
+]
+
+  [[steps.tools]]
+  name = "4me"
+  actions = [
+    "Open 4me and navigate to the self-service catalog",
+    "Submit a NEO Purpose Request or request to join an existing Purpose",
+    "Monitor request status until approved"
+  ]
+
+  [[steps.tools]]
+  name = "Data Product Manager (DPM)"
+  actions = [
+    "Confirm Purpose exists or is being created in DPM",
+    "Verify developer roles are assigned within the Purpose boundary"
+  ]
+
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = [
+    "After role assignment, verify P_{PURPOSE} database is accessible",
+    "Confirm purpose-specific schemas respond correctly to test queries"
+  ]
+
+[[steps]]
+id = 2
+phase = "Platform Access"
+title = "Onboard with GitLab"
+goal = "Get GitLab team access and align with repo conventions, branching, and MR standards."
+gate = "Working GitLab access with correct team group membership and understanding of repo conventions."
+process = [
+  "Confirm GitLab SSO login works",
+  "Request team group membership from team lead",
+  "Clone the starter/template repository",
+  "Review branching and MR conventions (feature branches, MR-based merges)",
+  "Familiarize yourself with CI/CD pipeline structure in the repo"
+]
+
+  [[steps.tools]]
+  name = "GitLab"
+  actions = [
+    "Log in via SSO and confirm access",
+    "Request team group membership from your team lead",
+    "Clone the starter/template repository to your local or cloud IDE",
+    "Read the repo branching guide and MR template",
+    "Review .gitlab-ci.yml to understand pipeline stages"
+  ]
+
+[[steps]]
+id = 3
+phase = "Platform Access"
+title = "Set Up Ona or VS Code Workspace"
+goal = "Connect the cloud IDE to Snowflake and GitLab to enable SQL, YAML, and dbt development locally."
+gate = "Working IDE workspace connected to Snowflake and GitLab with validated SQL execution and dbt commands."
+process = [
+  "Open Ona / VS Code workspace",
+  "Configure Snowflake connection (account, role, warehouse, database)",
+  "Connect workspace to GitLab repository",
+  "Validate SQL queries execute against the correct Snowflake environment",
+  "Ensure dbt commands (dbt run, dbt test) work locally"
+]
+
+  [[steps.tools]]
+  name = "Ona / VS Code"
+  actions = [
+    "Open workspace or create a new one",
+    "Install required extensions (Snowflake, dbt Power User, GitLens)",
+    "Configure Snowflake connection parameters in workspace settings"
+  ]
+
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = [
+    "Validate active role, warehouse, and target database respond correctly",
+    "Run a test query against the P_{PURPOSE} schema"
+  ]
+
+  [[steps.tools]]
+  name = "GitLab"
+  actions = [
+    "Connect workspace to the cloned repository",
+    "Confirm you can pull, commit, and push from the IDE"
+  ]
+
+  [[steps.tools]]
+  name = "dbt"
+  actions = [
+    "Run 'dbt debug' to confirm profile and Snowflake connection",
+    "Run 'dbt compile' to validate model syntax",
+    "Run 'dbt test' to confirm the test framework is operational"
+  ]
+
+# ─────────────────────────────────────────────
+# PHASE 2: DISCOVERY AND DESIGN  (Steps 4–7)
+# ─────────────────────────────────────────────
+
+[[steps]]
+id = 4
+phase = "Discovery and Design"
+title = "Discover Upstream Data Products"
+goal = "Identify upstream SADP/ADP/CADP inputs. When the SADP already exists, steps 4-6 are significantly faster - skip the SADP creation lifecycle and confirm grain, cadence, and ownership directly in the Portal."
+gate = "Shortlist of relevant upstream data products confirmed, with known owner, purpose, grain, and refresh cadence."
+process = [
+  "Search the Data Product Portal catalog for relevant upstream products",
+  "Compare candidate products by grain, refresh cadence, ownership, and coverage",
+  "Review metadata, descriptions, and data agreements",
+  "Shortlist the most suitable upstream products and note owners and support routes"
+]
+
+  [[steps.tools]]
+  name = "Data Product Portal"
+  actions = [
+    "Open the Portal and use search/filter to find candidate upstream products",
+    "Compare grain, cadence, and ownership across candidates",
+    "Note the data agreement status and support contact for each shortlisted product"
+  ]
+
+  [[steps.tools]]
+  name = "Data Product Manager (DPM)"
+  actions = [
+    "View ownership, metadata, and support route for each candidate",
+    "Confirm data agreements are available to request"
+  ]
+
+[[steps]]
+id = 5
+phase = "Discovery and Design"
+title = "Request Upstream Data Product Access"
+goal = "Obtain approved PBAC read access to all required upstream public schemas."
+gate = "Approved data agreements and working read permissions to all required upstream public schemas."
+process = [
+  "Initiate access request from the Data Product Portal entry for each upstream product",
+  "Purpose owner reviews and approves the data agreement",
+  "PBAC roles granting read access to the upstream public schema are assigned",
+  "Verify read access works by querying the upstream tables in Snowflake"
+]
+
+  [[steps.tools]]
+  name = "Data Product Portal"
+  actions = [
+    "Open the upstream product entry in the Portal",
+    "Click 'Request Access' and complete the access request form",
+    "Monitor request status until approved"
+  ]
+
+  [[steps.tools]]
+  name = "Data Product Manager (DPM)"
+  actions = [
+    "Track approval workflow progress in DPM",
+    "Confirm data agreement is linked and approved"
+  ]
+
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = [
+    "After PBAC role assignment, run a test query against the upstream public schema",
+    "Verify expected tables are readable with your assigned role"
+  ]
+
+[[steps]]
+id = 6
+phase = "Discovery and Design"
+title = "Inspect Upstream Data Product Content"
+goal = "Profile structure, grain, keys, cadence, and quality before designing the CADP contract. This avoids build surprises."
+gate = "Initial source assessment with tables, columns, grain, join feasibility, data quality notes, and usability assessment."
+process = [
+  "Review product descriptions, refresh cadence, and usage guidance in the Portal",
+  "Inspect tables, columns, primary/foreign keys, and data types in Snowflake",
+  "Profile sample data: check for nulls, duplicates, cardinality, and edge cases",
+  "Assess join feasibility between multiple upstream products",
+  "Document findings, data quality concerns, and assumptions"
+]
+
+  [[steps.tools]]
+  name = "Data Product Portal"
+  actions = [
+    "Read the product description, refresh cadence, and usage notes",
+    "Note any known limitations or usage guidance"
+  ]
+
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = [
+    "Run SHOW TABLES and DESCRIBE TABLE on upstream public schemas",
+    "Query sample rows to understand value distributions",
+    "Run profiling queries to check nulls, duplicates, and edge cases"
+  ]
+
+  [[steps.tools]]
+  name = "Ona / VS Code"
+  actions = [
+    "Write exploratory SQL queries to profile cardinality and join keys",
+    "Document findings in a profiling note file in the workspace"
+  ]
+
+  [[steps.tools]]
+  name = "GitLab"
+  actions = [
+    "Commit profiling notes and exploratory queries to the feature branch for traceability"
+  ]
+
+[[steps]]
+id = 7
+phase = "Discovery and Design"
+title = "Define CADP Design"
+goal = "Define the CADP contract before coding: grain, facts, dimensions, keys, naming, tests, and publish intent."
+gate = "CADP design blueprint documented and approved for build: grain, facts, dimensions, keys, naming conventions, test strategy, and publish intent."
+process = [
+  "Check Portal for existing products to avoid duplication and align naming",
+  "Define the grain: what does one row represent?",
+  "Identify facts (measures) and dimensions (attributes)",
+  "Define primary/foreign keys and naming per S&G Data Product Modeling Principles - CADPs reuse business keys from SADPs, never create new ones",
+  "Specify expected dbt tests and materialization strategy",
+  "Document design decisions in ADRs or design notes",
+  "Plan publish intent: what will the public schema expose?"
+]
+
+  [[steps.tools]]
+  name = "Data Product Portal"
+  actions = [
+    "Search for existing products to avoid naming conflicts",
+    "Confirm naming alignment with established conventions"
+  ]
+
+  [[steps.tools]]
+  name = "Data Product Manager (DPM)"
+  actions = [
+    "Define metadata requirements, ownership fields, and publication expectations early"
+  ]
+
+  [[steps.tools]]
+  name = "Ona / VS Code"
+  actions = [
+    "Draft ERD or table design notes in the workspace",
+    "Write design queries to validate grain and key assumptions in Snowflake"
+  ]
+
+  [[steps.tools]]
+  name = "GitLab"
+  actions = [
+    "Create a design ADR or design-notes.md in the repo",
+    "Store all modelling decisions and assumptions for peer review"
+  ]
+
+  [[steps.tools]]
+  name = "Vulcan"
+  actions = [
+    "Identify runtime configuration needs: schedule_type, materialization strategy, publish intent"
+  ]
+
+  [[steps.tools]]
+  name = "dbt"
+  actions = [
+    "Sketch model structure: stg_, int_, fct_, dim_ layer plan",
+    "Define schema.yml test expectations for each target model"
+  ]
+
+# ─────────────────────────────────────────────
+# PHASE 3: BUILD AND VALIDATE  (Steps 8–9)
+# ─────────────────────────────────────────────
+
+[[steps]]
+id = 8
+phase = "Build and Validate"
+title = "Build Transformation Logic"
+goal = "Implement dbt model layers (staging to intermediate to marts) with tests and configuration in the DEV schema."
+gate = "Working DEV models producing intermediate and final CADP outputs in P_{PURPOSE} schema with passing dbt tests."
+process = [
+  "Build stg_ models that rename, cast, and clean upstream columns",
+  "Build int_ models for complex joins, aggregations, and business logic",
+  "Build fct_ and dim_ mart models representing the final CADP contract",
+  "Configure materializations (view, table, incremental) per model",
+  "Add dbt schema and custom tests to each model",
+  "Iterate in DEV schema P_{PURPOSE}: run, inspect results, fix issues"
+]
+
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = [
+    "Execute dbt models targeting P_{PURPOSE} DEV schema",
+    "Inspect output tables after each run to verify correctness"
+  ]
+
+  [[steps.tools]]
+  name = "Ona / VS Code"
+  actions = [
+    "Write and iterate on SQL, YAML config, and dbt model files",
+    "Use dbt Power User extension for inline model preview and lineage"
+  ]
+
+  [[steps.tools]]
+  name = "GitLab"
+  actions = [
+    "Commit changes frequently to the feature branch",
+    "Keep commit messages descriptive for MR review"
+  ]
+
+  [[steps.tools]]
+  name = "Vulcan"
+  actions = [
+    "Define runtime and publish behavior in Vulcan project files",
+    "Specify materialization strategy and target schema in config"
+  ]
+
+  [[steps.tools]]
+  name = "GitLab CI/CD"
+  actions = [
+    "Prepare automated checks (linting, dbt compile) triggered on MR"
+  ]
+
+  [[steps.tools]]
+  name = "dbt"
+  actions = [
+    "Run 'dbt run --select stg_*' to build and validate staging layer",
+    "Run 'dbt run --select int_*' for intermediate layer",
+    "Run 'dbt run --select fct_* dim_*' for mart layer",
+    "Run 'dbt test' to validate all schema and custom tests"
+  ]
+
+[[steps]]
+id = 9
+phase = "Build and Validate"
+title = "Validate CADP Output"
+goal = "Prove quality, correctness, reconciliation, and performance before deployment."
+gate = "Accepted DEV-quality output with all dbt tests passing, Soda contracts validated, reconciliation confirmed, and defects resolved."
+process = [
+  "Run all dbt tests: uniqueness, not_null, relationships, accepted_values, custom",
+  "Validate data quality: joins, duplicates, nulls, orphan keys, row counts",
+  "Reconcile CADP output against trusted upstream source totals",
+  "Check query performance and materialization efficiency",
+  "Run Soda data contracts to validate quality gates",
+  "Fix any defects and re-validate until all checks pass"
+]
+
+  [[steps.tools]]
+  name = "dbt"
+  actions = [
+    "Run 'dbt test --select <model_name>' per model to isolate failures",
+    "Review test output, resolve failures, and document fixes",
+    "Run 'dbt test' across the full project before declaring done"
+  ]
+
+  [[steps.tools]]
+  name = "Soda"
+  actions = [
+    "Write Soda contract YAML for key quality dimensions (nulls, uniqueness, freshness)",
+    "Run 'soda scan' against the DEV schema outputs",
+    "Review results in Soda Cloud and resolve any contract failures"
+  ]
+
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = [
+    "Run reconciliation queries comparing CADP totals to upstream source totals",
+    "Check query execution plans for performance bottlenecks"
+  ]
+
+  [[steps.tools]]
+  name = "Ona / VS Code"
+  actions = [
+    "Debug unexpected query results interactively",
+    "Write and iterate on reconciliation scripts"
+  ]
+
+  [[steps.tools]]
+  name = "GitLab CI/CD"
+  actions = [
+    "Push branch and trigger CI pipeline for automated validation",
+    "Review pipeline pass/fail status before raising MR"
+  ]
+
+# ─────────────────────────────────────────────
+# PHASE 4: REGISTER AND DEPLOY  (Steps 10–12)
+# ─────────────────────────────────────────────
+
+[[steps]]
+id = 10
+phase = "Register and Deploy"
+title = "Register CADP in Data Product Manager"
+goal = "Register CADP and provision the public Snowflake schema before CI/CD deployment - the target schema must exist before deployment can succeed."
+gate = "Registered CADP with provisioned public schema (purpose__data_id) in Snowflake, referenced in Vulcan project config."
+process = [
+  "Create a new data product entry in the Data Product Manager",
+  "Define public schema name following naming convention (purpose__data_id)",
+  "Configure ownership, metadata, and support route",
+  "Trigger public schema provisioning in Snowflake",
+  "Confirm the public schema exists and is ready to receive data",
+  "Update Vulcan project to reference the registered data product ID"
+]
+
+  [[steps.tools]]
+  name = "Data Product Manager (DPM)"
+  actions = [
+    "Open DPM and create a new CADP entry",
+    "Fill in schema name (purpose__data_id), owner, support route, and metadata",
+    "Trigger the provisioning workflow to create the public schema in Snowflake"
+  ]
+
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = [
+    "Verify the public schema (purpose__data_id) has been created",
+    "Confirm it is accessible with your assigned role"
+  ]
+
+  [[steps.tools]]
+  name = "Vulcan"
+  actions = [
+    "Update Vulcan project files to reference the registered data product ID",
+    "Confirm the publish target points to the newly provisioned public schema"
+  ]
+
+[[steps]]
+id = 11
+phase = "Register and Deploy"
+title = "Deploy CADP Pipeline"
+goal = "Move approved logic to controlled deployment - code is merged, CI/CD validates and deploys, and the pipeline becomes executable in production."
+gate = "Deployed pipeline definition and executable production configuration with successful CI/CD run."
+process = [
+  "Finalize code and configuration; ensure all tests pass on feature branch",
+  "Create a Merge Request (MR) for peer review",
+  "Address review feedback and get MR approved",
+  "Merge code to main / approved branch",
+  "CI/CD pipeline triggers: validates, builds, and deploys",
+  "Verify deployment succeeded: pipeline definition and runtime config are in place"
+]
+
+  [[steps.tools]]
+  name = "GitLab"
+  actions = [
+    "Open a Merge Request from your feature branch",
+    "Assign reviewers and address all review feedback",
+    "Get MR approval and merge to main"
+  ]
+
+  [[steps.tools]]
+  name = "Vulcan"
+  actions = [
+    "Confirm runtime configuration (schedule, dependencies, parameters) is correct before merge"
+  ]
+
+  [[steps.tools]]
+  name = "GitLab CI/CD"
+  actions = [
+    "Monitor pipeline triggered by the merge to main",
+    "Confirm all stages (validate, build, deploy) pass green",
+    "Review deployment logs for any errors"
+  ]
+
+  [[steps.tools]]
+  name = "Conveyor / Airflow"
+  actions = [
+    "Confirm the DAG or job definition has been registered after deployment"
+  ]
+
+  [[steps.tools]]
+  name = "dbt"
+  actions = [
+    "Confirm the deployed dbt project is correctly wired to production Snowflake targets"
+  ]
+
+[[steps]]
+id = 12
+phase = "Register and Deploy"
+title = "Run Scheduled Refresh"
+goal = "Execute recurring refreshes using event-driven triggers on upstream SADP updates and establish operational monitoring."
+gate = "Stable recurring production runs with refreshed CADP data in private schema P_{PURPOSE}, monitored and alertable."
+process = [
+  "Configure schedule_type: events in Vulcan to trigger on upstream SADP refresh",
+  "Verify first production run completes successfully",
+  "Monitor subsequent runs for failures, performance degradation, or quality issues",
+  "Set up alerting for failed runs",
+  "Handle reruns and backfills as needed"
+]
+
+  [[steps.tools]]
+  name = "Vulcan"
+  actions = [
+    "Set schedule_type to 'events' in Vulcan project config",
+    "Specify the upstream SADP event as the trigger condition",
+    "Confirm runtime parameters (role, warehouse, target schema) are correct"
+  ]
+
+  [[steps.tools]]
+  name = "Conveyor / Airflow"
+  actions = [
+    "Monitor job execution status after first run",
+    "Set up alerting rules for failed or late runs",
+    "Use rerun/backfill functionality when needed"
+  ]
+
+  [[steps.tools]]
+  name = "dbt"
+  actions = [
+    "Confirm dbt transformation logic executes correctly in the first production run",
+    "Review run artifacts and logs for unexpected warnings"
+  ]
+
+  [[steps.tools]]
+  name = "Soda"
+  actions = [
+    "Confirm Soda contracts run automatically as part of each refresh",
+    "Review Soda Cloud for quality alerts after each run"
+  ]
+
+# ─────────────────────────────────────────────
+# PHASE 5: PUBLISH  (Steps 13–14)
+# ─────────────────────────────────────────────
+
+[[steps]]
+id = 13
+phase = "Publish"
+title = "Publish CADP (Write-Audit-Publish)"
+goal = "Publish safely using WAP semantics - Soda contracts gate promotion to the public schema. Failed contracts block publication to protect consumers."
+gate = "Published CADP tables in public schema (purpose__data_id), validated by Soda data contracts, via atomic zero-copy clone."
+process = [
+  "WRITE: output is written to private schema P_{PURPOSE} during scheduled run",
+  "AUDIT: Soda data contracts validate output against defined quality thresholds",
+  "PUBLISH: if all contracts pass, zero-copy clone from private to public schema atomically",
+  "BLOCK: if any contract fails, block publish, raise alert, and resolve before retry"
+]
+
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = [
+    "dbt output is written to P_{PURPOSE} during the run (Write step)",
+    "After Soda pass, zero-copy clone transfers data atomically to the public schema"
+  ]
+
+  [[steps.tools]]
+  name = "Soda"
+  actions = [
+    "Run 'soda scan' against private schema outputs (Audit step)",
+    "Review Soda Cloud - all contracts must pass before publish proceeds",
+    "If failures: investigate, fix source issue, and re-run before retrying"
+  ]
+
+  [[steps.tools]]
+  name = "Vulcan"
+  actions = [
+    "Confirm WAP (write / audit / publish) steps are configured in Vulcan project files",
+    "Verify block-on-failure behavior is active"
+  ]
+
+  [[steps.tools]]
+  name = "GitLab CI/CD"
+  actions = [
+    "CI/CD triggers the publish step only after Soda validation passes",
+    "Monitor pipeline to confirm the atomic publish completed successfully"
+  ]
+
+[[steps]]
+id = 14
+phase = "Publish"
+title = "Register and Expose CADP for Consumers"
+goal = "Make CADP discoverable, documented, and consumable through a governed PBAC access flow."
+gate = "Published CADP with complete discoverable metadata, governed access path, and consumer-ready documentation."
+process = [
+  "Expose the CADP in the Data Product Portal for consumer discovery",
+  "Complete all metadata: owner, support route, refresh cadence, grain, key columns, usage guidance",
+  "Define the access request and grant process (PBAC-based)",
+  "Optionally store versioned documentation alongside code in GitLab",
+  "Announce availability to relevant consumer teams"
+]
+
+  [[steps.tools]]
+  name = "Data Product Portal"
+  actions = [
+    "Open the CADP entry and set visibility to published/discoverable",
+    "Complete all metadata fields thoroughly",
+    "Verify the product appears correctly in the catalog search"
+  ]
+
+  [[steps.tools]]
+  name = "Data Product Manager (DPM)"
+  actions = [
+    "Register metadata, ownership, support route, refresh cadence, and access grant process",
+    "Confirm PBAC access path is correctly configured for consumers"
+  ]
+
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = [
+    "Confirm final public schema tables and views are accessible to consumer roles"
+  ]
+
+  [[steps.tools]]
+  name = "GitLab"
+  actions = [
+    "Optionally store consumer-facing documentation in the repo",
+    "Tag the release version in GitLab for traceability"
+  ]

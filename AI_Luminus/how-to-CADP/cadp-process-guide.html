@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CADP Process Guide</title>
+  <style>
+    :root {
+      --green:       #3D7A25;
+      --green-dark:  #2C591B;
+      --green-light: #EAF5E5;
+      --green-mid:   #9CCB89;
+      --green-arrow: #4F9E30;
+      --text:        #2A2F36;
+      --text-muted:  #6B7280;
+      --white:       #FFFFFF;
+      --border:      #E5E7EB;
+      --bg:          #F3F4F6;
+      --card:        #FFFFFF;
+      --shadow:      0 1px 4px rgba(0,0,0,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--green);
+      color: var(--white);
+      padding: 14px 28px 10px;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+    }
+    header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.2px; }
+    header p  { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+
+    /* ── PHASE NAV ── */
+    nav {
+      background: var(--green-dark);
+      padding: 0 28px;
+      display: flex;
+      gap: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    nav::-webkit-scrollbar { display: none; }
+    nav a {
+      color: var(--green-mid);
+      text-decoration: none;
+      padding: 9px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    nav a:hover { color: var(--white); border-bottom-color: var(--green-mid); }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 28px 20px 60px;
+    }
+
+    /* ── PHASE BLOCK ── */
+    .phase-block { margin-bottom: 52px; }
+    .phase-heading {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--green-mid);
+    }
+    .phase-pill {
+      background: var(--green);
+      color: var(--white);
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      white-space: nowrap;
+    }
+    .phase-name {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--green-dark);
+    }
+
+    /* ── STEP CARD ── */
+    .step-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .step-card-header {
+      background: var(--green-light);
+      border-bottom: 1px solid var(--green-mid);
+      padding: 13px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .step-card-header:hover { background: #d6edcc; }
+    .step-num {
+      background: var(--green);
+      color: var(--white);
+      min-width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .step-title { font-size: 15px; font-weight: 700; color: var(--green-dark); flex: 1; }
+    .step-chevron {
+      color: var(--green);
+      font-size: 18px;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .step-chevron.open { transform: rotate(180deg); }
+
+    /* ── STEP BODY ── */
+    .step-body { display: none; padding: 22px 22px 26px; }
+    .step-body.open { display: block; }
+
+    /* ── TWO COLUMN LAYOUT ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+    @media (max-width: 660px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── SECTION LABEL ── */
+    .sec-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sec-label span { font-size: 13px; }
+
+    /* ── GOAL BOX ── */
+    .goal-box {
+      background: var(--green-light);
+      border-left: 4px solid var(--green);
+      border-radius: 5px;
+      padding: 11px 15px;
+      font-size: 13.5px;
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    /* ── GATE BOX ── */
+    .gate-box {
+      background: #f0fdf4;
+      border: 1px solid var(--green-mid);
+      border-radius: 5px;
+      padding: 10px 15px;
+      font-size: 13px;
+      color: var(--green-dark);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.55;
+    }
+    .gate-check {
+      color: var(--green);
+      font-size: 15px;
+      font-weight: 900;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── PROCESS LIST ── */
+    .sec-full { margin-bottom: 22px; }
+    .process-list {
+      list-style: none;
+      counter-reset: pc;
+    }
+    .process-list li {
+      counter-increment: pc;
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .process-list li:last-child { border-bottom: none; }
+    .process-list li::before {
+      content: counter(pc);
+      background: var(--green);
+      color: var(--white);
+      min-width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ── HOW TO WORK SECTION ── */
+    .tools-section { margin-top: 0; }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 10px;
+    }
+    @media (max-width: 560px) { .tools-grid { grid-template-columns: 1fr; } }
+
+    .tool-panel {
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      overflow: hidden;
+    }
+    .tool-header {
+      padding: 9px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      font-size: 12px;
+      font-weight: 700;
+      transition: opacity 0.15s;
+    }
+    .tool-header:hover { opacity: 0.85; }
+    .tool-name-wrap { display: flex; align-items: center; gap: 8px; }
+    .tool-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .tool-chev {
+      font-size: 10px;
+      opacity: 0.6;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .tool-chev.open { transform: rotate(180deg); }
+    .tool-body {
+      display: none;
+      padding: 4px 13px 12px;
+      background: var(--bg);
+    }
+    .tool-body.open { display: block; }
+    .tool-body ol {
+      padding-left: 16px;
+    }
+    .tool-body ol li {
+      font-size: 12px;
+      color: var(--text);
+      padding: 3px 0;
+      line-height: 1.55;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 11px;
+      border-top: 1px solid var(--border);
+    }
+    footer code {
+      background: var(--green-light);
+      color: var(--green-dark);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 11px;
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      header { position: relative; }
+      nav { display: none; }
+      .step-card-header { cursor: default; }
+      .step-body { display: block !important; }
+      .tool-body { display: block !important; }
+      .step-chevron, .tool-chev { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1 id="pg-title">CADP Process Guide</h1>
+  <p id="pg-sub">Loading&hellip;</p>
+</header>
+<nav id="phase-nav"></nav>
+
+<main>
+  <div id="content"></div>
+</main>
+
+<footer>
+  Edit data in <code>cadp-process.toml</code>, then paste into the
+  <code>&lt;script type="text/toml"&gt;</code> block below to update this guide.
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════
+     DATA SOURCE — paste updated cadp-process.toml content here
+     ═══════════════════════════════════════════════════════════ -->
+<script type="text/toml" id="cadp-data">
+[meta]
+title = "CADP End-to-End Process Guide"
+subtitle = "Consumer-Aligned Data Product - NEO Platform"
+version = "v3 merged - June 2026"
+note = "Steps 0-14 cover the full CADP lifecycle. Steps 4-6 are significantly faster when the upstream SADP already exists."
+canonical_source = "cadp-process.yaml"
+canonical_note = "This TOML block is a derived representation for HTML rendering. The canonical source of truth is cadp-process.yaml. Update that file first, then paste the updated TOML here."
+
+[[steps]]
+id = 0
+phase = "Platform Access"
+title = "Onboard with NEO Platform"
+goal = "Get LIAM, Snowflake, and GitLab access so development can start in the NEO ecosystem."
+gate = "Active LIAM roles, verified Snowflake login, and confirmed GitLab SSO access."
+process = [
+  "Request LIAM permission package via iam.luminus.be (4me self-service)",
+  "Verify Snowflake email mapping and confirm login",
+  "Confirm GitLab SSO access",
+  "Ensure all three access points are active before proceeding"
+]
+  [[steps.tools]]
+  name = "LIAM / 4me"
+  actions = ["Open iam.luminus.be or raise a 4me self-service request","Request the NEO platform permission package","Await approval and confirm active roles"]
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = ["Navigate to the NEO Snowflake URL","Log in using SSO credentials","Confirm email mapping and default role work"]
+  [[steps.tools]]
+  name = "GitLab"
+  actions = ["Navigate to the NEO GitLab instance","Confirm SSO login works","Verify your user appears in the correct identity provider group"]
+
+[[steps]]
+id = 1
+phase = "Platform Access"
+title = "Request or Join a Purpose"
+goal = "Join or create a Purpose that defines PBAC boundaries for accessible databases and schemas."
+gate = "Approved Purpose membership with assigned PBAC roles and accessible Purpose-specific Snowflake databases and schemas."
+process = [
+  "Submit 4me self-service request for NEO Purpose (or join an existing one)",
+  "Purpose owner reviews and approves membership",
+  "PBAC roles are assigned to the developer",
+  "Purpose-specific Snowflake databases and schemas become available"
+]
+  [[steps.tools]]
+  name = "4me"
+  actions = ["Open 4me and navigate to the self-service catalog","Submit a NEO Purpose Request or request to join an existing Purpose","Monitor request status until approved"]
+  [[steps.tools]]
+  name = "Data Product Manager (DPM)"
+  actions = ["Confirm Purpose exists or is being created in DPM","Verify developer roles are assigned within the Purpose boundary"]
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = ["After role assignment, verify P_{PURPOSE} database is accessible","Confirm purpose-specific schemas respond correctly to test queries"]
+
+[[steps]]
+id = 2
+phase = "Platform Access"
+title = "Onboard with GitLab"
+goal = "Get GitLab team access and align with repo conventions, branching, and MR standards."
+gate = "Working GitLab access with correct team group membership and understanding of repo conventions."
+process = [
+  "Confirm GitLab SSO login works",
+  "Request team group membership from team lead",
+  "Clone the starter/template repository",
+  "Review branching and MR conventions (feature branches, MR-based merges)",
+  "Familiarize yourself with CI/CD pipeline structure in the repo"
+]
+  [[steps.tools]]
+  name = "GitLab"
+  actions = ["Log in via SSO and confirm access","Request team group membership from your team lead","Clone the starter/template repository to your local or cloud IDE","Read the repo branching guide and MR template","Review .gitlab-ci.yml to understand pipeline stages"]
+
+[[steps]]
+id = 3
+phase = "Platform Access"
+title = "Set Up Ona or VS Code Workspace"
+goal = "Connect the cloud IDE to Snowflake and GitLab to enable SQL, YAML, and dbt development locally."
+gate = "Working IDE workspace connected to Snowflake and GitLab with validated SQL execution and dbt commands."
+process = [
+  "Open Ona / VS Code workspace",
+  "Configure Snowflake connection (account, role, warehouse, database)",
+  "Connect workspace to GitLab repository",
+  "Validate SQL queries execute against the correct Snowflake environment",
+  "Ensure dbt commands (dbt run, dbt test) work locally"
+]
+  [[steps.tools]]
+  name = "Ona / VS Code"
+  actions = ["Open workspace or create a new one","Install required extensions (Snowflake, dbt Power User, GitLens)","Configure Snowflake connection parameters in workspace settings"]
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = ["Validate active role, warehouse, and target database respond correctly","Run a test query against the P_{PURPOSE} schema"]
+  [[steps.tools]]
+  name = "GitLab"
+  actions = ["Connect workspace to the cloned repository","Confirm you can pull, commit, and push from the IDE"]
+  [[steps.tools]]
+  name = "dbt"
+  actions = ["Run 'dbt debug' to confirm profile and Snowflake connection","Run 'dbt compile' to validate model syntax","Run 'dbt test' to confirm the test framework is operational"]
+
+[[steps]]
+id = 4
+phase = "Discovery and Design"
+title = "Discover Upstream Data Products"
+goal = "Identify upstream SADP/ADP/CADP inputs. When the SADP already exists, steps 4-6 are significantly faster - skip the SADP creation lifecycle and confirm grain, cadence, and ownership directly in the Portal."
+gate = "Shortlist of relevant upstream data products confirmed, with known owner, purpose, grain, and refresh cadence."
+process = [
+  "Search the Data Product Portal catalog for relevant upstream products",
+  "Compare candidate products by grain, refresh cadence, ownership, and coverage",
+  "Review metadata, descriptions, and data agreements",
+  "Shortlist the most suitable upstream products and note owners and support routes"
+]
+  [[steps.tools]]
+  name = "Data Product Portal"
+  actions = ["Open the Portal and use search/filter to find candidate upstream products","Compare grain, cadence, and ownership across candidates","Note data agreement status and support contact for each shortlisted product"]
+  [[steps.tools]]
+  name = "Data Product Manager (DPM)"
+  actions = ["View ownership, metadata, and support route for each candidate","Confirm data agreements are available to request"]
+
+[[steps]]
+id = 5
+phase = "Discovery and Design"
+title = "Request Upstream Data Product Access"
+goal = "Obtain approved PBAC read access to all required upstream public schemas."
+gate = "Approved data agreements and working read permissions to all required upstream public schemas."
+process = [
+  "Initiate access request from the Data Product Portal entry for each upstream product",
+  "Purpose owner reviews and approves the data agreement",
+  "PBAC roles granting read access to the upstream public schema are assigned",
+  "Verify read access works by querying the upstream tables in Snowflake"
+]
+  [[steps.tools]]
+  name = "Data Product Portal"
+  actions = ["Open the upstream product entry in the Portal","Click 'Request Access' and complete the access request form","Monitor request status until approved"]
+  [[steps.tools]]
+  name = "Data Product Manager (DPM)"
+  actions = ["Track approval workflow progress in DPM","Confirm data agreement is linked and approved"]
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = ["After PBAC role assignment, run a test query against the upstream public schema","Verify expected tables are readable with your assigned role"]
+
+[[steps]]
+id = 6
+phase = "Discovery and Design"
+title = "Inspect Upstream Data Product Content"
+goal = "Profile structure, grain, keys, cadence, and quality before designing the CADP contract. This avoids build surprises."
+gate = "Initial source assessment with tables, columns, grain, join feasibility, data quality notes, and usability assessment."
+process = [
+  "Review product descriptions, refresh cadence, and usage guidance in the Portal",
+  "Inspect tables, columns, primary/foreign keys, and data types in Snowflake",
+  "Profile sample data: check for nulls, duplicates, cardinality, and edge cases",
+  "Assess join feasibility between multiple upstream products",
+  "Document findings, data quality concerns, and assumptions"
+]
+  [[steps.tools]]
+  name = "Data Product Portal"
+  actions = ["Read the product description, refresh cadence, and usage notes","Note any known limitations or usage guidance"]
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = ["Run SHOW TABLES and DESCRIBE TABLE on upstream public schemas","Query sample rows to understand value distributions","Run profiling queries to check nulls, duplicates, and edge cases"]
+  [[steps.tools]]
+  name = "Ona / VS Code"
+  actions = ["Write exploratory SQL queries to profile cardinality and join keys","Document findings in a profiling note file in the workspace"]
+  [[steps.tools]]
+  name = "GitLab"
+  actions = ["Commit profiling notes and exploratory queries to the feature branch for traceability"]
+
+[[steps]]
+id = 7
+phase = "Discovery and Design"
+title = "Define CADP Design"
+goal = "Define the CADP contract before coding: grain, facts, dimensions, keys, naming, tests, and publish intent."
+gate = "CADP design blueprint documented and approved for build: grain, facts, dimensions, keys, naming conventions, test strategy, and publish intent."
+process = [
+  "Check Portal for existing products to avoid duplication and align naming",
+  "Define the grain: what does one row represent?",
+  "Identify facts (measures) and dimensions (attributes)",
+  "Define primary/foreign keys and naming per S&G Data Product Modeling Principles - CADPs reuse business keys from SADPs, never create new ones",
+  "Specify expected dbt tests and materialization strategy",
+  "Document design decisions in ADRs or design notes",
+  "Plan publish intent: what will the public schema expose?"
+]
+  [[steps.tools]]
+  name = "Data Product Portal"
+  actions = ["Search for existing products to avoid naming conflicts","Confirm naming alignment with established conventions"]
+  [[steps.tools]]
+  name = "Data Product Manager (DPM)"
+  actions = ["Define metadata requirements, ownership fields, and publication expectations early"]
+  [[steps.tools]]
+  name = "Ona / VS Code"
+  actions = ["Draft ERD or table design notes in the workspace","Write design queries to validate grain and key assumptions in Snowflake"]
+  [[steps.tools]]
+  name = "GitLab"
+  actions = ["Create a design ADR or design-notes.md in the repo","Store all modelling decisions and assumptions for peer review"]
+  [[steps.tools]]
+  name = "Vulcan"
+  actions = ["Identify runtime configuration needs: schedule_type, materialization strategy, publish intent"]
+  [[steps.tools]]
+  name = "dbt"
+  actions = ["Sketch model structure: stg_, int_, fct_, dim_ layer plan","Define schema.yml test expectations for each target model"]
+
+[[steps]]
+id = 8
+phase = "Build and Validate"
+title = "Build Transformation Logic"
+goal = "Implement dbt model layers (staging to intermediate to marts) with tests and configuration in the DEV schema."
+gate = "Working DEV models producing intermediate and final CADP outputs in P_{PURPOSE} schema with passing dbt tests."
+process = [
+  "Build stg_ models that rename, cast, and clean upstream columns",
+  "Build int_ models for complex joins, aggregations, and business logic",
+  "Build fct_ and dim_ mart models representing the final CADP contract",
+  "Configure materializations (view, table, incremental) per model",
+  "Add dbt schema and custom tests to each model",
+  "Iterate in DEV schema P_{PURPOSE}: run, inspect results, fix issues"
+]
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = ["Execute dbt models targeting P_{PURPOSE} DEV schema","Inspect output tables after each run to verify correctness"]
+  [[steps.tools]]
+  name = "Ona / VS Code"
+  actions = ["Write and iterate on SQL, YAML config, and dbt model files","Use dbt Power User extension for inline model preview and lineage"]
+  [[steps.tools]]
+  name = "GitLab"
+  actions = ["Commit changes frequently to the feature branch","Keep commit messages descriptive for MR review"]
+  [[steps.tools]]
+  name = "Vulcan"
+  actions = ["Define runtime and publish behavior in Vulcan project files","Specify materialization strategy and target schema in config"]
+  [[steps.tools]]
+  name = "GitLab CI/CD"
+  actions = ["Prepare automated checks (linting, dbt compile) triggered on MR"]
+  [[steps.tools]]
+  name = "dbt"
+  actions = ["Run 'dbt run --select stg_*' to build and validate staging layer","Run 'dbt run --select int_*' for intermediate layer","Run 'dbt run --select fct_* dim_*' for mart layer","Run 'dbt test' to validate all schema and custom tests"]
+
+[[steps]]
+id = 9
+phase = "Build and Validate"
+title = "Validate CADP Output"
+goal = "Prove quality, correctness, reconciliation, and performance before deployment."
+gate = "Accepted DEV-quality output with all dbt tests passing, Soda contracts validated, reconciliation confirmed, and defects resolved."
+process = [
+  "Run all dbt tests: uniqueness, not_null, relationships, accepted_values, custom",
+  "Validate data quality: joins, duplicates, nulls, orphan keys, row counts",
+  "Reconcile CADP output against trusted upstream source totals",
+  "Check query performance and materialization efficiency",
+  "Run Soda data contracts to validate quality gates",
+  "Fix any defects and re-validate until all checks pass"
+]
+  [[steps.tools]]
+  name = "dbt"
+  actions = ["Run 'dbt test --select <model_name>' per model to isolate failures","Review test output, resolve failures, and document fixes","Run 'dbt test' across the full project before declaring done"]
+  [[steps.tools]]
+  name = "Soda"
+  actions = ["Write Soda contract YAML for key quality dimensions (nulls, uniqueness, freshness)","Run 'soda scan' against the DEV schema outputs","Review results in Soda Cloud and resolve any contract failures"]
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = ["Run reconciliation queries comparing CADP totals to upstream source totals","Check query execution plans for performance bottlenecks"]
+  [[steps.tools]]
+  name = "Ona / VS Code"
+  actions = ["Debug unexpected query results interactively","Write and iterate on reconciliation scripts"]
+  [[steps.tools]]
+  name = "GitLab CI/CD"
+  actions = ["Push branch and trigger CI pipeline for automated validation","Review pipeline pass/fail status before raising MR"]
+
+[[steps]]
+id = 10
+phase = "Register and Deploy"
+title = "Register CADP in Data Product Manager"
+goal = "Register CADP and provision the public Snowflake schema before CI/CD deployment - the target schema must exist before deployment can succeed."
+gate = "Registered CADP with provisioned public schema (purpose__data_id) in Snowflake, referenced in Vulcan project config."
+process = [
+  "Create a new data product entry in the Data Product Manager",
+  "Define public schema name following naming convention (purpose__data_id)",
+  "Configure ownership, metadata, and support route",
+  "Trigger public schema provisioning in Snowflake",
+  "Confirm the public schema exists and is ready to receive data",
+  "Update Vulcan project to reference the registered data product ID"
+]
+  [[steps.tools]]
+  name = "Data Product Manager (DPM)"
+  actions = ["Open DPM and create a new CADP entry","Fill in schema name (purpose__data_id), owner, support route, and metadata","Trigger the provisioning workflow to create the public schema in Snowflake"]
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = ["Verify the public schema (purpose__data_id) has been created","Confirm it is accessible with your assigned role"]
+  [[steps.tools]]
+  name = "Vulcan"
+  actions = ["Update Vulcan project files to reference the registered data product ID","Confirm the publish target points to the newly provisioned public schema"]
+
+[[steps]]
+id = 11
+phase = "Register and Deploy"
+title = "Deploy CADP Pipeline"
+goal = "Move approved logic to controlled deployment - code is merged, CI/CD validates and deploys, and the pipeline becomes executable in production."
+gate = "Deployed pipeline definition and executable production configuration with successful CI/CD run."
+process = [
+  "Finalize code and configuration; ensure all tests pass on feature branch",
+  "Create a Merge Request (MR) for peer review",
+  "Address review feedback and get MR approved",
+  "Merge code to main / approved branch",
+  "CI/CD pipeline triggers: validates, builds, and deploys",
+  "Verify deployment succeeded: pipeline definition and runtime config are in place"
+]
+  [[steps.tools]]
+  name = "GitLab"
+  actions = ["Open a Merge Request from your feature branch","Assign reviewers and address all review feedback","Get MR approval and merge to main"]
+  [[steps.tools]]
+  name = "Vulcan"
+  actions = ["Confirm runtime configuration (schedule, dependencies, parameters) is correct before merge"]
+  [[steps.tools]]
+  name = "GitLab CI/CD"
+  actions = ["Monitor pipeline triggered by the merge to main","Confirm all stages (validate, build, deploy) pass green","Review deployment logs for any errors"]
+  [[steps.tools]]
+  name = "Conveyor / Airflow"
+  actions = ["Confirm the DAG or job definition has been registered after deployment"]
+  [[steps.tools]]
+  name = "dbt"
+  actions = ["Confirm the deployed dbt project is correctly wired to production Snowflake targets"]
+
+[[steps]]
+id = 12
+phase = "Register and Deploy"
+title = "Run Scheduled Refresh"
+goal = "Execute recurring refreshes using event-driven triggers on upstream SADP updates and establish operational monitoring."
+gate = "Stable recurring production runs with refreshed CADP data in private schema P_{PURPOSE}, monitored and alertable."
+process = [
+  "Configure schedule_type: events in Vulcan to trigger on upstream SADP refresh",
+  "Verify first production run completes successfully",
+  "Monitor subsequent runs for failures, performance degradation, or quality issues",
+  "Set up alerting for failed runs",
+  "Handle reruns and backfills as needed"
+]
+  [[steps.tools]]
+  name = "Vulcan"
+  actions = ["Set schedule_type to 'events' in Vulcan project config","Specify the upstream SADP event as the trigger condition","Confirm runtime parameters (role, warehouse, target schema) are correct"]
+  [[steps.tools]]
+  name = "Conveyor / Airflow"
+  actions = ["Monitor job execution status after first run","Set up alerting rules for failed or late runs","Use rerun/backfill functionality when needed"]
+  [[steps.tools]]
+  name = "dbt"
+  actions = ["Confirm dbt transformation logic executes correctly in the first production run","Review run artifacts and logs for unexpected warnings"]
+  [[steps.tools]]
+  name = "Soda"
+  actions = ["Confirm Soda contracts run automatically as part of each refresh","Review Soda Cloud for quality alerts after each run"]
+
+[[steps]]
+id = 13
+phase = "Publish"
+title = "Publish CADP (Write-Audit-Publish)"
+goal = "Publish safely using WAP semantics - Soda contracts gate promotion to the public schema. Failed contracts block publication to protect consumers."
+gate = "Published CADP tables in public schema (purpose__data_id), validated by Soda data contracts, via atomic zero-copy clone."
+process = [
+  "WRITE: output is written to private schema P_{PURPOSE} during scheduled run",
+  "AUDIT: Soda data contracts validate output against defined quality thresholds",
+  "PUBLISH: if all contracts pass, zero-copy clone from private to public schema atomically",
+  "BLOCK: if any contract fails, block publish, raise alert, and resolve before retry"
+]
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = ["dbt output is written to P_{PURPOSE} during the run (Write step)","After Soda pass, zero-copy clone transfers data atomically to the public schema"]
+  [[steps.tools]]
+  name = "Soda"
+  actions = ["Run 'soda scan' against private schema outputs (Audit step)","Review Soda Cloud - all contracts must pass before publish proceeds","If failures: investigate, fix source issue, and re-run before retrying"]
+  [[steps.tools]]
+  name = "Vulcan"
+  actions = ["Confirm WAP (write / audit / publish) steps are configured in Vulcan project files","Verify block-on-failure behavior is active"]
+  [[steps.tools]]
+  name = "GitLab CI/CD"
+  actions = ["CI/CD triggers the publish step only after Soda validation passes","Monitor pipeline to confirm the atomic publish completed successfully"]
+
+[[steps]]
+id = 14
+phase = "Publish"
+title = "Register and Expose CADP for Consumers"
+goal = "Make CADP discoverable, documented, and consumable through a governed PBAC access flow."
+gate = "Published CADP with complete discoverable metadata, governed access path, and consumer-ready documentation."
+process = [
+  "Expose the CADP in the Data Product Portal for consumer discovery",
+  "Complete all metadata: owner, support route, refresh cadence, grain, key columns, usage guidance",
+  "Define the access request and grant process (PBAC-based)",
+  "Optionally store versioned documentation alongside code in GitLab",
+  "Announce availability to relevant consumer teams"
+]
+  [[steps.tools]]
+  name = "Data Product Portal"
+  actions = ["Open the CADP entry and set visibility to published/discoverable","Complete all metadata fields thoroughly","Verify the product appears correctly in the catalog search"]
+  [[steps.tools]]
+  name = "Data Product Manager (DPM)"
+  actions = ["Register metadata, ownership, support route, refresh cadence, and access grant process","Confirm PBAC access path is correctly configured for consumers"]
+  [[steps.tools]]
+  name = "Snowflake"
+  actions = ["Confirm final public schema tables and views are accessible to consumer roles"]
+  [[steps.tools]]
+  name = "GitLab"
+  actions = ["Optionally store consumer-facing documentation in the repo","Tag the release version in GitLab for traceability"]
+</script>
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<script>
+  // ── Inline TOML parser (handles this file's specific TOML structure; no CDN needed) ──
+  function parseCadpToml(text) {
+    const lines = text.split('\n');
+    const result = { meta: {}, steps: [] };
+    let currentStep = null;
+    let currentTool = null;
+    let currentKey = null;
+    let inArray = false;
+    let arrayBuf = [];
+    let ctx = null; // 'meta' | 'step' | 'tool'
+
+    function setVal(key, value) {
+      if (ctx === 'tool' && currentTool) currentTool[key] = value;
+      else if (ctx === 'step' && currentStep) currentStep[key] = value;
+      else if (ctx === 'meta') result.meta[key] = value;
+    }
+
+    function extractStrings(str) {
+      const out = [];
+      const re = /"((?:[^"\\]|\\.)*)"/g;
+      let m;
+      while ((m = re.exec(str)) !== null) {
+        out.push(m[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\'));
+      }
+      return out;
+    }
+
+    for (let i = 0; i < lines.length; i++) {
+      const raw = lines[i];
+      const t = raw.trim();
+
+      if (inArray) {
+        if (t === ']') {
+          setVal(currentKey, extractStrings(arrayBuf.join(' ')));
+          inArray = false; arrayBuf = []; currentKey = null;
+        } else {
+          arrayBuf.push(t);
+        }
+        continue;
+      }
+
+      if (t === '' || t.startsWith('#')) continue;
+
+      if (t === '[[steps.tools]]') {
+        currentTool = { name: '', actions: [] };
+        if (currentStep) { if (!currentStep.tools) currentStep.tools = []; currentStep.tools.push(currentTool); }
+        ctx = 'tool'; continue;
+      }
+      if (t === '[[steps]]') {
+        currentStep = { tools: [] }; result.steps.push(currentStep);
+        currentTool = null; ctx = 'step'; continue;
+      }
+      if (t === '[meta]') { ctx = 'meta'; continue; }
+
+      const eq = t.indexOf(' = ');
+      if (eq < 0) continue;
+      const key = t.slice(0, eq).trim();
+      const val = t.slice(eq + 3).trim();
+
+      if (val === '[') { inArray = true; arrayBuf = []; currentKey = key; continue; }
+      if (val.startsWith('[')) { setVal(key, extractStrings(val)); continue; }
+      if (val.startsWith('"')) {
+        const inner = val.slice(1, val.lastIndexOf('"'));
+        setVal(key, inner.replace(/\\"/g, '"').replace(/\\\\/g, '\\'));
+      } else {
+        setVal(key, isNaN(val) ? val : Number(val));
+      }
+    }
+    return result;
+  }
+</script>
+
+<script>
+  // ── Tool colour map ──────────────────────────────────────────────────
+  const TOOL_COLORS = {
+    'Snowflake':                { bg: '#29B5E8', fg: '#fff' },
+    'GitLab':                   { bg: '#FC6D26', fg: '#fff' },
+    'GitLab CI/CD':             { bg: '#C44D00', fg: '#fff' },
+    'dbt':                      { bg: '#FF694B', fg: '#fff' },
+    'Soda':                     { bg: '#1565C0', fg: '#fff' },
+    'Data Product Portal':      { bg: '#3D7A25', fg: '#fff' },
+    'Data Product Manager (DPM)':{ bg: '#5C6BC0', fg: '#fff' },
+    'Vulcan':                   { bg: '#7B1FA2', fg: '#fff' },
+    'Conveyor / Airflow':       { bg: '#00897B', fg: '#fff' },
+    'Ona / VS Code':            { bg: '#0066B8', fg: '#fff' },
+    'LIAM / 4me':               { bg: '#546E7A', fg: '#fff' },
+    '4me':                      { bg: '#546E7A', fg: '#fff' },
+  };
+  const DEFAULT_COLOR = { bg: '#9E9E9E', fg: '#fff' };
+
+  function toolColor(name) {
+    return TOOL_COLORS[name] || DEFAULT_COLOR;
+  }
+
+  // ── Phase order ──────────────────────────────────────────────────────
+  const PHASE_ORDER = [
+    'Platform Access',
+    'Discovery and Design',
+    'Build and Validate',
+    'Register and Deploy',
+    'Publish'
+  ];
+
+  function phaseId(name) {
+    return 'phase-' + name.replace(/\s+/g, '-').toLowerCase();
+  }
+
+  // ── Render ───────────────────────────────────────────────────────────
+  function render(data) {
+    // Header
+    document.getElementById('pg-title').textContent = data.meta.title;
+    document.getElementById('pg-sub').textContent =
+      data.meta.subtitle + '  |  ' + data.meta.version;
+
+    // Group steps by phase
+    const phaseMap = {};
+    for (const step of data.steps) {
+      if (!phaseMap[step.phase]) phaseMap[step.phase] = [];
+      phaseMap[step.phase].push(step);
+    }
+
+    // Phase nav
+    const nav = document.getElementById('phase-nav');
+    for (const ph of PHASE_ORDER) {
+      if (!phaseMap[ph]) continue;
+      const a = document.createElement('a');
+      a.href = '#' + phaseId(ph);
+      a.textContent = ph;
+      nav.appendChild(a);
+    }
+
+    // Content
+    const content = document.getElementById('content');
+    for (const ph of PHASE_ORDER) {
+      if (!phaseMap[ph]) continue;
+      const block = document.createElement('section');
+      block.className = 'phase-block';
+      block.id = phaseId(ph);
+
+      const stepsHtml = phaseMap[ph].map(s => renderStep(s)).join('');
+      block.innerHTML = `
+        <div class="phase-heading">
+          <span class="phase-pill">${ph}</span>
+          <span class="phase-name">${ph}</span>
+        </div>
+        ${stepsHtml}
+      `;
+      content.appendChild(block);
+    }
+
+    // Accordion toggle — step bodies
+    document.querySelectorAll('.step-card-header').forEach(hdr => {
+      hdr.addEventListener('click', () => {
+        const body = hdr.nextElementSibling;
+        const chev = hdr.querySelector('.step-chevron');
+        body.classList.toggle('open');
+        chev.classList.toggle('open');
+      });
+    });
+
+    // Accordion toggle — tool bodies
+    document.querySelectorAll('.tool-header').forEach(hdr => {
+      hdr.addEventListener('click', () => {
+        const body = hdr.nextElementSibling;
+        const chev = hdr.querySelector('.tool-chev');
+        body.classList.toggle('open');
+        chev.classList.toggle('open');
+      });
+    });
+  }
+
+  function renderStep(s) {
+    const toolsHtml = (s.tools || []).map(t => {
+      const c = toolColor(t.name);
+      const actionsHtml = (t.actions || [])
+        .map(a => `<li>${escHtml(a)}</li>`).join('');
+      return `
+        <div class="tool-panel">
+          <div class="tool-header" style="background:${c.bg}; color:${c.fg};">
+            <span class="tool-name-wrap">
+              <span class="tool-dot" style="background:${c.fg};opacity:0.5;"></span>
+              ${escHtml(t.name)}
+            </span>
+            <span class="tool-chev">&#9660;</span>
+          </div>
+          <div class="tool-body">
+            <ol>${actionsHtml}</ol>
+          </div>
+        </div>`;
+    }).join('');
+
+    const processHtml = (s.process || [])
+      .map(p => `<li>${escHtml(p)}</li>`).join('');
+
+    return `
+      <div class="step-card">
+        <div class="step-card-header">
+          <div class="step-num">${s.id}</div>
+          <div class="step-title">${escHtml(s.title)}</div>
+          <div class="step-chevron">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <div class="two-col">
+            <div>
+              <div class="sec-label"><span>🎯</span> Goal</div>
+              <div class="goal-box">${escHtml(s.goal)}</div>
+            </div>
+            <div>
+              <div class="sec-label"><span>✅</span> Gate</div>
+              <div class="gate-box">
+                <span class="gate-check">&#10003;</span>
+                <span>${escHtml(s.gate)}</span>
+              </div>
+            </div>
+          </div>
+          <div class="sec-full">
+            <div class="sec-label"><span>📋</span> Process Steps</div>
+            <ul class="process-list">${processHtml}</ul>
+          </div>
+          <div class="tools-section">
+            <div class="sec-label"><span>🔧</span> How to Work — Tools &amp; Actions</div>
+            <div class="tools-grid">${toolsHtml}</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ── Boot ─────────────────────────────────────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    try {
+      const tomlText = document.getElementById('cadp-data').textContent;
+      const data = parseCadpToml(tomlText);
+      render(data);
+    } catch (e) {
+      document.getElementById('content').innerHTML =
+        `<div style="color:red;padding:40px;">
+          <strong>Failed to parse TOML data.</strong><br>
+          Check the &lt;script type="text/toml"&gt; block for syntax errors.<br><br>
+          <code>${escHtml(e.message)}</code>
+        </div>`;
+      console.error(e);
+    }
+  });
+</script>
+</body>
+</html>

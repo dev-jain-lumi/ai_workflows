@@ -1,16 +1,25 @@
-cadp_process:
+﻿cadp_process:
   source_reference:
-    title: Process-Tool Flow
-    source_file: Process-Tool Flow.xlsx
-    evidence_note: >
-      This YAML is aligned to the CSV matrix maintained in the Excel file in this folder.
-      Steps 0-14 below are treated as the authoritative CADP process.
+    title: CADP End-to-End Process Guide
+    version: "v3 merged - June 2026"
+    canonical: true
+    canonical_note: >
+      This YAML file is the single source of truth for the CADP process.
+      All other artifacts are derived from or must stay aligned with this file.
+    derived_artifacts:
+      - "cadp-process.toml — embedded in cadp-process-guide.html (TOML representation for HTML rendering)"
+      - "Process-Tool Flow enhanced.csv — matrix view of steps x tools"
+      - "cadp-tooling-architecture.puml / .mmd — tooling architecture diagrams"
+      - "cadp-checklist.yaml — gating checklist per phase"
+    update_rule: >
+      To update the process: edit this YAML first, then propagate changes to
+      cadp-process.toml (embedded in the HTML) and Process-Tool Flow enhanced.csv.
 
   practical_definition:
     cadp: Consumer-Aligned Data Product
     meaning: >
       A governed, consumer-facing data product built from approved upstream products and
-      exposed through controlled metadata, access, and publication flows.
+      exposed through controlled metadata, access, and publication flows on the NEO platform.
     key_difference_from_sadp: SADP is source-aligned input; CADP is consumer-aligned output.
 
   process_matrix_columns:
@@ -27,356 +36,604 @@ cadp_process:
     - Vulcan
     - GitLab CI/CD
     - Conveyor / Airflow
-    - DBT
+    - dbt
     - Soda
 
   end_to_end_workflow:
+
     - step: 0
+      phase: Platform Access
       process_step: Onboard with NEO Platform
       developer_objective: >
         Get LIAM, Snowflake, and GitLab access so development can start in the NEO ecosystem.
+        LIAM permission package grants base roles, Snowflake account enables data access,
+        and GitLab SSO enables code collaboration.
       process_steps:
-        - Request LIAM permission package via iam.luminus.be (or 4me self-service request).
-        - Verify Snowflake email and login.
+        - Request LIAM permission package via iam.luminus.be (4me self-service).
+        - Verify Snowflake email mapping and confirm login.
         - Confirm GitLab SSO access.
-        - Ensure all three access points are active.
-      main_output_gate: Active LIAM roles, verified Snowflake login, confirmed GitLab SSO.
+        - Ensure all three access points are active before proceeding.
+      main_output_gate: Active LIAM roles, verified Snowflake login, and confirmed GitLab SSO access.
       technology_support:
-        Data Product Portal: not_applicable
-        Data Product Manager (DPM): not_applicable
-        Snowflake: Verify email mapping, login, and default role.
-        Ona / VS Code: not_applicable
-        GitLab: Confirm SSO login and identity provider group mapping.
-        Vulcan: not_applicable
-        GitLab CI/CD: not_applicable
-        Conveyor / Airflow: not_applicable
-        DBT: not_applicable
-        Soda: not_applicable
+        LIAM / 4me: Request NEO platform permission package via iam.luminus.be self-service.
+        Snowflake: Verify email mapping per NEO onboarding guide; confirm login and default role work.
+        GitLab: Confirm SSO access; verify user appears in correct identity provider group.
+      tool_how_to_work:
+        - tool: LIAM / 4me
+          actions:
+            - Open iam.luminus.be or raise a 4me self-service request.
+            - Request the NEO platform permission package.
+            - Await approval and confirm active roles.
+        - tool: Snowflake
+          actions:
+            - Navigate to the NEO Snowflake URL.
+            - Log in using SSO credentials.
+            - Confirm email mapping and default role work.
+        - tool: GitLab
+          actions:
+            - Navigate to the NEO GitLab instance.
+            - Confirm SSO login works.
+            - Verify your user appears in the correct identity provider group.
 
     - step: 1
-      process_step: Request / Join a Purpose
+      phase: Platform Access
+      process_step: Request or Join a Purpose
       developer_objective: >
         Join or create a Purpose that defines PBAC boundaries for accessible databases and schemas.
+        Purposes determine which databases, schemas, and roles the developer can use.
       process_steps:
-        - Submit 4me NEO Purpose Request.
-        - Purpose owner approves membership.
-        - PBAC roles are assigned.
-        - Purpose-specific Snowflake assets become available.
-      main_output_gate: Approved Purpose membership with assigned PBAC roles.
+        - Submit 4me self-service request for NEO Purpose (or join an existing one).
+        - Purpose owner reviews and approves membership.
+        - PBAC roles are assigned to the developer.
+        - Purpose-specific Snowflake databases and schemas become available upon approval.
+      main_output_gate: >
+        Approved Purpose membership with assigned PBAC roles and accessible
+        Purpose-specific Snowflake databases and schemas.
       technology_support:
-        Data Product Portal: not_applicable
-        Data Product Manager (DPM): Purpose created/confirmed and membership approved.
-        Snowflake: Purpose-specific databases/schemas become accessible after role assignment.
-        Ona / VS Code: not_applicable
-        GitLab: not_applicable
-        Vulcan: not_applicable
-        GitLab CI/CD: not_applicable
-        Conveyor / Airflow: not_applicable
-        DBT: not_applicable
-        Soda: not_applicable
+        "4me": Submit NEO Purpose Request via self-service catalog; monitor until approved.
+        Data Product Manager (DPM): Purpose created/confirmed; developer roles assigned within the Purpose boundary.
+        Snowflake: Purpose-specific databases (P_{PURPOSE}) and schemas become accessible after role assignment.
+      tool_how_to_work:
+        - tool: "4me"
+          actions:
+            - Open 4me and navigate to the self-service catalog.
+            - Submit a NEO Purpose Request or request to join an existing Purpose.
+            - Monitor request status until approved.
+        - tool: Data Product Manager (DPM)
+          actions:
+            - Confirm Purpose exists or is being created in DPM.
+            - Verify developer roles are assigned within the Purpose boundary.
+        - tool: Snowflake
+          actions:
+            - After role assignment, verify P_{PURPOSE} database is accessible.
+            - Confirm purpose-specific schemas respond correctly to test queries.
 
     - step: 2
+      phase: Platform Access
       process_step: Onboard with GitLab
       developer_objective: >
-        Get GitLab team access and align with repo conventions, branching, and MR standards.
+        Get GitLab team access and align with repo conventions, branching, and MR standards
+        so code contributions follow team standards.
       process_steps:
-        - Confirm GitLab SSO login.
-        - Request team group membership.
-        - Clone starter/template repository.
-        - Review branch and MR conventions.
-        - Understand pipeline layout in repo.
-      main_output_gate: Working GitLab access and clear repo operating conventions.
+        - Confirm GitLab SSO login works.
+        - Request team group membership from team lead.
+        - Clone the starter/template repository.
+        - Review branching and MR conventions (feature branches, MR-based merges).
+        - Familiarize with CI/CD pipeline structure in the repo.
+      main_output_gate: Working GitLab access with correct team group membership and understanding of repo conventions.
       technology_support:
-        Data Product Portal: not_applicable
-        Data Product Manager (DPM): not_applicable
-        Snowflake: not_applicable
-        Ona / VS Code: not_applicable
-        GitLab: Team group joined, repo cloned, branching/MR standards understood.
-        Vulcan: not_applicable
-        GitLab CI/CD: Familiarity with repo CI/CD structure.
-        Conveyor / Airflow: not_applicable
-        DBT: not_applicable
-        Soda: not_applicable
+        GitLab: >
+          SSO login confirmed; team group joined; starter repo cloned;
+          branching and MR conventions reviewed; CI/CD pipeline structure understood.
+      tool_how_to_work:
+        - tool: GitLab
+          actions:
+            - Log in via SSO and confirm access.
+            - Request team group membership from your team lead.
+            - Clone the starter/template repository to your local or cloud IDE.
+            - Read the repo branching guide and MR template.
+            - Review .gitlab-ci.yml to understand pipeline stages.
 
     - step: 3
-      process_step: Set up Ona / VS Code Workspace
+      phase: Platform Access
+      process_step: Set Up Ona or VS Code Workspace
       developer_objective: >
-        Connect IDE to Snowflake and GitLab to enable SQL, YAML, and dbt development.
+        Connect the cloud IDE (Ona or VS Code) to Snowflake and GitLab so the developer
+        has a fully functional environment for writing and testing SQL, YAML, and dbt models.
       process_steps:
-        - Open Ona/VS Code workspace.
-        - Configure Snowflake account/role/warehouse/database.
-        - Connect to GitLab repository.
-        - Validate SQL execution in target environment.
-        - Validate dbt run and dbt test locally.
-      main_output_gate: IDE connected to Snowflake/GitLab with working SQL and dbt commands.
+        - Open Ona / VS Code workspace.
+        - Configure Snowflake connection (account, role, warehouse, database).
+        - Connect workspace to GitLab repository.
+        - Validate SQL queries execute against the correct Snowflake environment.
+        - Ensure dbt commands (dbt run, dbt test) work locally.
+      main_output_gate: Working IDE workspace connected to Snowflake and GitLab with validated SQL execution and dbt commands.
       technology_support:
-        Data Product Portal: not_applicable
-        Data Product Manager (DPM): not_applicable
-        Snowflake: Validate role, warehouse, compute, database, and target schemas.
-        Ona / VS Code: Configure workspace and run SQL/dbt commands.
+        "Ona / VS Code": Configure Snowflake connection parameters; connect to GitLab repo; validate SQL execution and dbt commands.
+        Snowflake: Validate active role, warehouse, compute, database, and target schemas respond correctly.
         GitLab: Repository connected and usable from IDE.
-        Vulcan: not_applicable
-        GitLab CI/CD: not_applicable
-        Conveyor / Airflow: not_applicable
-        DBT: Local command execution validated.
-        Soda: not_applicable
+        dbt: Local dbt run and dbt test commands validated.
+      tool_how_to_work:
+        - tool: "Ona / VS Code"
+          actions:
+            - Open workspace or create a new one.
+            - Install required extensions (Snowflake, dbt Power User, GitLens).
+            - Configure Snowflake connection parameters in workspace settings.
+        - tool: Snowflake
+          actions:
+            - Validate active role, warehouse, and target database respond correctly.
+            - Run a test query against the P_{PURPOSE} schema.
+        - tool: GitLab
+          actions:
+            - Connect workspace to the cloned repository.
+            - Confirm you can pull, commit, and push from the IDE.
+        - tool: dbt
+          actions:
+            - Run 'dbt debug' to confirm profile and Snowflake connection.
+            - Run 'dbt compile' to validate model syntax.
+            - Run 'dbt test' to confirm the test framework is operational.
 
     - step: 4
+      phase: Discovery and Design
       process_step: Discover Upstream Data Products
+      practical_note: >
+        When the upstream SADP already exists, steps 4-6 are significantly faster.
+        Skip the SADP creation lifecycle and go straight to confirming grain, cadence,
+        ownership, and coverage directly in the Portal.
       developer_objective: >
-        Identify upstream SADP/ADP/CADP inputs that best match consumer use case requirements.
+        Identify which existing SADPs, ADPs, or CADPs will serve as upstream inputs
+        for the new CADP. Confirm grain, cadence, ownership, and coverage.
       process_steps:
-        - Search Data Product Portal catalog.
-        - Compare products by grain, coverage, cadence, ownership.
-        - Review metadata and agreement context.
-        - Shortlist candidate upstream products and support routes.
-      main_output_gate: Shortlist of relevant upstream products with owner/grain/cadence.
+        - Search the Data Product Portal catalog for relevant upstream data products.
+        - Compare candidate products by grain, refresh cadence, ownership, and coverage.
+        - Review metadata, descriptions, and data agreements.
+        - Shortlist the most suitable upstream products and note their owners and support routes.
+      main_output_gate: >
+        Shortlist of relevant upstream data products (SADPs/ADPs/CADPs) confirmed,
+        with known owner, purpose, grain, and refresh cadence.
       technology_support:
-        Data Product Portal: Search and compare upstream products.
-        Data Product Manager (DPM): Check owner, metadata, agreements, support routes.
-        Snowflake: Upstream public schemas exist (access may still be pending).
-        Ona / VS Code: not_applicable
-        GitLab: not_applicable
-        Vulcan: not_applicable
-        GitLab CI/CD: not_applicable
-        Conveyor / Airflow: not_applicable
-        DBT: not_applicable
-        Soda: not_applicable
+        Data Product Portal: Search catalog; identify relevant upstream products; compare by grain, coverage, and refresh cadence.
+        Data Product Manager (DPM): View owner, metadata, data agreements, and support route for each candidate.
+        Snowflake: Upstream product schemas exist in public schemas but may not yet be accessible to the developer.
+      tool_how_to_work:
+        - tool: Data Product Portal
+          actions:
+            - Open the Portal and use search/filter to find candidate upstream products.
+            - Compare grain, cadence, and ownership across candidates.
+            - Note data agreement status and support contact for each shortlisted product.
+        - tool: Data Product Manager (DPM)
+          actions:
+            - View ownership, metadata, and support route for each candidate.
+            - Confirm data agreements are available to request.
 
     - step: 5
+      phase: Discovery and Design
       process_step: Request Upstream Data Product Access
       developer_objective: >
         Obtain approved PBAC read access to all required upstream public schemas.
+        Access is governed by PBAC — the Purpose owner must approve, and roles are
+        granted at the schema level.
       process_steps:
-        - Raise access requests from product entries in Portal.
-        - Purpose owner approves data agreements.
-        - Assign schema-level PBAC read roles.
-        - Verify access by querying upstream tables.
-      main_output_gate: Approved agreements and working read permissions on required inputs.
+        - Initiate access request from the Data Product Portal entry for each upstream product.
+        - Purpose owner reviews and approves the data agreement.
+        - PBAC roles granting read access to the upstream public schema are assigned.
+        - Verify read access works by querying the upstream tables in Snowflake.
+      main_output_gate: Approved data agreements and working read permissions to all required upstream public schemas.
       technology_support:
-        Data Product Portal: Access request initiation point.
-        Data Product Manager (DPM): Manage approval workflow and metadata linkage.
-        Snowflake: Apply PBAC roles and verify read access.
-        Ona / VS Code: not_applicable
-        GitLab: Track references/implementation links if needed.
-        Vulcan: not_applicable
-        GitLab CI/CD: not_applicable
-        Conveyor / Airflow: not_applicable
-        DBT: not_applicable
-        Soda: not_applicable
+        Data Product Portal: Initiate access request from the product entry for each upstream product.
+        Data Product Manager (DPM): Manage approval workflow, data agreements, and metadata linkage.
+        Snowflake: Apply PBAC roles and read access to upstream public schemas after approval; verify by querying upstream tables.
+        GitLab: Track request references or linked implementation items if needed.
+      tool_how_to_work:
+        - tool: Data Product Portal
+          actions:
+            - Open the upstream product entry in the Portal.
+            - Click Request Access and complete the access request form.
+            - Monitor request status until approved.
+        - tool: Data Product Manager (DPM)
+          actions:
+            - Track approval workflow progress in DPM.
+            - Confirm data agreement is linked and approved.
+        - tool: Snowflake
+          actions:
+            - After PBAC role assignment, run a test query against the upstream public schema.
+            - Verify expected tables are readable with your assigned role.
 
     - step: 6
+      phase: Discovery and Design
       process_step: Inspect Upstream Data Product Content
       developer_objective: >
-        Profile structure, grain, keys, cadence, and quality to avoid build surprises.
+        Profile structure, grain, keys, cadence, and quality before designing the CADP
+        contract. Understand upstream semantics to avoid build surprises.
       process_steps:
-        - Review product guidance and refresh patterns.
-        - Inspect tables/columns/types/keys.
-        - Profile nulls, duplicates, cardinality, edge cases.
-        - Evaluate join feasibility across products.
-        - Document findings and quality concerns.
-      main_output_gate: Source assessment with quality notes and join feasibility.
+        - Review product descriptions, refresh cadence, and usage guidance in the Portal.
+        - Inspect tables, columns, primary/foreign keys, and data types in Snowflake.
+        - Profile sample data: check for nulls, duplicates, cardinality, and edge cases.
+        - Assess join feasibility between multiple upstream products.
+        - Document findings, data quality concerns, and assumptions.
+      main_output_gate: >
+        Initial source assessment: tables, columns, grain, refresh cadence, join feasibility,
+        data quality notes, and usability assessment.
       technology_support:
-        Data Product Portal: Review description, cadence, and usage guidance.
-        Data Product Manager (DPM): Validate ownership and prerequisite access status.
-        Snowflake: Inspect upstream tables, keys, types, and sample data.
-        Ona / VS Code: Run exploratory profiling SQL.
-        GitLab: Store profiling notes if useful.
-        Vulcan: not_applicable
-        GitLab CI/CD: not_applicable
-        Conveyor / Airflow: not_applicable
-        DBT: not_applicable
-        Soda: not_applicable
+        Data Product Portal: Review description, refresh cadence, and usage guidance.
+        Data Product Manager (DPM): Check ownership and access prerequisites.
+        Snowflake: Inspect tables, columns, primary/foreign keys, data types, and sample data in upstream public schemas.
+        "Ona / VS Code": Run exploratory SQL to profile data; check nulls, duplicates, cardinality, and edge cases.
+        GitLab: Capture exploratory queries and profiling notes in feature branch.
+      tool_how_to_work:
+        - tool: Data Product Portal
+          actions:
+            - Read the product description, refresh cadence, and usage notes.
+            - Note any known limitations or usage guidance.
+        - tool: Snowflake
+          actions:
+            - Run SHOW TABLES and DESCRIBE TABLE on upstream public schemas.
+            - Query sample rows to understand value distributions.
+            - Run profiling queries to check nulls, duplicates, and edge cases.
+        - tool: "Ona / VS Code"
+          actions:
+            - Write exploratory SQL queries to profile cardinality and join keys.
+            - Document findings in a profiling note file in the workspace.
+        - tool: GitLab
+          actions:
+            - Commit profiling notes and exploratory queries to the feature branch for traceability.
 
     - step: 7
+      phase: Discovery and Design
       process_step: Define CADP Design
       developer_objective: >
-        Define CADP contract before coding: grain, facts/dimensions, tests, naming, publish intent.
+        Translate the consumer use case into a stable, well-documented CADP contract before
+        heavy coding starts. Define the target grain, facts, dimensions, keys, naming
+        conventions, test expectations, and publish intent.
       process_steps:
-        - Check for existing products to avoid duplication.
-        - Define grain, facts, dimensions, keys, naming.
-        - Define dbt tests and materializations.
-        - Document decisions in ADR/design notes.
-        - Plan publish exposure in public schema.
-      main_output_gate: CADP design blueprint documented and agreed.
+        - Check the Portal for existing products to avoid duplication and align naming.
+        - Define the grain (what does one row represent?).
+        - Identify facts (measures) and dimensions (attributes).
+        - Define primary keys, foreign keys, and naming per S&G Data Product Modeling Principles.
+          CADPs reuse business keys from SADPs — never create new ones.
+        - Specify expected dbt tests (uniqueness, not_null, relationships, accepted_values)
+          and materialization strategy.
+        - Document design decisions in ADRs or design notes.
+        - Plan the publish intent: what will the public schema expose?
+      main_output_gate: >
+        CADP design blueprint documented and approved for build: grain, facts, dimensions,
+        keys, naming conventions, test strategy, and publish intent.
       technology_support:
-        Data Product Portal: Check existing products and naming alignment.
-        Data Product Manager (DPM): Define metadata/ownership/publication expectations.
-        Snowflake: Analyze source structure and feasible joins/measures.
-        Ona / VS Code: Draft ERDs, notes, and exploratory queries.
-        GitLab: Store ADRs and design artifacts.
-        Vulcan: Identify runtime and publish configuration requirements.
-        GitLab CI/CD: not_applicable
-        Conveyor / Airflow: not_applicable
-        DBT: Define target models and test strategy.
+        Data Product Portal: Check for existing products to avoid duplication and align naming.
+        Data Product Manager (DPM): Define metadata requirements, ownership fields, and publication expectations.
+        Snowflake: Analyse upstream structure, grain, keys, and feasible joins/measures.
+        "Ona / VS Code": Draft ERDs, design notes, and exploratory queries.
+        GitLab: Store design artefacts, ADRs, and modelling decisions in the repo.
+        Vulcan: Identify runtime and publish configuration needs (materialization strategy, schedule_type).
+        dbt: Define target models, facts, dimensions, tests, and materializations in dbt project structure.
         Soda: Define contract expectations for downstream quality gates.
+      tool_how_to_work:
+        - tool: Data Product Portal
+          actions:
+            - Search for existing products to avoid naming conflicts.
+            - Confirm naming alignment with established conventions.
+        - tool: Data Product Manager (DPM)
+          actions:
+            - Define metadata requirements, ownership fields, and publication expectations early.
+        - tool: "Ona / VS Code"
+          actions:
+            - Draft ERD or table design notes in the workspace.
+            - Write design queries to validate grain and key assumptions in Snowflake.
+        - tool: GitLab
+          actions:
+            - Create a design ADR or design-notes.md in the repo.
+            - Store all modelling decisions and assumptions for peer review.
+        - tool: Vulcan
+          actions:
+            - Identify runtime configuration needs: schedule_type, materialization strategy, publish intent.
+        - tool: dbt
+          actions:
+            - Sketch model structure: stg_, int_, fct_, dim_ layer plan.
+            - Define schema.yml test expectations for each target model.
 
     - step: 8
+      phase: Build and Validate
       process_step: Build Transformation Logic
       developer_objective: >
-        Implement dbt model layers (stg -> int -> marts) with tests and config.
+        Implement dbt model layers (staging to intermediate to marts) that convert upstream
+        inputs into governed, business-ready outputs following dbt and Vulcan conventions.
       process_steps:
-        - Build stg_ models (clean/rename/cast).
-        - Build int_ models (joins and business logic).
-        - Build fct_ and dim_ marts.
-        - Configure model materializations.
-        - Add schema/custom dbt tests.
-        - Iterate in DEV schema P_{PURPOSE}.
-      main_output_gate: Working DEV models with testable outputs.
+        - Build stg_ models that rename, cast, and clean upstream columns.
+        - Build int_ models for complex joins, aggregations, and business logic.
+        - Build fct_ and dim_ mart models representing the final CADP contract.
+        - Configure materializations (view, table, incremental) per model.
+        - Add dbt schema and custom tests to each model.
+        - Iterate in DEV schema P_{PURPOSE}: run models, inspect results, fix issues.
+      main_output_gate: >
+        Working DEV models producing intermediate and final CADP outputs in
+        the P_{PURPOSE} schema with passing dbt tests.
       technology_support:
-        Data Product Portal: not_applicable
-        Data Product Manager (DPM): not_applicable
-        Snowflake: Execute models and persist DEV outputs for iteration.
-        Ona / VS Code: Write/run/debug SQL, YAML, and dbt config.
-        GitLab: Version changes continuously in feature branch.
-        Vulcan: Define runtime and publish behavior in project files.
-        GitLab CI/CD: Prepare automated checks for merge/deploy.
-        Conveyor / Airflow: not_applicable
-        DBT: Build staging/intermediate/fact/dim models with tests.
-        Soda: not_applicable
+        Snowflake: Execute dbt models in DEV schema P_{PURPOSE} and persist outputs for iteration and inspection.
+        "Ona / VS Code": Write, run, and debug SQL, YAML, and dbt model config; iterate on model logic.
+        GitLab: Version code changes continuously; commit frequently to feature branch.
+        Vulcan: Define runtime configuration and publish behavior in Vulcan project files.
+        GitLab CI/CD: Prepare automated checks for later deployment (CI pipeline validates on MR).
+        dbt: Build staging (stg_), intermediate (int_), fact (fct_), and dimension (dim_) models with tests.
+      tool_how_to_work:
+        - tool: Snowflake
+          actions:
+            - Execute dbt models targeting P_{PURPOSE} DEV schema.
+            - Inspect output tables after each run to verify correctness.
+        - tool: "Ona / VS Code"
+          actions:
+            - Write and iterate on SQL, YAML config, and dbt model files.
+            - Use dbt Power User extension for inline model preview and lineage.
+        - tool: GitLab
+          actions:
+            - Commit changes frequently to the feature branch.
+            - Keep commit messages descriptive for MR review.
+        - tool: Vulcan
+          actions:
+            - Define runtime and publish behavior in Vulcan project files.
+            - Specify materialization strategy and target schema in config.
+        - tool: GitLab CI/CD
+          actions:
+            - Prepare automated checks (linting, dbt compile) triggered on MR.
+        - tool: dbt
+          actions:
+            - Run 'dbt run --select stg_*' to build and validate staging layer.
+            - Run 'dbt run --select int_*' for intermediate layer.
+            - Run 'dbt run --select fct_* dim_*' for mart layer.
+            - Run 'dbt test' to validate all schema and custom tests.
 
     - step: 9
+      phase: Build and Validate
       process_step: Validate CADP Output
       developer_objective: >
-        Prove quality, correctness, reconciliation, and performance before deployment.
+        Prove that the CADP output is correct, trustworthy, and fit for consumer use.
+        Validate data quality, business logic, reconciliation against source, and
+        performance before moving to deployment.
       process_steps:
-        - Run dbt tests (uniqueness/not_null/relationships/accepted_values/custom).
-        - Validate joins, duplicates, nulls, orphan keys, row counts.
-        - Reconcile against trusted upstream totals.
-        - Check performance and materialization behavior.
-        - Run Soda contracts and resolve defects.
-      main_output_gate: Accepted DEV output with dbt tests and Soda contracts passing.
+        - Run all dbt tests (uniqueness, not_null, relationships, accepted_values, custom).
+        - Validate data quality: check joins, duplicates, nulls, orphan keys, and row counts.
+        - Reconcile CADP output against trusted upstream source totals where possible.
+        - Check query performance and materialization efficiency.
+        - Run Soda data contracts to validate quality gates.
+        - Fix any defects found and re-validate until all checks pass.
+      main_output_gate: >
+        Accepted DEV-quality output with all dbt tests passing, Soda contracts validated,
+        reconciliation confirmed, and defects resolved.
       technology_support:
-        Data Product Portal: not_applicable
-        Data Product Manager (DPM): Support publication readiness if validation passes.
-        Snowflake: Validate data quality and performance in DEV.
-        Ona / VS Code: Debug and reconcile unexpected results.
-        GitLab: Track fixes in reviewable branch history.
-        Vulcan: Adjust runtime/materialization config as needed.
-        GitLab CI/CD: Run branch-level validation where available.
-        Conveyor / Airflow: not_applicable
-        DBT: Execute tests and semantic validation checks.
-        Soda: Run data contracts and review Soda Cloud outcomes.
+        Data Product Manager (DPM): Support publication readiness tracking if validation passes.
+        Snowflake: Validate data quality, joins, duplicates, nulls, reconciliation, and query performance in DEV schema.
+        "Ona / VS Code": Debug unexpected query results and run reconciliation queries.
+        GitLab: Track fixes and reviewable changes in feature branch history.
+        Vulcan: Adjust runtime/materialization config if validation exposes issues.
+        GitLab CI/CD: Run branch-level CI validation where available (pipeline on MR).
+        dbt: Execute dbt tests and semantic validations.
+        Soda: Run Soda data contracts; validate quality checks; review results in Soda Cloud.
+      tool_how_to_work:
+        - tool: dbt
+          actions:
+            - Run 'dbt test --select <model_name>' per model to isolate failures.
+            - Review test output, resolve failures, and document fixes.
+            - Run 'dbt test' across the full project before declaring done.
+        - tool: Soda
+          actions:
+            - Write Soda contract YAML for key quality dimensions (nulls, uniqueness, freshness).
+            - Run 'soda scan' against the DEV schema outputs.
+            - Review results in Soda Cloud and resolve any contract failures.
+        - tool: Snowflake
+          actions:
+            - Run reconciliation queries comparing CADP totals to upstream source totals.
+            - Check query execution plans for performance bottlenecks.
+        - tool: "Ona / VS Code"
+          actions:
+            - Debug unexpected query results interactively.
+            - Write and iterate on reconciliation scripts.
+        - tool: GitLab CI/CD
+          actions:
+            - Push branch and trigger CI pipeline for automated validation.
+            - Review pipeline pass/fail status before raising MR.
 
     - step: 10
+      phase: Register and Deploy
       process_step: Register CADP in Data Product Manager
       developer_objective: >
-        Register CADP and provision public schema before CI/CD deploy targeting can succeed.
+        Register the CADP in the Data Product Manager so that the public Snowflake schema
+        (purpose__data_id) is provisioned. This must happen before CI/CD deployment can
+        succeed because the deployment target schema must exist first.
       process_steps:
-        - Create CADP entry in DPM.
-        - Define schema naming convention (<purpose>__<data_id>).
-        - Configure ownership, metadata, support route.
+        - Create a new data product entry in the Data Product Manager.
+        - Define the public schema name following the naming convention (purpose__data_id).
+        - Configure ownership, metadata, and support route.
         - Trigger public schema provisioning in Snowflake.
-        - Update Vulcan config with data product ID.
-      main_output_gate: Registered CADP with provisioned public schema and linked Vulcan config.
+        - Confirm the public schema exists and is ready to receive data.
+        - Update the Vulcan project to reference the registered data product ID.
+      main_output_gate: >
+        Registered CADP with provisioned public schema (purpose__data_id) in Snowflake,
+        referenced in Vulcan project config.
       technology_support:
-        Data Product Portal: not_applicable
-        Data Product Manager (DPM): Create product entry and provision public schema workflow.
-        Snowflake: Provision public schema for publication target.
-        Ona / VS Code: not_applicable
-        GitLab: not_applicable
-        Vulcan: Reference registered data product ID in project files.
-        GitLab CI/CD: not_applicable
-        Conveyor / Airflow: not_applicable
-        DBT: not_applicable
-        Soda: not_applicable
+        Data Product Manager (DPM): Create CADP entry; define schema name (purpose__data_id); provision public schema; configure ownership and metadata.
+        Snowflake: Public schema (purpose__data_id) provisioned and accessible to the deployment pipeline.
+        Vulcan: Vulcan project references registered data product ID in configuration.
+      tool_how_to_work:
+        - tool: Data Product Manager (DPM)
+          actions:
+            - Open DPM and create a new CADP entry.
+            - Fill in schema name (purpose__data_id), owner, support route, and metadata.
+            - Trigger the provisioning workflow to create the public schema in Snowflake.
+        - tool: Snowflake
+          actions:
+            - Verify the public schema (purpose__data_id) has been created.
+            - Confirm it is accessible with your assigned role.
+        - tool: Vulcan
+          actions:
+            - Update Vulcan project files to reference the registered data product ID.
+            - Confirm the publish target points to the newly provisioned public schema.
 
     - step: 11
+      phase: Register and Deploy
       process_step: Deploy CADP Pipeline
       developer_objective: >
-        Move approved logic to controlled deployment and make runtime execution ready.
+        Move approved logic to controlled deployment. Code is merged, CI/CD validates
+        and deploys, and the pipeline becomes executable in production.
       process_steps:
-        - Finalize branch code/config and ensure checks pass.
-        - Create MR, address feedback, obtain approvals.
-        - Merge to main/approved branch.
-        - Trigger CI/CD validation/build/deploy.
-        - Verify deployed runtime/pipeline configuration.
-      main_output_gate: Successful CI/CD deploy with executable production configuration.
+        - Finalize code and configuration; ensure all tests pass on feature branch.
+        - Create a Merge Request (MR) for peer review.
+        - Address review feedback and get MR approved.
+        - Merge code to main / approved branch.
+        - CI/CD pipeline triggers: validates, builds, and deploys.
+        - Verify deployment succeeded: pipeline definition and runtime config are in place.
+      main_output_gate: Deployed pipeline definition and executable production configuration with successful CI/CD run.
       technology_support:
-        Data Product Portal: not_applicable
-        Data Product Manager (DPM): not_applicable
-        Snowflake: Receive deployed definitions and target objects.
-        Ona / VS Code: Final release handoff and validation support.
         GitLab: MR review, approvals, and merge control.
-        Vulcan: Provide runtime schedule/dependency/parameter config.
-        GitLab CI/CD: Validate and deploy pipeline/config.
-        Conveyor / Airflow: Register DAG/job definition.
-        DBT: Deployed project ready for runtime execution.
-        Soda: Optional pre-publish gating checks in deployment flow.
+        Vulcan: Provide runtime schedule, dependency, and parameter config before merge.
+        GitLab CI/CD: Validate, build, and deploy pipeline/config on merge to main.
+        Conveyor / Airflow: Register DAG or job definition after deployment.
+        dbt: Deployed dbt project correctly wired to production Snowflake targets.
+      tool_how_to_work:
+        - tool: GitLab
+          actions:
+            - Open a Merge Request from your feature branch.
+            - Assign reviewers and address all review feedback.
+            - Get MR approval and merge to main.
+        - tool: Vulcan
+          actions:
+            - Confirm runtime configuration (schedule, dependencies, parameters) is correct before merge.
+        - tool: GitLab CI/CD
+          actions:
+            - Monitor pipeline triggered by the merge to main.
+            - Confirm all stages (validate, build, deploy) pass green.
+            - Review deployment logs for any errors.
+        - tool: Conveyor / Airflow
+          actions:
+            - Confirm the DAG or job definition has been registered after deployment.
+        - tool: dbt
+          actions:
+            - Confirm the deployed dbt project is correctly wired to production Snowflake targets.
 
     - step: 12
+      phase: Register and Deploy
       process_step: Run Scheduled Refresh
       developer_objective: >
-        Execute recurring refreshes using event-driven triggers and operational monitoring.
+        Execute recurring refreshes using event-driven triggers on upstream SADP updates
+        and establish operational monitoring.
       process_steps:
-        - Configure schedule_type: events in Vulcan.
-        - Verify first production run.
-        - Monitor ongoing runs and alerting.
-        - Handle reruns/backfills as required.
-      main_output_gate: Stable recurring production refresh with monitoring and alertability.
+        - Configure schedule_type events in Vulcan to trigger on upstream SADP refresh.
+        - Verify the first production run completes successfully.
+        - Monitor subsequent runs for failures, performance degradation, or quality issues.
+        - Set up alerting for failed runs.
+        - Handle reruns and backfills as needed.
+      main_output_gate: >
+        Stable recurring production runs with refreshed CADP data in private schema
+        P_{PURPOSE}, monitored and alertable.
       technology_support:
-        Data Product Portal: not_applicable
-        Data Product Manager (DPM): not_applicable
-        Snowflake: Read upstream public schemas and write refreshed private outputs.
-        Ona / VS Code: not_applicable
-        GitLab: Remains source of truth for deployed logic.
-        Vulcan: Supply event-trigger schedule and runtime parameters.
-        GitLab CI/CD: not_applicable
-        Conveyor / Airflow: Schedule/trigger/monitor/rerun/backfill jobs.
-        DBT: Execute transformation logic per run.
-        Soda: Validate quality contracts per run.
+        Snowflake: Read upstream public schemas and write refreshed private outputs to P_{PURPOSE}.
+        GitLab: Remains source of truth for deployed transformation logic.
+        Vulcan: Set schedule_type to events; specify upstream SADP event as the trigger condition.
+        Conveyor / Airflow: Schedule, trigger, monitor, rerun, and backfill production jobs.
+        dbt: Execute transformation logic per run; review run artifacts and logs.
+        Soda: Run Soda contracts automatically per refresh; review Soda Cloud for quality alerts.
+      tool_how_to_work:
+        - tool: Vulcan
+          actions:
+            - Set schedule_type to events in Vulcan project config.
+            - Specify the upstream SADP event as the trigger condition.
+            - Confirm runtime parameters (role, warehouse, target schema) are correct.
+        - tool: Conveyor / Airflow
+          actions:
+            - Monitor job execution status after first run.
+            - Set up alerting rules for failed or late runs.
+            - Use rerun/backfill functionality when needed.
+        - tool: dbt
+          actions:
+            - Confirm dbt transformation logic executes correctly in the first production run.
+            - Review run artifacts and logs for unexpected warnings.
+        - tool: Soda
+          actions:
+            - Confirm Soda contracts run automatically as part of each refresh.
+            - Review Soda Cloud for quality alerts after each run.
 
     - step: 13
+      phase: Publish
       process_step: Publish CADP (Write-Audit-Publish)
       developer_objective: >
-        Publish safely by gating promotion on Soda contracts using WAP semantics.
+        Publish safely using WAP semantics. Soda contracts gate promotion to the public
+        schema. Failed contracts block publication to protect consumers.
       process_steps:
-        - Write output to private schema P_{PURPOSE}.
-        - Audit with Soda data contracts.
-        - If pass, zero-copy clone to public schema atomically.
-        - If fail, block publish and alert.
-      main_output_gate: Published public CADP via atomic zero-copy clone after Soda pass.
+        - WRITE: output is written to private schema P_{PURPOSE} during the scheduled run.
+        - AUDIT: Soda data contracts validate output against defined quality thresholds.
+        - PUBLISH: if all contracts pass, zero-copy clone from private to public schema atomically.
+        - BLOCK: if any contract fails, block publish, raise alert, and resolve before retry.
+      main_output_gate: >
+        Published CADP tables in public schema (purpose__data_id), validated by Soda data
+        contracts, via atomic zero-copy clone.
       technology_support:
-        Data Product Portal: not_applicable
         Data Product Manager (DPM): Track publication status and lineage.
-        Snowflake: Private write, audited quality, atomic clone to public schema.
-        Ona / VS Code: not_applicable
-        GitLab: not_applicable
-        Vulcan: Configure WAP write/audit/publish workflow.
-        GitLab CI/CD: Trigger publish step after Soda pass.
+        Snowflake: Private write during run; atomic zero-copy clone to public schema after Soda pass.
+        Vulcan: Configure WAP write/audit/publish workflow; verify block-on-failure behavior is active.
+        GitLab CI/CD: Trigger publish step only after Soda validation passes.
         Conveyor / Airflow: Orchestrate publish execution path if configured.
-        DBT: Source objects for publish are dbt-built outputs.
-        Soda: Contracts gate publish; failures block promotion and raise visibility.
+        dbt: Source objects for publish are dbt-built outputs in private schema.
+        Soda: Run contracts against private schema outputs; failures block promotion and raise visibility.
+      tool_how_to_work:
+        - tool: Snowflake
+          actions:
+            - dbt output is written to P_{PURPOSE} during the run (Write step).
+            - After Soda pass, zero-copy clone transfers data atomically to the public schema.
+        - tool: Soda
+          actions:
+            - Run soda scan against private schema outputs (Audit step).
+            - Review Soda Cloud: all contracts must pass before publish proceeds.
+            - If failures occur: investigate, fix source issue, and re-run before retrying.
+        - tool: Vulcan
+          actions:
+            - Confirm WAP (write/audit/publish) steps are configured in Vulcan project files.
+            - Verify block-on-failure behavior is active.
+        - tool: GitLab CI/CD
+          actions:
+            - CI/CD triggers the publish step only after Soda validation passes.
+            - Monitor pipeline to confirm the atomic publish completed successfully.
 
     - step: 14
+      phase: Publish
       process_step: Register and Expose CADP for Consumers
       developer_objective: >
-        Make CADP discoverable, documented, and consumable through governed access flow.
+        Make CADP discoverable, documented, and consumable through a governed PBAC
+        access flow.
       process_steps:
-        - Expose CADP in Data Product Portal.
-        - Complete metadata: owner, support, cadence, grain, key columns, usage.
-        - Define PBAC-based access path.
-        - Optionally store versioned docs in GitLab.
-        - Announce availability to consumer teams.
-      main_output_gate: Published discoverable CADP with governed access and complete metadata.
+        - Expose the CADP in the Data Product Portal for consumer discovery.
+        - Complete all metadata: owner, support route, refresh cadence, grain, key columns, usage guidance.
+        - Define the access request and grant process (PBAC-based).
+        - Optionally store versioned documentation alongside code in GitLab.
+        - Announce availability to relevant consumer teams.
+      main_output_gate: >
+        Published discoverable CADP with complete metadata, governed PBAC access path,
+        and consumer-ready documentation.
       technology_support:
-        Data Product Portal: Consumer discovery and access-request entry.
-        Data Product Manager (DPM): Register metadata, ownership, support, cadence, grant process.
-        Snowflake: Host final public schema tables/views for consumption.
-        Ona / VS Code: not_applicable
-        GitLab: Optional versioned documentation storage.
-        Vulcan: Optional publish-specific settings.
-        GitLab CI/CD: not_applicable
-        Conveyor / Airflow: not_applicable
-        DBT: Published assets are backed by dbt-modeled outputs.
-        Soda: not_applicable
+        Data Product Portal: Consumer discovery and access-request entry; complete all metadata fields; set product to visible/discoverable.
+        Data Product Manager (DPM): Register metadata, ownership, support route, cadence, and PBAC access grant process.
+        Snowflake: Host final public schema tables and views for consumption by consumer roles.
+        GitLab: Optional versioned consumer-facing documentation; tag release version for traceability.
+      tool_how_to_work:
+        - tool: Data Product Portal
+          actions:
+            - Open the CADP entry and set visibility to published/discoverable.
+            - Complete all metadata fields thoroughly.
+            - Verify the product appears correctly in the catalog search.
+        - tool: Data Product Manager (DPM)
+          actions:
+            - Register metadata, ownership, support route, refresh cadence, and access grant process.
+            - Confirm PBAC access path is correctly configured for consumers.
+        - tool: Snowflake
+          actions:
+            - Confirm final public schema tables and views are accessible to consumer roles.
+        - tool: GitLab
+          actions:
+            - Optionally store consumer-facing documentation in the repo.
+            - Tag the release version in GitLab for traceability.
 
   acceptance_criteria:
     technical:
       - NEO onboarding (LIAM + Snowflake + GitLab SSO) complete before development.
       - Purpose and PBAC roles are approved before upstream access.
       - Upstream read access is approved and queryable before CADP build.
-      - DBT tests pass before deployment.
+      - dbt tests pass before deployment.
       - Soda contracts pass before publish.
       - WAP publish uses atomic zero-copy clone from private to public schema.
       - Scheduled refreshes run successfully with monitoring and alerting.
@@ -384,6 +641,13 @@ cadp_process:
       - CADP registration in DPM is complete before production publish.
       - Ownership, support route, and metadata are complete before consumer exposure.
       - CADP is discoverable in Portal with governed access path.
+      - Business keys from SADPs are reused; CADPs never create new business keys.
+    key_rules:
+      - CADPs reuse business keys from SADPs — never create new business keys.
+      - Schema naming convention: purpose__data_id for public schemas.
+      - Write to P_{PURPOSE} (private); publish to purpose__data_id (public) via WAP only.
+      - dbt naming layers: stg_ (staging) -> int_ (intermediate) -> fct_ (facts) -> dim_ (dimensions).
+      - PBAC access always flows through DPM-governed roles; never bypass data agreements.
 
   one_line_summary: >
     The authoritative CADP process starts with NEO/PBAC onboarding, discovers and approves

@@ -24,13 +24,23 @@ Never accept:
 
 Use the first matching workflow:
 
-1. decision support -> Workflows/decision-quality.md
-2. leadership summary -> Workflows/executive-update.md
-3. meeting prep or follow-up -> Workflows/meeting-prep-and-recap.md
-4. delivery health, risk, dependency review -> Workflows/risk-and-dependency-review.md
-5. planning readiness or PI prep -> Workflows/roadmap-to-pi-planning.md
+1. decision support → [Workflows/decision-quality.md](Workflows/decision-quality.md)
+2. leadership summary → [Workflows/executive-update.md](Workflows/executive-update.md)
+3. meeting prep or follow-up → [Workflows/meeting-prep-and-recap.md](Workflows/meeting-prep-and-recap.md)
+4. delivery health, risk, dependency review → [Workflows/risk-and-dependency-review.md](Workflows/risk-and-dependency-review.md)
+5. planning readiness or PI prep → [Workflows/roadmap-to-pi-planning.md](Workflows/roadmap-to-pi-planning.md)
 
 If no route is clear, ask focused clarifying questions on scope, owner, timeline, and decision rights.
+
+## Key Context
+
+Read before generating any artifact:
+
+- [STRATEGIC_CONTEXT.md](STRATEGIC_CONTEXT.md) — current priorities, constraints, and stakeholders
+- [MANAGEMENT_PRINCIPLES.md](MANAGEMENT_PRINCIPLES.md) — leadership and decision principles
+- [OPERATING_MODEL.md](OPERATING_MODEL.md) — demand-to-delivery operating loop
+- [Templates/](Templates/) — standard output formats; always use instead of inventing structure
+- [COMMANDS.md](COMMANDS.md) — canonical trigger phrases for all workflows
 
 ## Canonical Authoring Pattern
 
@@ -203,7 +213,10 @@ Before marking complete, verify:
 1. every action has an owner and due date or checkpoint
 2. every risk has a mitigation owner
 3. decision ask is explicit when escalation is needed
-4. relevant checklist in Evals/ has been applied
+4. relevant checklist in [Evals/](Evals/) has been applied
+   - decisions → [Evals/decision-quality-check.md](Evals/decision-quality-check.md)
+   - leadership updates → [Evals/executive-clarity-check.md](Evals/executive-clarity-check.md)
+   - all outputs → [Evals/actionability-check.md](Evals/actionability-check.md)
 
 ## Operating Cadence
 
