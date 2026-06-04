@@ -11,21 +11,17 @@ This repo pushes to two remotes:
 
 ---
 
-## Keeping GitHub and GitLab in Sync (Push Mirror)
+## Keeping GitHub and GitLab in Sync
 
-Set up a **GitLab push mirror to GitHub** — every push to GitLab auto-replicates to GitHub. No manual double-push needed.
+GitLab is the **primary remote** (Gitpod source). GitHub is a **manual backup** — push to it occasionally, not on every commit.
 
-**One-time setup in GitLab:**
+```powershell
+# Day-to-day: push to GitLab only
+git push gitlab main
 
-1. GitLab project → **Settings → Repository → Mirroring repositories**
-2. Click **Add new**
-3. Git repository URL: `https://github.com/dev-jain-lumi/ai_workflows.git`
-4. Mirror direction: **Push**
-5. Authentication: use a GitHub Personal Access Token (PAT) with `repo` scope
-   - Generate at: https://github.com/settings/tokens
-6. Click **Mirror repository**
-
-Once set, every `git push gitlab main` will also update GitHub within ~1 minute.
+# Backup to GitHub when needed (e.g. end of week, before major changes)
+git push origin main
+```
 
 ---
 
@@ -57,14 +53,13 @@ Working directly on `main` — this is a private solo repo. Rollback via `git re
 ## Quick Reference
 
 ```powershell
-# Commit and push (local Windows)
+# Day-to-day push (GitLab — primary)
 git add -A
 git commit -m "your message"
-git push gitlab main   # mirror handles GitHub sync
-
-# Push to both manually (if mirror not set up)
-git push origin main
 git push gitlab main
+
+# Backup push to GitHub (manual, as needed)
+git push origin main
 
 # Check remotes
 git remote -v
