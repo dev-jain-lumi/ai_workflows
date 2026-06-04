@@ -31,3 +31,16 @@ Context -> Workflow -> Artifact -> Decision or Action Log -> Review
 ## Artifact Lifecycle
 
 Draft -> Review -> Approved -> Superseded -> Archived
+
+## Authoring Pattern
+
+Knowledge sources live in `Knowledge/` (YAML, CSV, Markdown). Outputs in `Artifacts/` are generated from those sources. Never edit outputs directly — always update the source first, then regenerate.
+
+| Source format | Used for |
+|---|---|
+| YAML / TOML | structured config, process definitions |
+| CSV | planning data, roadmaps, to-do tracking |
+| Markdown | narrative notes, briefs, decisions |
+| PlantUML (`.puml`) | architecture and flow diagrams |
+
+Generated outputs: HTML (shareable), CSV (exchange), Markdown (stakeholder-facing).

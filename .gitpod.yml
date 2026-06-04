@@ -1,0 +1,14 @@
+image: gitpod/workspace-full
+
+tasks:
+  - name: Setup
+    init: |
+      git config user.email "$(git config user.email)"
+      git config user.name "$(git config user.name)"
+    command: echo "Workspace ready. Working on branch $(git branch --show-current)."
+
+vscode:
+  extensions:
+    - GitHub.copilot
+    - GitHub.copilot-chat
+    - ms-vscode.vscode-markdown-pack
