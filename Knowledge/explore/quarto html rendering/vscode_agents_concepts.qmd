@@ -1,0 +1,1976 @@
+---
+title: "Agentic engineering"
+author: "F. Szedleski & C. Combe"
+
+format:
+  beamer:
+    theme: metropolis
+    aspectratio: 169
+    fontsize: 10pt
+  revealjs:
+    theme: dark
+    auto-stretch: false
+    scrollable: true
+    width: 1400
+    slide-number: true
+    preview-links: auto
+    transition: fade
+    smaller: false
+    mermaid:
+      theme: dark
+      config:
+        fontFamily: "Inter, Segoe UI, Arial, sans-serif"
+---
+
+# One Mental Model
+
+<style>
+/* Let wide dataframe-style tables scroll horizontally instead of squeezing columns. */
+.reveal .table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+.reveal .table-scroll table {
+  min-width: max-content;
+  margin: 0;
+}
+.reveal .table-scroll th,
+.reveal .table-scroll td {
+  white-space: nowrap;
+}
+
+.reveal .slash-command-table .table-scroll {
+  width: auto;
+  max-width: 100%;
+}
+
+.reveal .slash-command-table .table-scroll table {
+  width: auto;
+  min-width: 0;
+  table-layout: auto;
+}
+
+.reveal .slash-command-table .table-scroll col {
+  width: auto !important;
+}
+
+.reveal .slash-command-table .table-scroll th,
+.reveal .slash-command-table .table-scroll td {
+  width: auto;
+  white-space: normal;
+}
+
+
+.reveal .slide img.section-zero-image {
+  max-width: none !important;
+  max-height: none !important;
+
+}
+
+.reveal .chat-surface-grid .callout {
+  margin: 0 0 1rem 0;
+  border-radius: 22px;
+  border: 2px solid transparent;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.24);
+}
+
+.reveal .chat-surface-grid .callout .callout-title-container {
+  letter-spacing: 0.04em;
+}
+
+.reveal .chat-surface-grid .callout .callout-body-container {
+  padding-bottom: 0.7rem;
+}
+
+.reveal .chat-surface-grid .callout p {
+  margin: 0.35rem 0;
+}
+
+.reveal .chat-surface-grid .callout code {
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 999px;
+  padding: 0.14rem 0.55rem;
+}
+
+.reveal .chat-surface-grid .chat-view-card {
+  border-color: #23c7b5;
+  background: linear-gradient(135deg, rgba(35, 199, 181, 0.22), rgba(13, 18, 27, 0.96));
+}
+
+.reveal .chat-surface-grid .inline-chat-card {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(20, 17, 12, 0.96));
+}
+
+.reveal .chat-surface-grid .quick-chat-card {
+  border-color: #f97316;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.22), rgba(24, 15, 12, 0.96));
+}
+
+.reveal .chat-surface-grid .agent-mode-card {
+  border-color: #38bdf8;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.22), rgba(12, 17, 25, 0.96));
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  for (const table of document.querySelectorAll(".reveal .slide table")) {
+    if (table.parentElement?.classList.contains("table-scroll")) {
+      continue;
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "table-scroll";
+    table.parentNode.insertBefore(wrapper, table);
+    wrapper.appendChild(table);
+  }
+});
+</script>
+
+This presentation explains:
+
+
+- Your **code**, your rules with custom-instructions & memories
+- **Agents** as specialists that can reason and act
+- **Skills** and **Hooks** as the specialisation layer
+- **MCP** as the context extension layer
+- **Sub-agents** & **Workflows** as the coordination model
+- **Plugins** as the distribution layer for skills, hooks & mcp
+
+# Part 0 : setting the scene {#part-0}
+
+## How a modern LLM gets built
+
+![](vscode_agents_concepts_files/libs/slides/whats_a_llm.png){fig-align="center" .section-zero-image}
+
+An LLM product is a stack, not a single training run.
+
+- **Dataset + preprocessing** decide what signal enters the model
+- **Pre-training** builds the general world model
+- **Post-training** makes it follow instructions and preferences
+- **Optimization + distillation** make it cheap, fast, and deployable
+
+The behavior you see in chat is shaped by the whole pipeline.
+
+## The core architecture is not the surprise anymore
+
+![](vscode_agents_concepts_files/libs/slides/llm_arch_no_change.png){fig-align="center" .section-zero-image}
+
+The last two years did not require a brand-new architecture every quarter.
+
+- transformer-style designs still dominate
+- gains came from better data, post-training, inference, and tooling
+- the stack around the model improved faster than the core model shape
+
+That matters because teams can build operating practices around a moving frontier without waiting for a totally new paradigm.
+
+## Capability kept moving anyway
+
+![](vscode_agents_concepts_files/libs/slides/always_more_complex_tasks.png){fig-align="center" .section-zero-image}
+
+Even with a familiar architecture, frontier capability moved fast enough to change daily engineering work.
+
+- task horizons keep extending from seconds to minutes and hours
+- models can stay on-task long enough to matter on real software workflows
+- the question is no longer "can a model help?" but "which slice of work can it finish reliably?"
+
+## The frontier keeps being repriced
+
+![](vscode_agents_concepts_files/libs/slides/model_race.png){fig-align="center" .section-zero-image}
+
+- benchmark leaders keep rotating
+- model choice is now an operational decision, not a once-a-year platform decision
+- teams need an operating model that survives rapid model churn
+
+## The frontier is jagged
+
+![](vscode_agents_concepts_files/libs/slides/jagged_frontier.png){fig-align="center".section-zero-image}
+
+Raw model power is not the same as reliable execution.
+
+- similar-looking tasks can fall on opposite sides of the frontier
+- decomposition, context, and framing can move work from outside to inside the frontier
+- this is why workflow design matters as much as model choice
+
+## Impact is already visible, but uneven
+
+![](vscode_agents_concepts_files/libs/slides/llm_impacts.png){fig-align="center" .section-zero-image}
+
+Anthropic's usage data points to task-level augmentation, not a flat automation story.
+
+- highest exposure is concentrated in knowledge work
+- observed usage is lower than theoretical coverage
+- software, business, legal, education, and office work are already in scope
+
+The shift starts where work is language-heavy, iterative, and tool-mediated.
+
+## The builder pool is expanding beyond engineers
+
+![](vscode_agents_concepts_files/libs/slides/claude_code.png){fig-align="center" .section-zero-image}
+
+This is the practical shift:
+
+- useful internal tools can now be built by domain experts
+- the person closest to the problem can automate part of it
+- AI-assisted coding is becoming a general problem-solving interface
+
+The point is not that everyone became a software engineer. The point is that software creation is becoming more accessible.
+
+## Why learn AI-assisted coding now
+
+If the architecture is stable, the capability curve is rising, the frontier is jagged, and more people can build, then the differentiator is no longer access to a model.
+
+The differentiator is knowing how to:
+
+- give the model the right context
+- constrain how it acts
+- connect it to real tools and systems
+- verify that its output is actually correct
+
+That is what the rest of this deck is about.
+
+# Part 1 : your code, your rules {#part-1}
+## Team Instructions Matter
+
+`.github/copilot-instructions.md` gives every run the same baseline.
+
+- coding standards
+- testing expectations
+- security rules
+- error-handling conventions
+
+Without shared instructions, each run improvises. With them, output becomes consistent.
+
+---
+
+## Set up your workspace for AI with `/init`
+
+With always-on custom instructions like `copilot-instructions.md` or `AGENTS.md`, you can ensure that the AI uses your project's conventions for generating code.
+
+To prime your project with an initial set of instructions based on your codebase, you can now use the **/init** slash command in chat.
+
+
+- **Discovers** existing AI conventions in your workspace
+- **Analyzes** your codebase structure and patterns
+- **Generates** comprehensive, tailored workspace instructions
+- **Customizable:** `/init` is implemented as a contributed prompt file, allowing you to modify its underlying behavior
+
+---
+
+## The Memory Tool
+
+The **memory tool** allows agents to save and recall notes as they work. You can explicitly ask the agent to remember something or retrieve it. All data is stored locally on your machine.
+
+*Enabled via:* `github.copilot.chat.tools.memory.enabled`
+
+| Scope | Path | Persists Session | Persists Workspace | Use for |
+|---|---|---|---|---|
+| **User** | `/memories/` | Yes | Yes | Preferences, patterns, commands |
+| **Repository** | `/memories/repo/` | Yes | No | Codebase conventions, structure |
+| **Session** | `/memories/session/` | No | No | Task context, in-progress plans |
+
+---
+
+## Using Memory Scopes
+
+
+- **User memory**: Auto-loaded (first 200 lines) across all projects.
+  - *Prompt: "Remember that I prefer tabs over spaces"*
+- **Repository memory**: Scoped to the current workspace and persists across sessions.
+  - *Prompt: "Remember that all API endpoints require authentication"*
+- **Session memory**: Scoped to the current conversation.
+  - *Example: The Plan agent uses this to persist its implementation plans (`plan.md`).*
+
+---
+
+## Managing Memories
+
+Store/retrieve memories simply by talking to the agent (*"What are our commit message conventions?"*).
+
+**Available VS Code Commands:**
+- `Chat: Show Memory Files`
+- `Chat: Clear All Memory Files`
+
+*(Note: Deleting individual memory files is not yet supported. Clear all, or ask the agent to update a specific file to remove outdated information.)*
+
+# Part 2: What is an Agent?
+
+## The Basic Loop
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+```{mermaid}
+%%| fig-width: 4
+%%| fig-height: 3
+%%{init: {'flowchart': {'htmlLabels': false}} }%%
+flowchart LR
+    U["User request"] --> A["Agent"]
+    A --> C["Context"]
+    A --> T["Tools"]
+    A --> D["Decision"]
+    D --> A
+```
+
+:::
+::: {.column width="40%"}
+
+
+1. The agent perceives the **request**
+2. The **context** determines what the model can see
+3. The **tools** determine what the model can do
+4. The agent decides **what to do next**
+
+:::
+::::
+
+---
+
+## Agent Types in VS Code
+
+VS Code uses the word **agent** for 2 related but different things:
+
+- **Built-in agent modes**: product-defined runtimes with their own tool loop
+- **Custom agents**: reusable personas you define in `.agent.md` files
+
+### Built-In Runtime Modes
+
+:::: {.columns}
+::: {.column width="25%"}
+#### Plan Agent
+
+- planning-first workflow before coding
+- explores codebase context and constraints
+- drafts phased steps and validation
+:::
+::: {.column width="25%"}
+#### Coding Agent
+
+- edits files
+- runs commands and tools
+- tests and iterates
+:::
+::: {.column width="25%"}
+#### Third-Party Agent
+
+- supplied by external providers like Codex or Claude
+- may expose its own tool loop and behaviors
+- still runs in the same VS Code chat surface
+- built-in GitHub Copilot auth & billing
+:::
+
+::: {.column width="25%"}
+#### Custom Agent
+
+- user- or team-defined persona in the picker
+- can restrict tools and prefer a model
+- can hand off to other agents
+- defined in a `.agent.md` file
+
+::: {.fragment}
+```yaml
+---
+name: security-reviewer
+tools: ["search", "github"]
+model: GPT-5 (copilot)
+---
+```
+:::
+:::
+::::
+
+Key distinction:
+
+- **Plan, Coding, Third-Party** = runtime harnesses
+- **Custom Agent** = reusable persona layer
+
+![](vscode_agents_concepts_files/libs/slides/agent.png){fig-align="center" width="100%"}
+
+Built-in and third-party agents are mostly **runtime + tool harness**.
+
+![](vscode_agents_concepts_files/libs/slides/agent-loop.png){fig-align="center" width="100%"}
+
+---
+
+## Custom Agents in VS Code
+
+### What They Actually Are
+
+
+- Unlike the built-in modes above, a custom agent is a reusable persona defined in a `.agent.md` file
+- It bundles instructions, allowed tools, optional subagents, and model preferences
+- It is persistent: you switch to it from the agents dropdown instead of re-prompting the same behavior every time
+- It can be user-facing, subagent-only, or both
+
+
+Use a custom agent when you need a stable role such as planner, solution architect, security reviewer, or release manager.
+
+---
+
+### Where Agent Files Live
+
+| Scope | Default location | Why it matters |
+|---|---|---|
+| Workspace | `.github/agents/*.agent.md` | shared with the repo and team |
+| User profile | `~/.copilot/agents/*.agent.md` | reusable across projects |
+
+
+- `chat.agentFilesLocations` can add more workspace discovery paths
+- parent-repository discovery can be enabled for monorepos
+
+
+---
+
+### Frontmatter That Changes Behavior
+
+| Field | Why you care |
+|---|---|
+| `description` | discovery text and picker hint |
+| `tools` | least-privilege tool access |
+| `agents` | which subagents this agent may invoke |
+| `model` | fixed or prioritized model selection |
+| `user-invocable` | show or hide in the picker |
+| `disable-model-invocation` | allow or block use as a subagent |
+| `handoffs` | guided transitions to the next role |
+
+The body of the file is plain Markdown instructions. Those instructions are prepended when the agent is active.
+
+---
+
+### Practical Agent Example
+
+```yaml
+---
+name: planner
+description: Generate an implementation plan before coding
+tools: ["search", "web", "agent"]
+agents: ["implementation", "security-reviewer"]
+model: GPT-5 (copilot)
+handoffs: [{ label: Start Implementation, agent: implementation, prompt: Implement the approved plan above. }, { label: Run Security Review, agent: security-reviewer, prompt: Review the implementation for security regressions. }]
+---
+
+You are an expert system architect and planner.
+Before writing any code, your goal is to break the user's
+request down into actionable chunks.
+
+1. Analyze the dependencies of the requested feature
+2. Create a step-by-step implementation guide
+3. Identify potential security risks
+4. Do not generate code—instead, hand off to the implementation agent
+```
+
+This is more than prompt text. It defines who the agent is allowed to be and what it is allowed to do.
+
+---
+
+### Where Agents Run
+
+Agents are no longer constrained just to your active interactive chat window. They can be executed in the background for long-running or batch tasks.
+
+![Agent Execution Modes](agent-types-diagram-v3.png){fig-align="center" width="60%"}
+
+---
+
+### What Agents can do
+
+AI-powered capabilities can execute actions autonomously. VS Code provides built-in protections:
+
+- **Trust Boundaries**: Explicit consent required for Workspaces, Extension publishers, MCP servers, and Network domains.
+- **Scope & Isolation**: Workspace-limited file access, Session-level temp permissions, Background agent Git worktree isolation.
+- **Approvals & Review**: Diff editor reviews for file changes, explicit tool and terminal approvals.
+- **Sandboxing**: Terminal (`chat.tools.terminal.sandbox.enabled`) and MCP server sandboxing restrict file system and network access.
+- **Hooks**: Use `PreToolUse` hooks to deterministically block dangerous operations (e.g., `rm -rf`).
+- **Enterprise Policies**: Centralized controls to disable agents, restrict extension tools, or manage MCP server sources.
+
+# Part 3: Skills and Hooks
+
+## Skills Package Reusable Expertise
+
+| Skill type | Location |
+|---|---|
+| **Project skills** (repository) | `.github/skills/`, `.claude/skills/`, `.agents/skills/` |
+| **Personal skills** (user profile) | `~/.copilot/skills/`, `~/.claude/skills/`, `~/.agents/skills/` |
+
+**Example structure:**
+```text
+.github/skills/
+├── security-audit/
+├── performance-profiling/
+└── api-design/
+```
+
+
+- A skill is a reusable capability folder (or a single file)
+- It can include instructions, scripts, and supporting resources
+- Agents load skills when a task needs that capability
+- The interoperable format is documented in the [Agent Skills specification](https://agentskills.io/specification)
+- `SKILL.md` contains YAML frontmatter plus Markdown instructions
+- Required fields: `name`, `description`; optional fields include `license`, `compatibility`, `metadata`, and `allowed-tools`
+
+---
+
+## Agent Skills Directory Structure
+
+A skill is a directory containing, at minimum, a `SKILL.md` file.
+
+```text
+skill-name/
+├── SKILL.md          # Required: metadata + instructions
+├── scripts/          # Optional: executable code
+├── references/       # Optional: documentation
+├── assets/           # Optional: templates, resources
+└── ...               # Any additional files or directories
+```
+
+- `SKILL.md` is the entry point an agent reads first
+- Supporting code, docs, and templates can live alongside it
+
+---
+
+## Agent Skills Frontmatter
+
+::: {.slash-command-table}
+| Field | Required | Constraints |
+|---|---|---|
+| `name` | Yes | Max 64 characters. Lowercase letters, numbers, and hyphens only. Must not start or end with a hyphen. |
+| `description` | Yes | Max 1024 characters. Non-empty. Describes what the skill does and when to use it. |
+| `license` | No | License name or reference to a bundled license file. |
+| `compatibility` | No | Max 500 characters. Indicates environment requirements such as intended product, system packages, or network access. |
+| `metadata` | No | Arbitrary key-value mapping for additional metadata. |
+| `allowed-tools` | No | Space-separated string of pre-approved tools the skill may use. Experimental. |
+:::
+
+**Minimal example:**
+```markdown
+---
+name: code-review
+description: Review code for security, correctness, and maintainability issues.
+---
+```
+
+Source: [Agent Skills specification](https://agentskills.io/specification)
+
+---
+
+## Community Skills Resources
+
+Great examples of community-driven skill repositories:
+
+
+- **Airflow skills:** [astronomer/agents](https://github.com/astronomer/agents?tab=readme-ov-file#skills)
+- **dbt skills:** [dbt-labs/dbt-agent-skills](https://github.com/dbt-labs/dbt-agent-skills)
+- **Python skills:** [honnibal/claude-skills](https://github.com/honnibal/claude-skills)
+- **Duckdb skills:** [duckdb/claude-skills](https://github.com/duckdb/duckdb-skills)
+
+---
+
+## Hooks Shape Agent Behavior
+
+:::: {.columns}
+::: {.column width="45%"}
+```{mermaid}
+%%| fig-width: 4
+%%| fig-height: 5
+%%{init: {'flowchart': {'htmlLabels': false}} }%%
+flowchart TD
+    SS(["SessionStart"]) --> UPS["UserPromptSubmit"]
+    UPS -. Context full .-> PC["PreCompact"]
+    UPS --> PLAN["Agent Reasoning"]
+    PC --> PLAN
+
+    PLAN --> PRE["PreToolUse"]
+    PRE --> RUN["Execute Tool"]
+    RUN -. success .-> POST["PostToolUse"]
+    RUN -. failure .-> ERR["OnError"]
+    POST --> PLAN
+    ERR --> PLAN
+
+    PLAN --> SSTART["SubagentStart"]
+    SSTART --> SSTOP["SubagentStop"]
+    SSTOP --> PLAN
+
+    PLAN --> OUT["Return result"]
+    OUT --> STOP(["Stop"])
+```
+:::
+
+::: {.column width="55%"}
+
+| Hook Event | Best Used For |
+|---|---|
+| **SessionStart** | Init state, validate workspace |
+| **UserPromptSubmit** | Audit reqs, inject system context |
+| **PreToolUse** | Block danger operations, get approval |
+| **PostToolUse** | Auto-format, validate tool output |
+| **PreCompact** | Save context before truncation |
+| **SubagentStart/Stop** | Track nested agents, aggregation |
+| **Stop** | Generate reports, cleanup |
+:::
+::::
+
+---
+
+## Hook Example
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "npx prettier --write \"$TOOL_INPUT_FILE_PATH\""
+      }
+    ]
+  }
+}
+```
+
+This turns a manual cleanup step into an automatic rule.
+
+# Part 4: MCP
+
+## MCP Connects Agents to Real Systems
+
+```{mermaid}
+%%| fig-width: 6
+%%| fig-height: 2.5
+%%{init: {'flowchart': {'htmlLabels': false}} }%%
+flowchart LR
+    VS["VS Code host"] --> GH["GitHub MCP"]
+    VS --> CM["Custom MCP"]
+    GH --> GHR["PRs<br/>issues<br/>repos"]
+    CM --> CMR["internal tools<br/>APIs<br/>docs"]
+```
+
+
+- MCP exposes resources and tools
+- Agents can query systems directly instead of relying on pasted context
+- This is what turns chat into a connected engineering interface
+
+
+---
+
+## MCP Flow in Practice
+
+```{mermaid}
+%%| fig-width: 6
+%%| fig-height: 4
+sequenceDiagram
+    participant U as User
+    participant A as Agent
+    participant S as GitHub MCP
+    U->>A: Check if PR 123 has conflicts
+    A->>S: getPRDetails(pr=123)
+    S-->>A: conflicts=true, files affected
+    A-->>U: PR has conflicts and here is where
+```
+
+---
+
+## What a Custom MCP Server Can Expose
+
+
+- employee and org data
+- infrastructure actions
+- finance or operational systems
+- internal documentation and runbooks
+
+
+The important point is not the server itself. The important point is that the agent can act with live context.
+
+---
+
+## Adding an MCP Server via UI
+
+VS Code provides built-in UI commands to easily manage MCP servers.
+
+**Steps:**
+
+1. Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`).
+2. Type and select `MCP: Add Server`.
+3. Choose **Install** (see below) to add a new server (or browse the ones available).
+
+---
+
+## Adding an MCP Server Manually
+
+You can manually define an MCP server in your workspace config file. The location and format depend on your tool:
+
+**VS Code:** `.vscode/mcp.json` with `"servers"` key
+**Copilot CLI:** `.mcp.json` with `"mcpServers"` key
+
+**Example Configuration:**
+```json
+{
+    "servers": {
+        "my-custom-server": {
+            "command": "python",
+            "args": [
+                "/path/to/my_server.py"
+            ],
+            "env": {
+                "API_KEY": "${API_KEY}"
+            }
+        }
+    }
+}
+```
+
+⚠️ **Security Note:** Never hardcode secrets in `.vscode/mcp.json`. Instead, inject credentials via:
+- Environment variables (e.g., `export API_KEY=...`)
+- Local `.env` file (excluded from version control)
+- Secure credential stores (OS Keychain, 1Password, Vault)
+
+After modifying, agents will instantiate the server and have access to its resources and tools!
+
+---
+
+## Setting up Common MCP Servers
+
+Adding an MCP server mostly involves configuring an `mpx` package or a custom standalone script with specific env vars.
+
+:::: {.columns}
+::: {.column width="50%"}
+### GitLab
+```json
+{
+  "servers": {
+      "GitLab": {
+        "command": "npx",
+          "args": [
+                  "mcp-remote",
+                  "https://gitlab.com/api/v4/mcp",
+                  "--static-oauth-client-metadata",
+                  "{\"scope\": \"mcp\"}"
+                  ]
+                }
+              }
+}
+```
+### Atlassian
+```json
+{
+  "servers": {
+    "atlassian": {
+      "type": "sse",
+      "url": "https://mcp.atlassian.com/v1/sse",
+      "command": ""
+    }
+  }
+}
+```
+### Snowflake
+```json
+
+  {
+  "servers": {
+    "mcp-server-snowflake": {
+      "command": "uvx",
+      "args": [
+        "snowflake-labs-mcp",
+        "--service-config-file",
+        "<path_to_file>/tools_config.yaml",
+        "--connection-name",
+        "default"
+      ]
+    }
+  }
+}
+
+```
+:::
+::: {.column width="50%"}
+### Airflow
+```json
+{
+  "servers": {
+    "airflow": {
+      "type": "stdio",
+      "command": "bash",
+      "args": [
+        "-c",
+        "AIRFLOW_API_URL=${AIRFLOW_API_URL} AIRFLOW_AUTH_TOKEN=${AIRFLOW_AUTH_TOKEN} uvx astro-airflow-mcp --transport stdio"
+      ]
+    }
+  }
+}
+```
+*Note: Set `AIRFLOW_API_URL` and `AIRFLOW_AUTH_TOKEN` environment variables before running. Do not commit credentials to version control.*
+
+### AWS
+```json
+{
+  "servers": {
+    "awslabs.aws-serverless-mcp-server": {
+      "command": "uvx",
+      "args": [
+        "awslabs.aws-serverless-mcp-server@latest",
+        "--allow-write",
+        "--allow-sensitive-data-access"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    }
+}}
+```
+### Microsoft IQ (Graph) - https://github.com/microsoft/work-iq
+*(Coming soon via official MS endpoints, typically authorized through identity providers like Entra ID rather than plaintext configs).*
+:::
+::::
+
+# Part 5: Sub-Agents, Workflows & Orchestration
+
+## Agents vs Subagents
+
+| Concept | Who starts it | Main purpose | Persistence |
+|---|---|---|---|
+| **Agent** | the user selects it | own the conversation and workflow | persistent persona and config |
+| **Subagent** | another agent invokes it | solve one focused task and return a result | isolated run inside a parent workflow |
+
+
+- A subagent is not a different primitive by itself; it is an agent used from inside another agent
+- Custom agents can serve as subagents unless `disable-model-invocation: true`
+- `user-invocable: false` hides an agent from the picker while still allowing subagent use
+
+
+---
+
+## Implementing Parallel Work
+
+```{mermaid}
+%%| fig-width: 6
+%%| fig-height: 4
+%%{init: {'flowchart': {'htmlLabels': false}} }%%
+flowchart TD
+    M["Security Audit"] --> S1["Static Code Analysis"]
+    M --> S2["Dependency Vulnerability Check"]
+    M --> S3["Secrets Scanning"]
+    M --> S4["Compliance Review"]
+    S1 --> X["Aggregated Security Report"]
+    S2 --> X
+    S3 --> X
+    S4 --> X
+```
+
+- Use sub-agents when tasks can be split cleanly
+- Parallel work reduces waiting time
+- Isolation helps avoid context bleed and conflicting edits
+
+## Parallel Work Prompt Pattern
+
+You can run subagents programmatically by prompting the agent to invoke them.
+Inside your `.agent.md` instructions, ask the model to use the agents concurrently:
+
+```markdown
+# Instructions
+You are the Lead Security Auditor.
+
+To complete a full review, invoke your subagents concurrently on the provided PR diff:
+1. Use the Static Analyzer agent to check for insecure code patterns.
+2. Use the Dependency Checker agent to verify package versions against CVEs.
+3. Use the Secrets Scanner agent to ensure no keys or tokens are in the diff.
+
+Wait for all agents to return their outputs, then compile their findings into a single unified Markdown report.
+```
+
+### Key Benefits
+
+- **Context efficiency:** Subagents operate in dedicated context windows, preventing overflow.
+- **Specialization:** Different agents can use models optimized specifically for their task.
+- **Parallel execution:** Independent tasks run concurrently across multiple subagents.
+
+---
+
+## Orchestration In Practice: Copilot Orchestra
+
+```{mermaid}
+%%| fig-width: 6
+%%| fig-height: 3.3
+sequenceDiagram
+    participant User
+    participant Conductor
+    participant Planning
+    participant Implement
+    participant Review
+
+    User->>Conductor: Request feature/change
+    Conductor->>Planning: Gather context
+    Planning-->>Conductor: Return findings
+    Conductor->>User: Present plan
+    User-->>Conductor: Approve plan
+
+    loop For each phase
+        Conductor->>Implement: Execute phase (TDD)
+        Implement-->>Conductor: Report completion
+        Conductor->>Review: Review implementation
+        Review-->>Conductor: Return status
+
+        alt Approved
+            Conductor->>User: Present summary & commit message
+            User-->>Conductor: Commit & continue
+        else Needs Revision
+            Conductor->>Implement: Revise with feedback
+        else Failed
+            Conductor->>User: Request guidance
+        end
+    end
+
+    Conductor->>User: Plan complete
+```
+*Copilot Orchestra sequence by @ShepAlderson*
+
+**Community Examples:**
+
+- **Copilot Orchestra:** A multi-agent framework orchestrating a complete development cycle (see preceding slide).
+- **GitHub Copilot Atlas:** An extended system with specialized agents like "Prometheus" (planning), "Oracle" (research), "Sisyphus" (implementation), and "Explorer" (rapid discovery).
+
+# Part 6: Plugins
+
+## Plugins Bundle Capabilities
+
+```{mermaid}
+%%| fig-width: 5
+%%| fig-height: 4
+%%{init: {'flowchart': {'htmlLabels': false}} }%%
+flowchart TD
+    P["Plugin"] --> SK["Skills"]
+    P --> PR["Prompts"]
+    P --> MCP["MCP config"]
+    P --> HK["Hooks"]
+    P --> CMD["Commands"]
+```
+
+Plugins are distribution units. They make a working setup reusable.
+
+---
+
+## Agent vs Skill vs Plugin
+::: {.slash-command-table}
+| Concept | What it is | Typical use |
+|---|---|---|
+| **Agent** | A persistent role with instructions and tool policy | plan, code, review |
+| **Skill** | A reusable capability | audit, profiling, validation |
+| **Plugin** | A packaged collection | share a full setup across teams |
+:::
+If you need a reusable persona with tool restrictions or handoffs, use an agent. If you need portable expertise that many agents can load on demand, use a skill.
+
+# Part 7: Model Updates
+
+## Current Copilot Model Snapshot
+
+As of late May 2026, the GitHub changelog and current Copilot model docs point to this lineup.
+
+:::: {.columns}
+::: {.column width="50%"}
+**OpenAI**
+
+- GPT-5 mini
+- GPT-5.3-Codex
+- GPT-5.4
+- GPT-5.4 mini
+- GPT-5.5
+
+**Anthropic**
+
+- Claude Haiku 4.5
+- Claude Sonnet 4.5, 4.6
+- Claude Opus 4.6, 4.7, 4.8
+:::
+::: {.column width="50%"}
+**Google / GitHub**
+
+- Gemini 2.5 Pro
+- Gemini 3 Flash *(preview)*
+- Gemini 3.1 Pro *(preview)*
+- Gemini 3.5 Flash
+- Raptor mini *(preview)*
+
+**Recent changelog highlights**
+
+- **May 28:** Claude Opus 4.8 became GA in Copilot
+- **May 19:** Gemini 3.5 Flash became GA in Copilot
+- **May 17:** GPT-5.3-Codex became the base model for Copilot Business and Enterprise
+- **May 20:** Auto model selection in VS Code started routing by task
+:::
+::::
+
+*Model availability varies by client, plan, and policy, so treat the picker as a live surface rather than a fixed yearly list.*
+
+---
+
+## Retired And Closing Models
+
+GitHub's current retirement history and May changelog entries changed the picture again.
+
+:::: {.columns}
+::: {.column width="52%"}
+**Closing on June 1, 2026**
+
+- GPT-4.1
+- GPT-5.2
+- GPT-5.2-Codex
+
+**Retired in May 2026**
+
+- **May 15:** Grok Code Fast 1 -> GPT-5 mini
+- **May 7:** Claude Sonnet 4 -> Claude Sonnet 4.6
+:::
+::: {.column width="48%"}
+**Earlier 2026 retirements**
+
+- **Apr 15:** GPT-5.1 -> GPT-5.3-Codex
+- **Apr 1:** GPT-5.1-Codex, GPT-5.1-Codex-Max, GPT-5.1-Codex-Mini -> GPT-5.3-Codex
+- **Mar 26:** Gemini 3 Pro -> Gemini 3.1 Pro
+- **Feb 17:** GPT-5 -> GPT-5.2
+- **Feb 17:** GPT-5-Codex -> GPT-5.2-Codex
+- **Feb 17:** Claude Opus 4.1 -> Claude Opus 4.6
+:::
+::::
+
+*The practical lesson: model names churn faster than team conventions, so keep custom agents and demos aligned with the current picker.*
+
+---
+
+## Reasoning Levels And Billing
+
+:::: {.columns}
+::: {.column width="52%"}
+### What You Can Tune
+
+- In VS Code and Copilot CLI, some models support **configurable reasoning levels**
+- Supported examples include `Claude Sonnet 4.6`, `Claude Opus 4.6`, `Claude Opus 4.7`, `Claude Opus 4.8`, `GPT-5.3-Codex`, `GPT-5.4`, and `GPT-5.5`
+- The same family of models can also support an extended **1 million token** context window
+- Use regular reasoning by default, then increase it when a task genuinely needs deeper multi-step analysis
+:::
+::: {.column width="48%"}
+### Why This Matters Now
+
+- GitHub Copilot moves to **usage-based billing on June 1, 2026**
+- Model choice and token consumption are converted into **AI credits**
+- Higher reasoning levels and larger context windows consume more AI credits
+- Code completions and next edit suggestions remain unlimited on paid plans
+:::
+::::
+
+*Teach the operating habit, not just the model names: pick the model for the task, raise reasoning only when needed, and watch cost once AI credits go live.*
+
+---
+
+![](vscode_agents_concepts_files/libs/slides/llm-costs.png){fig-align="center" width="95%"}
+
+# Key Takeaways
+
+## Which Extension Point Fits?
+
+- Want Copilot to **always** follow team rules: use **custom instructions**
+- Want a **repeatable workflow** you invoke when needed: use a **skill**
+- Want Copilot to work with **external systems**: add an **MCP server**
+- Want **guardrails or automation** around tools and session events: use **hooks**
+- Want a **specialist reviewer** or safer permissions: define a **custom agent**
+- Want Copilot to split off **complex work**: let it use **subagents**
+- Want to ship the whole setup to a team: package it as a **plugin**
+
+Think in terms of scope:
+
+- instructions shape everything
+- skills shape one kind of task
+- hooks shape lifecycle behavior
+- MCP changes capability
+- agents shape specialization
+- plugins shape distribution
+
+### Useful Repositories To Explore
+
+- [github/spec-kit](https://github.com/github/spec-kit)
+- [microsoft/hve-core](https://github.com/microsoft/hve-core)
+- [github/awesome-copilot](https://github.com/github/awesome-copilot)
+- [astronomer/agents](https://github.com/astronomer/agents)
+- [obra/superpowers](https://github.com/obra/superpowers)
+
+# Part 8: GitHub Copilot Chat in VS Code {#part-8}
+
+## Where Chat Shows Up In VS Code
+
+Copilot Chat is the user-facing surface where instructions, agents, tools, and MCP show up in daily work.
+
+:::: {.columns .chat-surface-grid}
+::: {.column width="50%"}
+::: {.callout-note .chat-view-card appearance="simple"}
+### Chat View
+
+**Best for:** longer conversations in the secondary side bar  
+**Shortcut:** `Ctrl+Alt+I`
+:::
+
+::: {.callout-tip .inline-chat-card appearance="simple"}
+### Inline Chat
+
+**Best for:** asking from the editor or terminal without leaving the file you are working in  
+**Shortcut:** `Ctrl+I`
+:::
+:::
+
+::: {.column width="100%"}
+::: {.callout-important .quick-chat-card appearance="simple"}
+### Quick Chat
+
+**Best for:** fast one-off questions without changing your layout  
+**Shortcut:** `Ctrl+Shift+Alt+L`
+:::
+:::
+::::
+
+This is the front door for many of the capabilities from Parts 1 to 6.
+
+---
+
+## Tools And Context In Chat
+
+:::: {.columns}
+::: {.column width="50%"}
+### Add Relevant Context
+
+- **Add Context...** attaches files, symbols, selections, commits, problems, and test failures
+- `#file`, `#folder`, and `#symbol` ground the prompt in specific workspace artifacts
+- Dragging files, folders, or Problems entries into chat is often faster than re-explaining the issue
+- `#` mentions add context or a specific tool directly from the prompt box
+:::
+::: {.column width="50%"}
+### Let Chat Use Tools
+
+- Built-in tool sets cover read, search, edit, execute, web, and subagent delegation
+- MCP servers and extensions can add more tools and live system access
+- Tools change what Copilot can **do**, not just what it can **say**
+- Permission levels still matter: agent mode is most powerful when approvals and scope are configured intentionally
+:::
+::::
+
+---
+
+## Slash Commands Worth Teaching
+
+::: {.slash-command-table}
+| Slash command | Best used for |
+|---|---|
+| `/[prompt-name]` | run a reusable prompt file in chat |
+| `/[skill-name]` | run an agent skill in chat, for example `/webapp-testing` |
+| `/chronicle:*` | query session history, generate standups, and get usage tips from local chat history |
+| `/clear` | start a fresh chat session |
+| `/compact` | summarize a long conversation to preserve context budget |
+| `/create-agent` | generate a custom agent with AI assistance in Agent mode |
+| `/create-hook` | generate a hook configuration with AI assistance in Agent mode |
+| `/create-instruction` | generate an instructions file with AI assistance in Agent mode |
+| `/create-prompt` | generate a prompt file with AI assistance in Agent mode |
+| `/create-skill` | generate an agent skill with AI assistance in Agent mode |
+| `/doc` | generate inline documentation or comments from the editor |
+| `/explain` | explain a code block, file, or concept |
+| `/fix` | repair a selected problem, compiler error, or failing code path |
+| `/init` | create or refresh workspace instructions from the project structure |
+| `/plan` | produce an implementation plan before coding |
+| `/tests` | generate or extend tests for selected code |
+| `/troubleshoot` | analyze agent debug logs for the current chat session or a prior one with `#session` |
+:::
+
+The key distinction from the next section: these are VS Code Chat commands, not Copilot CLI commands.
+
+`/troubleshoot` requires `github.copilot.chat.agentDebugLog.enabled`.
+
+---
+
+### [Chronicle (Experimental)](https://code.visualstudio.com/updates/v1_118#_chronicle-experimental)
+
+See [Query session history with chronicle](https://code.visualstudio.com/docs/copilot/chat/session-insights) for the full reference.
+
+:::: {.columns}
+::: {.column width="52%"}
+#### Set It Up
+
+1. Enable `github.copilot.chat.localIndex.enabled`.
+2. Keep using Copilot Chat normally. Chronicle records session metadata, conversation turns, files touched, and PR, issue, and commit references in a local SQLite database.
+3. Start querying that history once you have a few sessions worth of data.
+4. Run `/chronicle:reindex` if sessions are missing or the local index needs to be rebuilt.
+:::
+::: {.column width="48%"}
+#### Useful Commands
+
+- `/chronicle:standup` creates a standup report from recent sessions.
+- `/chronicle:tips` gives workflow advice based on your own usage patterns.
+- `/chronicle:cost-tips` highlights ways to reduce token usage and cost.
+- `/chronicle:search <query>` finds sessions by keyword, file path, PR, or issue.
+- Free-form questions like `What files did I edit yesterday?` can also search session history.
+:::
+::::
+
+---
+
+## Chat Participants
+
+::: {.slash-command-table}
+| Participant | Best use | Example prompt |
+|---|---|---|
+| `@github` | PRs, issues, repositories, and GitHub activity | `@github show the recent merged PRs in this repo` |
+| `@terminal` | shell commands and terminal output | `@terminal explain why this command failed` |
+| `@vscode` | VS Code features, settings, and extension APIs | `@vscode how do I configure a launch.json for Python?` |
+| Extension participants | domain-specific helpers added by extensions | use these when a tool or platform adds its own specialist participant |
+:::
+
+Participants steer the conversation toward a domain. Tools give the chat session capabilities.
+
+# Part 9: GitHub Copilot CLI
+
+## Github Copilot Cli installation
+
+GitHub Copilot CLI is Copilot's terminal interface. 
+It reached **General Availability on February 25, 2026**.
+
+:::: {.columns}
+::: {.column width="50%"}
+### Install & Launch
+```bash
+# macOS / Linux
+npm install -g @github/copilot
+
+# launch from the folder you want to work in
+copilot
+```
+
+:::
+::: {.column width="50%"}
+### First Things To Know
+
+- Launch `copilot` in a folder that contains the code you want to work with
+- By default, Copilot CLI uses **Claude Sonnet 4.5**
+- Use `/login` inside the session for OAuth but `GH_TOKEN` also works for automation
+:::
+::::
+
+---
+
+## Bring Your Own Model: Copilot CLI + Ollama
+
+Use Ollama when you want Copilot CLI to run against your own local or hosted model instead of the default provider.
+
+:::: {.columns}
+::: {.column width="50%"}
+### Quick Start
+
+```bash
+ollama launch copilot
+ollama launch copilot --model qwen3.5
+
+# headless / CI-style
+ollama launch copilot --model kimi-k2.5:cloud --yes -- -p "how does this repository work?"
+```
+
+- `ollama launch copilot` is the shortest path to a working session
+- pass `--model` when you want a specific local or cloud model
+:::
+::: {.column width="50%"}
+### Manual Wiring
+
+```bash
+export COPILOT_PROVIDER_BASE_URL=http://localhost:11434/v1
+export COPILOT_PROVIDER_API_KEY=
+export COPILOT_PROVIDER_WIRE_API=responses
+export COPILOT_MODEL=qwen3.5
+copilot
+```
+
+- Copilot CLI talks to Ollama through its OpenAI-compatible API
+- prefer models with a large context window; Ollama recommends at least 64k tokens for Copilot CLI
+- examples from the docs: `qwen3.5`, `glm-4.7-flash`, `glm-5:cloud`, `kimi-k2.5:cloud`
+:::
+::::
+
+Source: <https://docs.ollama.com/integrations/copilot-cli>
+
+---
+
+## CLI Workflows And Built-In Agents
+
+### Choose The Workflow
+
+::: {.slash-command-table}
+| Workflow | Trigger | Model | Choose it when |
+|---|---|---|---|
+| Coding | normal interactive session | `claude-sonnet-4.5` | implement changes, run tools, and iterate |
+| Rubber Duck | automatic checkpoints or ask Copilot to critique its work | any Claude model with GPT-5.4 access enabled | get a second opinion after planning, complex implementations, or tests |
+| Review | `/review` | `claude-sonnet-4.5` | inspect a diff for risks, regressions, or missing tests |
+| Research | `/research TOPIC` | `claude-sonnet-4.6` | run a slower repo, GitHub, and web investigation with a saved report |
+| Delegation | `/tasks`, `/fleet` | `claude-haiku-4.5` | hand off long-running or parallel work |
+
+:::
+
+- To start using Rubber Duck, install GitHub Copilot CLI and run `/experimental`.
+- It becomes available when you select any Claude model from the model picker and have access enabled to GPT-5.4.
+- Critiques surface automatically at checkpoints or on demand when you ask Copilot to critique its work; Copilot incorporates the feedback and shows what changed.
+
+---
+
+## Main Session Commands
+
+:::: {.columns}
+::: {.column width="50%"}
+### Everyday Control
+
+- `/model` to view or switch models mid-session
+- `/agent <name>` to load a custom agent
+- `/add-dir <path>` to expand working context
+- `/remote [on|off]` exposes the live session on GitHub.com or GitHub Mobile so you can keep steering it from another device
+- `/session` or `/usage` shows usage metrics for the current CLI session. Use them to audit activity, review model or tool usage, and debug a run
+- `/diff` and `/review` to inspect changes
+- `!<command>` to run a shell command inline
+- `/mcp show|add|auth` manages MCP servers
+- `/undo` or `/rewind` reverts the last turn and file changes
+- `/terminal-setup` fixes multiline input support in terminals that need it
+
+:::
+::: {.column width="50%"}
+### Agentic And Ops
+
+- `/tasks` checks background work
+- `/allow-all` or `/yolo` removes approval prompts, so only use it in trusted environments
+:::
+::::
+
+Slash commands cheat sheet: <https://github.blog/ai-and-ml/github-copilot/a-cheat-sheet-to-slash-commands-in-github-copilot-cli/>
+
+---
+
+## Manage Context Deliberately
+
+:::: {.columns}
+::: {.column width="52%"}
+### Manual Control With `/compact`
+
+- Use `/compact` any time you want Copilot to compress the current context
+- This helps keep long-running sessions focused instead of carrying every earlier turn forward
+- Press `Escape` if you start the command and want to cancel it
+:::
+::: {.column width="48%"}
+### Visualize Usage With `/context`
+
+- `/context` shows a detailed token usage breakdown for the current session
+- Use it to see how your context window is being consumed
+- It is the fastest way to understand whether files, history, or instructions are taking most of the budget
+:::
+::::
+
+---
+
+## Recovery And Session Controls In The Chat UI
+
+Use these once a Copilot chat session is already open.
+
+:::: {.columns}
+::: {.column width="50%"}
+### Resume The Right Session
+
+- `/resume [VALUE]` lets you switch sessions from a list or jump directly by session ID, ID prefix, or session name
+- `/continue` jumps back into the most recent session
+- Use these when you want to pick up work without starting a fresh context window
+:::
+::: {.column width="50%"}
+### Inspect And Manage Sessions
+
+- Bare `/session` matches `/usage` for current-session metrics; `/session ...` and `/sessions ...` manage saved sessions
+- Key subcommands include `info`, `checkpoints [n]`, `files`, `plan`, `rename [NAME]`, `cleanup`, `prune`, `delete [ID]`, and `delete-all`
+- `/session checkpoints` lists session checkpoints; `/session checkpoints NUMBER` shows the checkpoint you want to display
+- `/session files` shows temporary files created during the current session, including artifacts that should not be saved to the repository
+- `/session plan` shows the current plan, if Copilot has generated one
+:::
+::::
+
+---
+
+## Share Or Export Session Output
+
+:::: {.columns}
+::: {.column width="52%"}
+### Available Forms
+
+```bash
+/share [file|html|gist] [session|research] [PATH]
+/export [file|html|gist] [session|research] [PATH]
+```
+
+- Share a live session or a research report as Markdown, interactive HTML, or a GitHub gist
+- `session` targets the current conversation, while `research` targets a saved research report
+- Use `PATH` when you want a specific output file location
+:::
+::: {.column width="48%"}
+### Practical Uses
+
+- `/share html session` creates a browsable interactive export of the current session
+- `/share gist research` is useful when you want to send research findings quickly
+- `/export file session notes.md` saves a Markdown artifact for docs, tickets, or handoff notes
+- Treat `/share` and `/export` as the publishing layer for work done in the CLI
+:::
+::::
+
+---
+
+## Experimental Mode Controls
+
+:::: {.columns}
+::: {.column width="50%"}
+### Enabling Experimental Mode
+```bash
+copilot --experimental    # launch with experimental mode
+# or inside a session:
+/experimental             # enable it from the CLI
+```
+
+Experimental mode enables features that are still in development, including fleet orchestration, history tools, and power-user session controls.
+Once you enable it, the setting is persisted in your config, so later launches no longer need the `--experimental` flag.
+:::
+::: {.column width="50%"}
+### Why Enable It
+
+- Use it when you need commands or controls marked as experimental
+- Turn it on early in workshops or demos so advanced commands are already available
+- Treat it as an opt-in feature gate for newer CLI capabilities
+
+This is the switch that exposes the more advanced side of the CLI.
+:::
+::::
+
+---
+
+## Steer A Session From Another Device With `/remote`
+
+:::: {.columns}
+::: {.column width="50%"}
+### Command Forms
+
+```bash
+/remote
+/remote on
+/remote off
+copilot --remote
+```
+
+- `/remote on` enables remote steering for the current interactive session
+- plain `/remote` shows status and re-displays the access details for the running session
+- `/remote off` disables remote access when you are done
+- `copilot --remote` starts a session with remote steering enabled from launch
+:::
+::: {.column width="50%"}
+### When To Use It
+
+- Use it when the original CLI session is still running but you need to monitor output, answer prompts, or approve actions from another device
+- The original machine must stay online, and the session must stay open in the terminal
+- Remote steering only works inside a GitHub-hosted repository and is limited to the same GitHub account that started the session
+- Pair it with `/keep-alive` when you plan to step away from the host machine
+
+This turns an interactive CLI session into something you can keep driving from GitHub.com or GitHub Mobile.
+:::
+::::
+
+## Keep The Machine Awake With `/keep-alive`
+
+:::: {.columns}
+::: {.column width="50%"}
+### Command Forms
+```bash
+/keep-alive on
+/keep-alive busy
+/keep-alive 30m
+/keep-alive 2h
+```
+
+- `on` prevents sleep while the CLI session stays active
+- `busy` prevents sleep only while the agent is actively working
+- `NUMBERm` or `NUMBERh` keeps the machine awake for a fixed time window
+- This command is only available in experimental mode
+:::
+::: {.column width="50%"}
+### Why It Matters
+
+- Use it for long reviews, research runs, and unattended automation
+- `busy` is the safest default when you only want to protect active work
+- Time-based windows help when you are stepping away from the keyboard
+- Session-wide `on` is useful for workshops, demos, or extended pairing
+
+This is where the CLI starts to feel like a durable runtime instead of a one-shot prompt tool.
+:::
+::::
+
+---
+
+## Run Tasks In Parallel With `/fleet`
+
+:::: {.columns}
+::: {.column width="44%"}
+### Using The Slash Command
+
+```bash
+/fleet [PROMPT]
+```
+
+- Enter `/fleet` followed by the prompt you want Copilot to execute
+- Use it after you already have a plan and want autonomous implementation
+- `/fleet` lets Copilot use subagents and parallelize independent work where possible
+:::
+::: {.column width="56%"}
+### When To Reach For It
+
+- Best fit: implementation plans that can be broken into review, coding, and validation tracks
+- It is stronger than a normal prompt when the work can branch and rejoin
+- Expect Copilot to keep working without constant input, but still ask when a decision is needed
+
+Think of `/fleet` as the handoff from planning to execution.
+:::
+::::
+
+---
+
+## Typical `/fleet` Workflow
+
+:::: {.columns}
+::: {.column width="58%"}
+### From Plan Mode To Execution
+
+1. In an interactive CLI session, press `Shift+Tab` to switch into plan mode.
+2. Describe the feature or change you want to make.
+3. Work with Copilot to produce an implementation plan.
+4. When the plan looks right, choose how to launch execution.
+:::
+::: {.column width="42%"}
+### Two Common Handoffs
+
+- Accept plan and build on autopilot, then use `/fleet`
+- Exit plan mode, then run a prompt such as `/fleet implement the plan`
+
+In both cases, Copilot starts working through the plan and can delegate parts of the work to subagents in parallel.
+:::
+::::
+
+---
+
+## Monitor Fleet Work With `/tasks`
+
+:::: {.columns}
+::: {.column width="52%"}
+### What You See
+
+- Run `/tasks` to list background tasks for the current session
+- The list includes subagent work created by `/fleet`
+- Completed subtasks show a summary of what was done when you open them
+:::
+::: {.column width="48%"}
+### Keyboard Controls
+
+- `Up` and `Down`: move through the task list
+- `Enter`: open task details
+- `k`: kill a running task
+- `r`: remove a completed or killed task from the list
+
+`/tasks` is the operational view for long-running or parallel work.
+:::
+::::
+
+---
+
+## Session History With `/chronicle`
+
+  `/chronicle` is easy to miss because it sits behind **experimental mode**, but it is one of the most useful CLI features.
+
+:::: {.columns}
+::: {.column width="50%"}
+### What It Uses
+
+- Every CLI session is saved locally
+- Session files live under `~/.copilot/session-state/`
+- A local SQLite store powers history queries and summaries
+- Nothing extra is uploaded beyond normal model interactions
+:::
+::: {.column width="50%"}
+### Main Subcommands
+
+```bash
+/chronicle standup
+/chronicle tips
+/chronicle improve
+/chronicle reindex
+```
+
+- `standup` summarizes recent work
+- `tips` gives workflow advice
+- `improve` suggests better custom instructions
+- `reindex` rebuilds the local session store
+:::
+::::
+
+### When `/chronicle` Helps
+
+- Start of day: `/chronicle standup last 3 days`
+- Repeated misunderstandings: `/chronicle improve`
+- Workflow coaching: `/chronicle tips`
+- Restoring local history after cleanup: `/chronicle reindex`
+
+The key idea is simple: Copilot CLI can reason over your own local session history.
+
+## Reference Shortcuts Worth Teaching
+
+- `@ filename` attaches file contents to context
+- `# 123` attaches a GitHub issue or PR
+- `?` opens quick help on an empty prompt
+- `Ctrl+G` opens the prompt in `$EDITOR`
+- `Ctrl+X` then `/` runs a slash command without losing a drafted prompt
+- `Ctrl+Enter` or `Ctrl+Q` queues a message while the agent is busy
+- `Shift+Tab` cycles execution modes
+- `Ctrl+T` toggles reasoning display in the timeline
+
+---
+
+## Steer The Conversation While Copilot Is Thinking
+
+:::: {.columns}
+::: {.column width="52%"}
+### Queue Follow-Up Messages
+
+- Send another message while Copilot is still working to steer it in a new direction
+- `Ctrl+Enter` or `Ctrl+Q` queues the message until the current response finishes
+- This keeps the session natural: you do not have to wait for a full answer before correcting course
+:::
+::: {.column width="48%"}
+### Give Feedback On Rejected Tool Requests
+
+- If you reject a permission request, add inline feedback explaining why
+- Copilot can adapt its plan instead of stopping outright
+- This is useful when you want a safer command, narrower scope, or a different approach
+:::
+::::
+
+---
+
+## Non-Interactive Mode For Scripts And CI
+
+Use these commands while you are still in the shell, before an interactive session starts or a scripted run begins.
+
+::: {.slash-command-table}
+| Command | What it is for |
+|---|---|
+| `copilot` | Launch the interactive user interface in the current folder. |
+| `copilot help [TOPIC]` | Show CLI help. Useful topics include `config`, `commands`, `environment`, `logging`, `monitoring`, `permissions`, and `providers`. |
+| `copilot init` | Initialize Copilot custom instructions for the current repository. |
+| `copilot login [OPTION]` | Authenticate with Copilot via the OAuth device flow. Use `--host HOST` when you need to sign in against GitHub Enterprise instead of `https://github.com`. |
+| `copilot mcp` | Manage MCP server configurations from the command line instead of from inside chat. |
+| `copilot plugin` | Manage plugins and plugin marketplaces. |
+| `copilot update` | Download and install the latest CLI version. |
+| `copilot version` | Display version information and check whether an update is available. |
+:::
+
+Rule of thumb: use these commands to start, configure, authenticate, extend, or update Copilot; use the next slide when the shell invocation itself should answer and exit.
+
+---
+
+## Programmatic Github Copilot Cli Usage
+
+Copilot CLI also has a **non-interactive prompt mode** for pipelines, automation, and programmatic use.
+
+:::: {.columns}
+::: {.column width="50%"}
+### Useful Flags
+```bash
+copilot -p "task"             # non-interactive prompt mode
+-s, --silent                  # output only the agent response
+--output-format json          # emit machine-readable JSON
+--additional-mcp-config @f.json  # inject MCP servers per run
+--list-env                    # debug loaded agents/skills/plugins
+```
+:::
+::: {.column width="50%"}
+### CI Shape
+```yaml
+copilot-review:
+  stage: review
+  script:
+    - copilot -p "Review $CI_COMMIT_SHA for regressions"
+        --silent --output-format json
+        | jq -r '.message' >> review.md
+  artifacts:
+    paths: [review.md]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+```
+
+- Store `GH_TOKEN` as a masked CI/CD variable
+- Consume JSON output with `jq`
+- Use this mode for review, triage, and reporting jobs
+:::
+::::
+
+---
+
+## Command line options
+
+Use these when you launch Copilot from the shell or script a run.
+
+- `--agent=AGENT` starts directly in a chosen custom agent
+- `--additional-mcp-config=@file.json` injects MCP servers for one run
+- `--allow-all`, `--allow-all-tools`, `--allow-tool=...` control permission prompts
+- `--autopilot` enables autonomous continuation in prompt mode
+- `--available-tools=...` constrains what the model can use
+- `--resume` reopens the session selector from the command line
+- `--continue` jumps back into the most recent session
+- `-p` or `--prompt` passes a single prompt on the command line. Copilot completes the task and then exits
+- `-s` or `--silent` outputs only the agent response, without usage statistics, which makes it easier to script around `-p`. Add an approval flag when the run needs to edit files or execute tools
+
+## Basic Example of usages
+
+:::: {.columns}
+::: {.column width="52%"}
+### Direct Prompt Mode
+```bash
+copilot -p "Show me this week's commits and summarize them" \
+  --allow-tool='shell(git)' \
+  --silent
+```
+
+:::
+::: {.column width="48%"}
+### Pipes And Existing Sessions
+```bash
+./script-outputting-options.sh | copilot
+
+```
+
+:::
+::::
+
+
+:::: {.columns}
+::: {.column width="52%"}
+### Scope Shell Access Tightly
+```bash
+# allow all git commands except git push
+copilot -p "Summarize the current branch history" \
+  --allow-tool='shell(git:*)' \
+  --deny-tool='shell(git push)'
+```
+
+:::
+::: {.column width="48%"}
+### Allow MCP Tools Precisely
+```bash
+# allow a specific MCP tool
+copilot -p "Open a backlog issue" \
+  --allow-tool='MyMCP(create_issue)'
+
+# allow every tool from one server
+copilot -p "Work with the ticketing system" \
+  --allow-tool='MyMCP'
+```
+
+:::
+::::
+
+---
+
+## Use Custom Agents In Prompt Mode
+
+:::: {.columns}
+::: {.column width="52%"}
+### Delegate To A Named Agent
+```bash
+copilot -p "Review the latest commit" \
+  --allow-tool='shell' \
+  --agent code-review
+```
+
+- `--agent` sends the prompt to a named custom agent
+- The agent must already exist in your Copilot CLI agent files
+- This is the programmatic way to steer work toward a specialized persona
+:::
+::: {.column width="48%"}
+### Important Distinction
+
+- `--agent code-review` only works if you created a custom agent with that exact name
+- That is different from the built-in review workflow exposed through `/review`
+- Use custom agents when you want persistent instructions, restricted tools, or a fixed role across many runs
+:::
+::::
+
+---
+
+## Choose Models For Prompt Runs
+
+:::: {.columns}
+::: {.column width="52%"}
+### Pick A Model Per Run
+```bash
+copilot -p "What does this project do?" \
+  -s --model claude-haiku-4.5
+
+copilot -p "Fix the race condition in the worker pool" \
+  --model gpt-5.3-codex \
+  --allow-tool='write, shell'
+```
+
+- `--model` lets you trade off speed, cost, and capability for each run
+- Without `-s` or `--silent`, the CLI shows which model produced the response
+- `copilot help` lists the exact model strings you can use
+:::
+::: {.column width="48%"}
+### Persist A Default Model
+```bash
+export COPILOT_MODEL=claude-haiku-4.5
+```
+
+```json
+{
+  "model": "gpt-5.3-codex",
+  "effortLevel": "low"
+}
+```
+
+- `COPILOT_MODEL` sets the default model for the current shell session
+- Persist defaults in `~/.copilot/settings.json` or `$COPILOT_HOME/settings.json`
+- Some models support `effortLevel` to control how much reasoning time they spend
+:::
+::::
+
+---
+
+## Useful Programmatic Recipes
+
+:::: {.columns}
+::: {.column width="50%"}
+### Review And Generate
+```bash
+copilot -p '/review the changes on this branch compared to main. Focus on bugs and security issues.' \
+  -s --allow-tool='shell(git:*)'
+
+copilot -p 'Generate JSDoc comments for all exported functions in src/api/' \
+  --allow-tool=write
+```
+
+- The first example runs the built-in review workflow against the current branch
+- The second uses prompt mode for batch documentation work
+:::
+::: {.column width="50%"}
+### Export The Result
+```bash
+copilot -p "Audit this project's dependencies for vulnerabilities" \
+  --allow-tool='shell(npm:*), shell(npx:*)' \
+  --share='./audit-report.md'
+
+copilot -p 'Summarize the architecture of this project' --share-gist
+```
+
+- `--share=PATH` saves the full session transcript to a local Markdown file
+- `--share-gist` publishes the transcript as a GitHub gist for quick sharing
+- Gists are not available for Enterprise Managed Users or GitHub Enterprise Cloud data residency environments
+:::
+::::
+
+---
+
+## Shell Scripting Patterns
+
+:::: {.columns}
+::: {.column width="52%"}
+### Capture Or Branch On Output
+```bash
+result=$(copilot -p 'What version of Node.js does this project require?
+Give the number only. No other text.' -s)
+echo "Required Node version: $result"
+```
+
+```bash
+if copilot -p 'Does this project have any TypeScript errors? Reply only YES or NO.' -s \
+  | grep -qi "no"; then
+  echo "No type errors found."
+else
+  echo "Type errors detected."
+fi
+```
+:::
+::: {.column width="48%"}
+### Process Many Files
+```bash
+for file in src/api/*.ts; do
+  echo "--- Reviewing $file ---" | tee -a review-results.md
+  copilot -p "Review $file for error handling issues" -s --allow-all-tools | tee -a review-results.md
+done
+```
+
+- `-s` keeps the output easy to capture, parse, and append in shell pipelines
+- Loops and conditionals work well when prompts are narrow and output is constrained
+- For unattended runs, narrow tool permissions are safer than `--allow-all-tools` when possible
+:::
+::::
+
+## MCP In Programmatic CLI Runs
+
+:::: {.columns}
+::: {.column width="55%"}
+### Built-In MCP Servers
+
+| Server | What it gives you |
+|---|---|
+| `github-mcp-server` | GitHub API access for issues, pull requests, commits, code search, and GitHub Actions |
+| `playwright` | Browser automation for navigation, clicks, typing, screenshots, and forms |
+| `fetch` | HTTP requests through the `fetch` tool |
+| `time` | Time utilities such as `get_current_time` and `convert_time` |
+
+These are available in the CLI without extra setup.
+:::
+::: {.column width="45%"}
+### Trust Levels
+
+| Source | Trust | Review |
+|---|---|---|
+| Built-in | High | No |
+| Repository (`.github/mcp.json`) | Medium | Recommended |
+| Workspace (`.mcp.json`) | Medium | Recommended |
+| User config (`~/.copilot/mcp-config.json`) | User-defined | Your responsibility |
+| Remote servers | Low | Always |
+:::
+::::
+
+If your project still uses VS Code's `.vscode/mcp.json`, migrate it to the CLI's `.mcp.json` format by remapping `servers` to `mcpServers`:
+
+```bash
+jq '{mcpServers: .servers}' .vscode/mcp.json > .mcp.json
+```
+
+---
+
+## Getting Help
+
+:::: {.columns}
+::: {.column width="46%"}
+### Quick CLI Help
+
+From the command line, display help with:
+
+```bash
+copilot -h
+```
+
+- Use this when you want a fast reminder of the main CLI commands and flags
+:::
+::: {.column width="54%"}
+### Help By Topic
+
+For help on specific topics, enter:
+
+```bash
+copilot help TOPIC
+```
+
+- Common topics include `config`, `commands`, `environment`, `logging`, and `permissions`
+- Use topic help when you need more detail on setup, runtime behavior, or CLI permissions
+:::
+::::
+
+# Questions?
+
+# Part 10: AI-Assisted Coding Training
+
+{{< include github-copilot-training/slides.body.qmd >}}
