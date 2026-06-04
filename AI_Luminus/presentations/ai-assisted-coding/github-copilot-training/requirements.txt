@@ -1,0 +1,7 @@
+setuptools
+ipykernel
+pandas
+pytest
+soda-core
+soda-core-duckdb
+duckdb

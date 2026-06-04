@@ -44,3 +44,21 @@ Knowledge sources live in `Knowledge/` (YAML, CSV, Markdown). Outputs in `Artifa
 | PlantUML (`.puml`) | architecture and flow diagrams |
 
 Generated outputs: HTML (shareable), CSV (exchange), Markdown (stakeholder-facing).
+
+## Quarto Presentation Flow
+
+Quarto source and includes for AI-assisted coding training live in:
+
+- AI_Luminus/presentations/ai-assisted-coding/vscode_agents_concepts.qmd
+- AI_Luminus/presentations/ai-assisted-coding/github-copilot-training/
+
+Local render commands:
+
+```bash
+quarto render AI_Luminus/presentations/ai-assisted-coding/vscode_agents_concepts.qmd --to revealjs
+python3 -m http.server 8000
+```
+
+Open in browser:
+
+- http://127.0.0.1:8000/AI_Luminus/presentations/ai-assisted-coding/vscode_agents_concepts.html

@@ -42,6 +42,20 @@ Read before generating any artifact:
 - [Templates/](Templates/) — standard output formats; always use instead of inventing structure
 - [COMMANDS.md](COMMANDS.md) — canonical trigger phrases for all workflows
 
+### Domain-Specific Instructions
+
+- CADP workflows in AI_Luminus/how-to-CADP/: [.github/instructions/cadp.instructions.md](.github/instructions/cadp.instructions.md)
+- Jira + Confluence feature intake: [.github/skills/jira-confluence-intake/](.github/skills/jira-confluence-intake/)
+- Automatic data-product documentation: [.github/instructions/data-product-automatic-documentation.instructions.md](.github/instructions/data-product-automatic-documentation.instructions.md)
+- Shared capability skills:
+  - SADP/Vulcan build skill: [.github/skills/sadp-development/SKILL.md](.github/skills/sadp-development/SKILL.md)
+  - HTML/PPT design skill: [.github/skills/ppt-design/SKILL.md](.github/skills/ppt-design/SKILL.md)
+- Shared workflow skills:
+  - MR description writer: [.github/skills/merge-request-description/SKILL.md](.github/skills/merge-request-description/SKILL.md)
+  - Pre-MR reviewer: [.github/skills/pre-merge-review/SKILL.md](.github/skills/pre-merge-review/SKILL.md)
+  - Release-email generator: [.github/skills/release-announcement-email/SKILL.md](.github/skills/release-announcement-email/SKILL.md)
+- Optional migration agent imported from shared-md: [.github/agents/airflow-3-migration.agent.md](.github/agents/airflow-3-migration.agent.md)
+
 ## Canonical Authoring Pattern
 
 Store one canonical source and publish from it:
@@ -55,6 +69,25 @@ Default file pattern:
 - source: Knowledge/<domain>/<topic>/<name>.source.<ext>
 - notes: Knowledge/<domain>/<topic>/<name>.notes.md
 - output: Artifacts/<artifact-type>/<topic>/<name>.output.<ext>
+
+## Explore Workspace
+
+Use Knowledge/explore/ as a sandbox for uncertain ideas, early drafts, experiments, and concept testing.
+
+- keep exploratory content in Knowledge/explore/ until the approach is validated
+- once validated, promote content into the canonical Knowledge/<domain>/... and Artifacts/... structure
+- remove stale experiment folders and temporary render outputs after tests complete
+
+### Workflow Quick-Start Prompts
+
+Use reusable prompt files in [.github/prompts/](.github/prompts/) when the request matches a standard workflow:
+
+- decision support: [.github/prompts/decision-support.prompt.md](.github/prompts/decision-support.prompt.md)
+- executive update: [.github/prompts/executive-update.prompt.md](.github/prompts/executive-update.prompt.md)
+- feature intake: [.github/prompts/feature-intake.prompt.md](.github/prompts/feature-intake.prompt.md)
+- meeting recap: [.github/prompts/meeting-recap.prompt.md](.github/prompts/meeting-recap.prompt.md)
+- backlog triage: [.github/prompts/process-backlog.prompt.md](.github/prompts/process-backlog.prompt.md)
+- weekly review: [.github/prompts/weekly-review.prompt.md](.github/prompts/weekly-review.prompt.md)
 
 ## Format Rules
 

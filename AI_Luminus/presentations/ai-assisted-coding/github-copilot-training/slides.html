@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="slides_files/libs/clipboard/clipboard.min.js"></script>
+<script src="slides_files/libs/quarto-html/tabby.min.js"></script>
+<script src="slides_files/libs/quarto-html/popper.min.js"></script>
+<script src="slides_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="slides_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="slides_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="slides_files/libs/quarto-html/quarto-syntax-highlighting-662ae1889177880cb371f83234c0a158.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.30">
+
+  <meta name="author" content="Full-day workshop">
+  <title>Beyond Autocomplete</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="slides_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="slides_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #24292e;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #24292e; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #d73a49; } /* Attribute */
+    code span.bn { color: #005cc5; } /* BaseN */
+    code span.bu { color: #d73a49; } /* BuiltIn */
+    code span.cf { color: #d73a49; } /* ControlFlow */
+    code span.ch { color: #032f62; } /* Char */
+    code span.cn { color: #005cc5; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #d73a49; } /* DataType */
+    code span.dv { color: #005cc5; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #d73a49; font-weight: bold; } /* Extension */
+    code span.fl { color: #005cc5; } /* Float */
+    code span.fu { color: #6f42c1; } /* Function */
+    code span.im { color: #032f62; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #d73a49; } /* Keyword */
+    code span.op { color: #24292e; } /* Operator */
+    code span.ot { color: #6f42c1; } /* Other */
+    code span.pp { color: #d73a49; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #005cc5; } /* SpecialChar */
+    code span.ss { color: #032f62; } /* SpecialString */
+    code span.st { color: #032f62; } /* String */
+    code span.va { color: #e36209; } /* Variable */
+    code span.vs { color: #032f62; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="slides_files/libs/revealjs/dist/theme/quarto-bdc00e421f0f67bb1c8a574e443af4bf.css">
+  <link rel="stylesheet" href="slides-custom.css">
+  <link href="slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="slides_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="slides_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Beyond Autocomplete</h1>
+  <p class="subtitle">AI-Assisted Coding with GitHub Copilot</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Full-day workshop 
+</div>
+</div>
+</div>
+
+</section>
+<section id="the-day-in-one-sentence" class="slide level2">
+<h2>The day in one sentence</h2>
+<blockquote>
+<p>Copilot is a fast, confident, well-read junior colleague who has never seen a CET fall-back order B in production.</p>
+<p>Today you learn how to <strong>direct</strong> it — and how to prove a February-green migration is still safe in June.</p>
+</blockquote>
+<aside class="notes">
+<p>Open with this quote on screen before saying anything. Let it land. Then: “This is the mental model for the whole day. Copilot is smart, fast, and often wrong in ways that look correct until a missing CET regime shows up. Our job is to learn how to catch that — and how to give it enough context that it’s wrong less often.”</p>
+<p>Bridge straight into the facilitator-guide narrative: “Winter data passed. The summer regression exposed 29,211 mismatches in production. In this training you will see the same failure pattern at smaller scale and build the workflow that catches it.”</p>
+<p>Ask the room: “How many of you have accepted a Copilot suggestion and only found the problem later in review — or in production?” Usually most hands go up. That’s your hook.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="what-were-building" class="slide level2">
+<h2>What we’re building</h2>
+<p>The <strong><code>curve_pipeline</code></strong> workshop repo — one connected CET migration story you move through with notebooks, prompts, tests, worktrees, SODA checks, and orchestration.</p>
+<div class="fragment">
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module</th>
+<th>Notebook</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>M1</td>
+<td><code>M1_EXPLORE.ipynb</code></td>
+<td>Explain <code>curve_loader.py</code> and find the winter-only blind spot</td>
+</tr>
+<tr class="even">
+<td>M2</td>
+<td><code>M2_CET_BUG.ipynb</code></td>
+<td>Diagnose and fix the CET copy-through bug</td>
+</tr>
+<tr class="odd">
+<td>M3</td>
+<td><code>M3_COPILOT_INSTRUCTIONS.ipynb</code></td>
+<td>Encode domain rules in <code>.github/copilot-instructions.md</code></td>
+</tr>
+<tr class="even">
+<td>M4</td>
+<td><code>M4_TDD_VALIDATOR.ipynb</code></td>
+<td>Plan and write validator tests before implementation</td>
+</tr>
+<tr class="odd">
+<td>M5</td>
+<td><code>M5_AGENT_WORKTREES.ipynb</code></td>
+<td>Parallel worktrees + <code>CurveValidator</code> + SODA checks</td>
+</tr>
+<tr class="even">
+<td>M6</td>
+<td><code>M6_MCP_ORCHESTRATION.ipynb</code></td>
+<td>Trigger, inspect, fix, and re-trigger all 4 seasons</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fragment">
+<p>Facilitator mirror notebooks live in <code>facilitator/M*_facilitator.ipynb</code>.</p>
+<aside class="notes">
+<p>Show the file tree in VS Code while this slide is up. Point out the participant notebooks, the <code>facilitator/</code> mirror notebooks, <code>curve_pipeline/validator.py</code>, and the DAG.</p>
+<p>“This is not six disconnected demos. Every notebook pushes the same migration story forward.”</p>
+<p>Point to the last row: “By Module 6, Copilot will be calling live Airflow tools and using code you wrote earlier in the day. That’s the payoff.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="the-arc" class="slide level2">
+<h2>The arc</h2>
+<pre><code>M1: Explain loader  →  M2: Expose CET bug  →  M3: Encode rules
+                                                       ↓
+M6: Trigger + inspect DAG  ←  M5: Parallel worktrees + SODA  ←  M4: Plan + test first</code></pre>
+<div class="fragment">
+<p>Each module hands context, code, or safety nets to the next one.</p>
+<p>Each notebook is part of one connected debugging and delivery workflow.</p>
+<aside class="notes">
+<p>Walk through the arc slowly. “You’ll feel each of these transitions during the day. At the end of M1 you’ll understand why winter-only evidence is weak. At the end of M4 you’ll have tests before the implementation. At the end of M6 you’ll have the full trigger → fail → read logs → fix → re-trigger loop.”</p>
+<p>Key message: “Nothing you do today is throwaway. The notebook artifacts are the inputs for later modules.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="schedule" class="slide level2">
+<h2>Schedule</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Time</th>
+<th>Module</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>09:00</td>
+<td>M1</td>
+</tr>
+<tr class="even">
+<td>09:45</td>
+<td>M2</td>
+</tr>
+<tr class="odd">
+<td>10:30</td>
+<td>Break</td>
+</tr>
+<tr class="even">
+<td>10:45</td>
+<td>M3</td>
+</tr>
+<tr class="odd">
+<td>11:15</td>
+<td>M4</td>
+</tr>
+<tr class="even">
+<td>12:15</td>
+<td>Lunch</td>
+</tr>
+<tr class="odd">
+<td>13:00</td>
+<td>M5</td>
+</tr>
+<tr class="even">
+<td>14:10</td>
+<td>Break</td>
+</tr>
+<tr class="odd">
+<td>14:25</td>
+<td>M6</td>
+</tr>
+<tr class="even">
+<td>15:50</td>
+<td>Closing</td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<p>“M4 and M5 are the densest. If you’re running behind, compress optional detail there and protect M6. M6 is the payoff.”</p>
+<p>Practical note: bathrooms, phones, energy levels. Two breaks are built in. Point out that every module has both a participant notebook and a facilitator mirror notebook.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section>
+<section id="module-1" class="title-slide slide level1 center" data-background-color="#0f4c81">
+<h1>Module 1</h1>
+
+</section>
+<section id="understand-the-codebase-with-chat" class="slide level2">
+<h2>Understand the Codebase with Chat</h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Participant notebook: <code>M1_EXPLORE.ipynb</code><br>
+Facilitator notebook: <code>facilitator/M1_facilitator.ipynb</code><br>
+Code focus: <code>curve_pipeline/curve_loader.py</code> and <code>tests/test_curve_loader.py</code></p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Transition: “No slash commands, no agents. Just you, Chat, and the codebase. This module is about building an accurate mental model before anyone touches the CET converter.”</p>
+<p>Key teaching moment: Copilot can explain a function correctly and still miss the bug that matters later. The explanation is a starting point, not proof.</p>
+<p>Timing: 20 min for notebook comprehension, 25 min for the blind-spot hunt.</p>
+<p>Watch for participants jumping into <code>cet_converter.py</code> too early. Stop them and bring them back to <code>curve_loader.py</code> and the existing tests.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="the-context-variable-that-changes-everything" class="slide level2">
+<h2>The context variable that changes everything</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="co"># Without context</span></span>
+<span id="cb2-2"><a href=""></a><span class="co">"what does this pipeline do?"</span></span>
+<span id="cb2-3"><a href=""></a><span class="co"># → generic, incomplete</span></span>
+<span id="cb2-4"><a href=""></a></span>
+<span id="cb2-5"><a href=""></a><span class="co"># With context</span></span>
+<span id="cb2-6"><a href=""></a><span class="co">"Explain load_curves_csv, filter_valid_curves, and group_by_delivery.</span></span>
+<span id="cb2-7"><a href=""></a><span class="er">#file:curve_pipeline/curve_loader.py"</span></span>
+<span id="cb2-8"><a href=""></a><span class="co"># → grounded in the real training code</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="fragment">
+<p><strong><code>#file:</code></strong> — attach a specific file <strong><code>#selection</code></strong> — attach what you’ve highlighted <strong><code>@workspace</code></strong> — query across the whole project</p>
+<aside class="notes">
+<p>LIVE DEMO HERE — do not just read the slide.</p>
+<ol type="1">
+<li>Open <code>curve_pipeline/curve_loader.py</code>.</li>
+<li>Ask the vague question. Show the generic answer.</li>
+<li>Ask again with <code>#file:</code>. Show how the response becomes about real fields, orders, and CET columns.</li>
+</ol>
+<p>“The model didn’t get smarter between those two prompts. You gave it better context. That’s the entire lesson of this module.”</p>
+<p><code>@workspace</code> is slower and requires indexing — mention it but don’t demo unless it’s fast.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="chat-is-not-a-code-generator" class="slide level2">
+<h2>Chat is not a code generator</h2>
+<p>It’s a <strong>thinking partner</strong>.</p>
+<div class="fragment">
+<p>Three uses that change how you work:</p>
+<ol type="1">
+<li><strong>Comprehension</strong> — map the code path faster than line-by-line reading</li>
+<li><strong>Hypothesis</strong> — surface the assumption that makes winter look safe</li>
+<li><strong>Critique</strong> — ask what test or checkpoint is missing</li>
+</ol>
+</div>
+<div class="fragment">
+<p>The 3-turn loop:</p>
+<blockquote>
+<p>Explain → <strong>Challenge</strong> → Ask for the missing test</p>
+</blockquote>
+<aside class="notes">
+<p>“Most people use Chat for one-shot generation and then accept or reject. That’s the weakest way to use it.”</p>
+<p>“The upgrade here is: make Chat explain, then challenge the explanation, then ask what evidence is still missing.”</p>
+<p>Ask: “Who here rewrites their Chat prompt when the first answer is bad?” — most hands. “That instinct is right. We’re going to make it deliberate.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="exercise-1a-code-path-map-20-min" class="slide level2">
+<h2>Exercise 1A — Code path map (20 min)</h2>
+<p>Open <code>curve_pipeline/curve_loader.py</code>. Work in <code>M1_EXPLORE.ipynb</code> and answer in your own words:</p>
+<ol type="1">
+<li>What does <code>load_curves_csv</code> guarantee before downstream code runs?</li>
+<li>Why does <code>filter_valid_curves</code> keep negative quotes?</li>
+<li>What does <code>group_by_delivery</code> encode about order A vs order B?</li>
+</ol>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>Write the answers in the notebook, not Chat. Paraphrasing is where understanding happens.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Enforce the paraphrase rule firmly. “If I see anyone copy-pasting from Chat, I’ll ask you to explain it out loud. That’s the test.”</p>
+<p>Expected answers: - <code>load_curves_csv</code> checks required columns and returns raw dict rows. - <code>filter_valid_curves</code> keeps negative quotes because they are valid in energy markets. - <code>group_by_delivery</code> uses <code>(startDate, startTime, order)</code> because order B only appears on fall-back day.</p>
+<p>After 20 min, ask 2-3 people to share Q3 — it’s the one that reveals the most domain structure.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="exercise-1b-find-the-blind-spot-25-min" class="slide level2">
+<h2>Exercise 1B — Find the blind spot (25 min)</h2>
+<p>Use Chat plus <code>tests/test_curve_loader.py</code>.</p>
+<ol type="1">
+<li>Which existing checks would still pass if <code>cetStarttime</code> just copied <code>startTime</code> directly?</li>
+<li>Why does winter data hide that bug?</li>
+<li>Add one note to <code>M1_EXPLORE.ipynb</code>: which seasonal checkpoint is missing?</li>
+</ol>
+<div class="fragment">
+<p>Starter prompt:</p>
+<pre><code>"Read #file:curve_pipeline/curve_loader.py and #file:tests/test_curve_loader.py.
+Which assumption makes these checks safe in winter but insufficient for summer?"</code></pre>
+<aside class="notes">
+<p>“The goal is not to find the bug yet. The goal is to explain why the current evidence would fail to reveal it.”</p>
+<p>Expected answer: the loader tests all pass because they never validate summer CET conversion. They live in the regime where copy-through looks correct.</p>
+<p>Use the 15-minute prompt from the facilitation script if the room stalls: “Find me the test that would pass even if <code>cetStarttime</code> just copied <code>startTime</code> directly.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section></section>
+<section>
+<section id="module-2" class="title-slide slide level1 center" data-background-color="#0f4c81">
+<h1>Module 2</h1>
+
+</section>
+<section id="find-and-explain-the-cet-bug" class="slide level2">
+<h2>Find and Explain the CET Bug</h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Participant notebook: <code>M2_CET_BUG.ipynb</code><br>
+Facilitator notebook: <code>facilitator/M2_facilitator.ipynb</code><br>
+Exercise focus: <code>curve_pipeline/cet_converter.py</code>, regression checkpoints, and <code>scenarios/1-bug-hunt/airflow_logs_fixture.txt</code></p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Transition: “Now we move from comprehension to failure analysis. Same Chat panel, but this time the slash commands are tied to a real regression miss.”</p>
+<p>Key teaching moment: <code>/explain</code> can describe intent while missing correctness. Regression output is the proof.</p>
+<p>Timing: 15 min for explain + logs, 15 min for the first fix, 10 min for reruns and debrief.</p>
+<p>Watch for the common local success case: summer gets fixed, then fall-back order B breaks.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="the-slash-command-vocabulary" class="slide level2">
+<h2>The slash command vocabulary</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Use it for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>/explain</code></td>
+<td>Understanding what code <strong>does</strong></td>
+</tr>
+<tr class="even">
+<td><code>/fix</code></td>
+<td>Repairing a specific failure</td>
+</tr>
+<tr class="odd">
+<td><code>/doc</code></td>
+<td>Generating NumPy docstrings</td>
+</tr>
+<tr class="even">
+<td><code>/tests</code></td>
+<td>Generating a test suite</td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Warning</strong></p>
+</div>
+<div class="callout-content">
+<p><strong><code>/explain</code> describes intent, not correctness.</strong> It will miss logical bugs.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>“These aren’t magic. They’re structured prompts with context injection built in. Understanding that they’re just prompts helps you use them better — and know when to add more detail.”</p>
+<p>The callout is the key lesson of this module. Emphasise it: “/explain will tell you what the code is trying to do. It will not tell you if it’s doing it wrong.” That’s what the exercise will prove.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="fix-precision-matters" class="slide level2">
+<h2><code>/fix</code> — precision matters</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Weak</strong></p>
+<pre><code>/fix</code></pre>
+<p>Chat guesses what to fix. Usually wrong.</p>
+</div><div class="column" style="width:50%;">
+<p><strong>Strong</strong></p>
+<pre><code>/fix summer records in compute_cet_timestamps
+must convert Europe/Brussels local time to
+fixed CET (UTC+1). Right now cetStartDate
+and cetStarttime copy startDate/startTime
+through unchanged, which breaks summer rows
+and midnight rollback.</code></pre>
+<p>Chat fixes the right thing.</p>
+</div></div>
+<aside class="notes">
+<p>“The single most common mistake with /fix is not describing the failure. Chat has no idea what ‘wrong’ means without a description.”</p>
+<p>Demo this live if time allows: select localise_to_cet, type /fix with no description, show the result. Then add the description. Show how different the output is.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="the-bug-in-cet_converter.py" class="slide level2">
+<h2>The bug in <code>cet_converter.py</code></h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="kw">def</span> compute_cet_timestamps(records):</span>
+<span id="cb6-2"><a href=""></a>  result <span class="op">=</span> []</span>
+<span id="cb6-3"><a href=""></a>  <span class="cf">for</span> r <span class="kw">in</span> records:</span>
+<span id="cb6-4"><a href=""></a>    r <span class="op">=</span> <span class="bu">dict</span>(r)</span>
+<span id="cb6-5"><a href=""></a>    r[<span class="st">"cetStartDate"</span>] <span class="op">=</span> r[<span class="st">"startDate"</span>]   <span class="co"># </span><span class="al">BUG</span><span class="co">: ignores CEST rollback</span></span>
+<span id="cb6-6"><a href=""></a>    r[<span class="st">"cetStarttime"</span>] <span class="op">=</span> r[<span class="st">"startTime"</span>]   <span class="co"># </span><span class="al">BUG</span><span class="co">: summer should subtract 1h</span></span>
+<span id="cb6-7"><a href=""></a>    result.append(r)</span>
+<span id="cb6-8"><a href=""></a>  <span class="cf">return</span> result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="fragment">
+<p>Winter data passes because local time already equals fixed CET.</p>
+</div>
+<div class="fragment">
+<p>Summer rows should subtract 1 hour, and midnight summer rows roll back to the previous CET date.</p>
+</div>
+<div class="fragment">
+<p>Fall-back order B is a separate rule: the repeated 02:00 hour is already CET.</p>
+<aside class="notes">
+<p>Do NOT reveal this until after participants have attempted <code>/explain</code> on <code>compute_cet_timestamps</code>. This slide is for the debrief, not the introduction.</p>
+<p>The key teaching point: “<code>/explain</code> described the function correctly and missed the bug entirely.”</p>
+<p>Ask: “How many of you have had a bug like this in production — correct-looking output, wrong calculation underneath?” Usually several hands. This validates why the exercise matters.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="exercise-2-workflow-sprint-40-min" class="slide level2">
+<h2>Exercise 2 — Workflow sprint (40 min)</h2>
+<p>Work through <code>M2_CET_BUG.ipynb</code> and <code>curve_pipeline/cet_converter.py</code> in order:</p>
+<ol type="1">
+<li><code>/explain</code> on <code>compute_cet_timestamps</code> — does it describe intent or detect the bug?</li>
+<li>Compare the result with <code>scenarios/1-bug-hunt/airflow_logs_fixture.txt</code></li>
+<li><code>/fix</code> with precise regime context: summer subtracts 1 hour, fall-back order B does not</li>
+<li>Re-run the summer and fall-back checks. What improved? What still fails?</li>
+</ol>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p><code>/explain</code> is descriptive. Regression output is proof.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Timing: steps 1-2 = 15 min, step 3 = 10 min, step 4 = 15 min.</p>
+<p>Use the bug-reveal language from the facilitation script after the log read: “All summer records. One-hour shift. Python copied local time. SAS converted to fixed CET.”</p>
+<p>Debrief question after: “What would actually have caught this bug earlier?” Answer: a summer checkpoint or a unit test that asserts <code>cetStarttime = startTime - 1h</code> for a summer record and the no-conversion rule for fall-back order B.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section></section>
+<section>
+<section id="module-3" class="title-slide slide level1 center" data-background-color="#0f4c81">
+<h1>Module 3</h1>
+
+</section>
+<section id="write-copilot-instructions" class="slide level2">
+<h2>Write Copilot Instructions</h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Participant notebook: <code>M3_COPILOT_INSTRUCTIONS.ipynb</code><br>
+Facilitator notebook: <code>facilitator/M3_facilitator.ipynb</code><br>
+Exercise focus: <code>.github/copilot-instructions.md</code>, <code>.github/prompts/</code>, and reusable CET review moves</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Transition: “By now you’ve felt the friction. Copilot keeps trying to apply a generic time-series worldview to a very specific CET migration. Module 3 turns tribal knowledge into repository context.”</p>
+<p>Key teaching moment: custom instructions turn domain rules into default context.</p>
+<p>Timing: 10 min to edit instructions, 15 min to validate them against a real prompt.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="two-layers-of-persistent-context" class="slide level2">
+<h2>Two layers of persistent context</h2>
+<p><strong><code>.github/copilot-instructions.md</code></strong> — always on, no invocation needed</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href=""></a><span class="fu">## CET rules</span></span>
+<span id="cb7-2"><a href=""></a><span class="ss">- </span>Negative quotes are valid — never flag them as errors.</span>
+<span id="cb7-3"><a href=""></a><span class="ss">- </span><span class="in">`curve_pipeline/curve_loader.py`</span> is read-only during training.</span>
+<span id="cb7-4"><a href=""></a><span class="ss">- </span>Summer records convert from Europe/Brussels local time to fixed CET (UTC+1).</span>
+<span id="cb7-5"><a href=""></a><span class="ss">- </span>order=B at 02:00 on DST fall-back day is already CET — do not subtract 1 hour.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="fragment">
+<p><strong><code>.github/prompts/</code> and <code>.github/skills/</code></strong> — invoked with <code>/</code> in Chat</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb8-1"><a href=""></a>/review-cet-function</span>
+<span id="cb8-2"><a href=""></a>/add-numpy-tests</span>
+<span id="cb8-3"><a href=""></a>/add-soda-checks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="fragment">
+<p>Instructions provide the defaults. Prompt files and skills package the repeated moves.</p>
+<aside class="notes">
+<p>Show copilot-instructions.md in VS Code while this slide is up.</p>
+<p>Key distinction: “Instructions are the team contract. Prompt files and skills are the repeatable actions you invoke on demand.”</p>
+<p>Ask Chat to write a validation function WITHOUT the instructions file active (rename it temporarily), then WITH it. The negative quotes and order-B behaviour should change immediately.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="the-four-non-negotiables" class="slide level2">
+<h2>The four non-negotiables</h2>
+<ol type="1">
+<li>Negative quotes are valid input.</li>
+<li>Reuse helpers from <code>cet_converter.py</code> instead of reimplementing DST logic.</li>
+<li>Keep <code>curve_loader.py</code> unchanged during the workshop.</li>
+<li>Prefer NumPy-style docstrings and explicit error vs warning behaviour.</li>
+</ol>
+<div class="fragment">
+<p>If the instructions do not encode the domain, Copilot will invent one.</p>
+<aside class="notes">
+<p>The M3 facilitator notebook frames these as non-negotiable because every later module depends on them. If one is missing, get participants to tighten the instruction text until they can test it in Chat.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="exercise-3a-custom-instructions-10-min" class="slide level2">
+<h2>Exercise 3A — Custom instructions (10 min)</h2>
+<p>In <code>M3_COPILOT_INSTRUCTIONS.ipynb</code>, refine <code>.github/copilot-instructions.md</code> so it covers the four non-negotiables.</p>
+<p>Test it immediately: ask Chat how it would fix <code>compute_cet_timestamps</code>. Does it preserve negative quotes and order B?</p>
+</section>
+<section id="exercise-3b-prompt-files-15-min" class="slide level2">
+<h2>Exercise 3B — Prompt files (15 min)</h2>
+<p>Run one reusable helper on a real training file:</p>
+<ul>
+<li><code>/review-cet-function</code> on <code>curve_pipeline/cet_converter.py</code>, or</li>
+<li><code>/add-numpy-tests</code> on a selected function in <code>curve_pipeline/curve_loader.py</code></li>
+</ul>
+<p>Does the generated output respect the rules you just encoded?</p>
+<aside class="notes">
+<p>For 3A: if someone writes a vague rule, push them toward something testable: negative quotes, order-B handling, reuse of helpers, or docstring format.</p>
+<p>For 3B: the litmus is whether the review or generated tests now respect domain rules without being reminded in the prompt.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="module-4" class="title-slide slide level1 center" data-background-color="#0f4c81">
+<h1>Module 4</h1>
+
+</section>
+<section id="plan-mode-tdd-code-review" class="slide level2">
+<h2>Plan Mode + TDD + Code Review</h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Participant notebook: <code>M4_TDD_VALIDATOR.ipynb</code><br>
+Facilitator notebook: <code>facilitator/M4_facilitator.ipynb</code><br>
+Exercise focus: <code>curve_pipeline/validator.py</code>, <code>tests/test_validator.py</code>, and <code>/review-cet-function</code></p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Transition: “This is the module most people resist. The shift is: plan first, tests second, implementation third. With Copilot available, that order becomes practical.”</p>
+<p>Key teaching moment: the February checkpoint passed because it only covered winter. Participants now write the tests that would have blocked the original bug.</p>
+<p>Timing: 20 min planning and tests, 15 min implementation, 15 min review + fix loop.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="plan-mode-makes-tdd-practical" class="slide level2">
+<h2>Plan mode makes TDD practical</h2>
+<p>Most teams ask Copilot for code too early. The result: tests that prove the implementation you got, not the contract you wanted.</p>
+<div class="fragment">
+<p>Use plan mode to enumerate the CET regimes before you generate any code:</p>
+<ol type="1">
+<li>Winter: no conversion</li>
+<li>Summer: subtract 1 hour</li>
+<li>Summer midnight: roll back to the previous CET date</li>
+<li>Fall-back order B: no conversion</li>
+</ol>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb9-1"><a href=""></a>"Create a test plan for CurveValidator based on</span>
+<span id="cb9-2"><a href=""></a>#file:curve_pipeline/validator.py and #file:curve_pipeline/cet_converter.py.</span>
+<span id="cb9-3"><a href=""></a>Do NOT implement anything yet."</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="fragment">
+<p>The plan becomes the spec for <code>tests/test_validator.py</code>.</p>
+<aside class="notes">
+<p>“Get participants to say the four regimes out loud before they ask for test generation. The plan is the forcing function.”</p>
+<p>“Then keep <code>tests/test_validator.py</code> open as a tab while implementing. That turns the tests into live context for Copilot.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="the-traceback-is-the-prompt" class="slide level2">
+<h2>The traceback is the prompt</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Don’t do this</strong></p>
+<pre><code>"validator is broken"</code></pre>
+</div><div class="column" style="width:50%;">
+<p><strong>Do this</strong></p>
+<pre><code>FAILED tests/test_validator.py::test_summer_subtract_one_hour
+AssertionError: expected 23:00:00
+got 00:00:00
+
+#selection ← curve_pipeline/validator.py
+/fix</code></pre>
+</div></div>
+<p>The actual traceback carries more information than any description.</p>
+<aside class="notes">
+<p>“A traceback contains: the test name (what was being tested), the assertion that failed (what was expected vs actual), and the exact line. A description like ‘it’s broken’ contains none of that.”</p>
+<p>“Paste the full traceback. Select the function. Then /fix. That’s the loop.”</p>
+<p>Demo this live in Part C if possible — introduce the bug, run pytest, paste output into Chat.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="the-negative-prices-litmus-test" class="slide level2">
+<h2>The negative prices litmus test</h2>
+<p>If your generated <code>CurveValidator</code> flags negative quotes, your tests should catch it.</p>
+<div class="fragment">
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href=""></a><span class="kw">def</span> test_negative_quote_is_valid():</span>
+<span id="cb12-2"><a href=""></a>    record <span class="op">=</span> {</span>
+<span id="cb12-3"><a href=""></a>    <span class="st">"quotedDate"</span>: <span class="st">"2026-02-05"</span>,</span>
+<span id="cb12-4"><a href=""></a>    <span class="st">"startDate"</span>: <span class="st">"2026-02-05"</span>,</span>
+<span id="cb12-5"><a href=""></a>    <span class="st">"startTime"</span>: <span class="st">"13:00:00"</span>,</span>
+<span id="cb12-6"><a href=""></a>    <span class="st">"order"</span>: <span class="st">"A"</span>,</span>
+<span id="cb12-7"><a href=""></a>    <span class="st">"quote"</span>: <span class="st">"-45.2"</span>,</span>
+<span id="cb12-8"><a href=""></a>    <span class="st">"unit"</span>: <span class="st">"EUR/MWH"</span>,</span>
+<span id="cb12-9"><a href=""></a>    <span class="st">"type"</span>: <span class="st">"INPUT"</span>,</span>
+<span id="cb12-10"><a href=""></a>    <span class="st">"cetStartDate"</span>: <span class="st">"2026-02-05"</span>,</span>
+<span id="cb12-11"><a href=""></a>    <span class="st">"cetStarttime"</span>: <span class="st">"13:00:00"</span>,</span>
+<span id="cb12-12"><a href=""></a>    }</span>
+<span id="cb12-13"><a href=""></a>    result <span class="op">=</span> validator.validate_record(record)</span>
+<span id="cb12-14"><a href=""></a>    <span class="cf">assert</span> result.is_valid</span>
+<span id="cb12-15"><a href=""></a>    <span class="cf">assert</span> result.errors <span class="op">==</span> []</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="fragment">
+<p>If Copilot’s implementation fails this test — that’s the lesson working.</p>
+<aside class="notes">
+<p>“This test is the red thread of the whole day. It first appeared in the instructions you wrote in M3. Now it’s a test. In M5 the agent may fail it on first try. In M6 the DAG’s SODA and validator path must still respect it.”</p>
+<p>“If Copilot generates an implementation that filters negative prices and THIS test catches it — that’s exactly the lesson. Your tests protected you from domain ignorance in the model.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="exercise-4-50-min" class="slide level2">
+<h2>Exercise 4 (50 min)</h2>
+<p><strong>Part A (20 min):</strong> In <code>M4_TDD_VALIDATOR.ipynb</code>, ask for a test plan first, then write <code>tests/test_validator.py</code>. Include winter, summer, midnight rollback, and fall-back order B.</p>
+<p><strong>Part B (15 min):</strong> Implement <code>curve_pipeline/validator.py</code> to satisfy the tests. Keep <code>tests/test_validator.py</code> open as a tab.</p>
+<p><strong>Part C (15 min):</strong> Run <code>pytest tests/test_validator.py -v</code>, then <code>/review-cet-function</code>. Use traceback + <code>/fix</code> for any remaining failure. Root cause or symptom?</p>
+<aside class="notes">
+<p>Part A: if anyone finishes quickly, push them: add duplicate detection and order-B misuse cases.</p>
+<p>Part B: this is intentionally hard for people who don’t usually write tests first. That friction is the lesson. Don’t rescue them too quickly.</p>
+<p>Watch for the classic failure mode: participants write only winter tests. If that happens, use the facilitation-script line: “If there is more than one test that still passes with the copy-through bug, you’re missing a test.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="module-5" class="title-slide slide level1 center" data-background-color="#0f4c81">
+<h1>Module 5</h1>
+
+</section>
+<section id="agent-parallel-worktrees-soda" class="slide level2">
+<h2>Agent + Parallel Worktrees + SODA</h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Participant notebook: <code>M5_AGENT_WORKTREES.ipynb</code><br>
+Facilitator notebook: <code>facilitator/M5_facilitator.ipynb</code><br>
+Exercise focus: <code>.worktrees/scenario-1</code>, <code>.worktrees/scenario-2</code>, <code>scenarios/2-new-feature/spec.md</code>, and <code>soda_checks/curve_quality.yml</code></p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Transition: “Everything so far has been single-turn or single-file. Now we split the work into two parallel change streams and let agents operate inside explicit boundaries.”</p>
+<p>Key teaching moment: worktrees are not just convenience. They are the mechanism that keeps independent agent changes reviewable and mergeable.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="what-agent-mode-actually-does" class="slide level2">
+<h2>What agent mode actually does</h2>
+<p>Agent mode plans and executes sequences of edits <strong>across multiple files</strong> + terminal.</p>
+<div class="fragment">
+<p>It makes confident mistakes.</p>
+</div>
+<div class="fragment">
+<p><strong>The review obligation:</strong> every agent-produced line must be read before commit. Not because agents are bad — because they have no domain knowledge.</p>
+</div>
+<div class="fragment">
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Important</strong></p>
+</div>
+<div class="callout-content">
+<p>The test suite from Module 4 and the worktree split are the safety nets that catch it.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>“Agent mode is powerful. It’s also the place where people get into trouble by trusting the output too much. A 3-file change that looks coherent can have a subtle domain error in it — like filtering negative prices — that won’t crash but will silently corrupt results.”</p>
+<p>“The test suite is not optional. It’s the contract the agent has to satisfy.”</p>
+<p>Show the Copilot Edits panel briefly — point out the undo button. “This is your safety net at the UI level. The tests are your safety net at the logic level.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="two-worktrees-in-parallel" class="slide level2">
+<h2>Two worktrees in parallel</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Scenario 1 — bug hunt</strong> Worktree: <code>.worktrees/scenario-1</code></p>
+<p>Context: - <code>scenarios/1-bug-hunt/airflow_logs_fixture.txt</code> - <code>curve_pipeline/cet_converter.py</code> - summer and fall-back regression behaviour</p>
+<p>Goal: fix the CET bug without breaking order B.</p>
+</div><div class="column" style="width:50%;">
+<p><strong>Scenario 2 — new validation feature</strong> Worktree: <code>.worktrees/scenario-2</code></p>
+<p>Context: - <code>scenarios/2-new-feature/spec.md</code> - <code>curve_pipeline/validator.py</code> - tests-first workflow from Module 4</p>
+<p>Goal: implement <code>CurveValidator</code> and keep duplicates scoped to <code>quotedDate</code>.</p>
+</div></div>
+<div class="fragment">
+<p><strong>The contrast is the lesson:</strong> same agent skill, very different review burden.</p>
+<aside class="notes">
+<p>“Start Session 1 first. While it’s running — agent mode can take 2-3 minutes — start Session 2 in a new tab. You’ll review both when they finish.”</p>
+<p>“The contrast is intentional. Session 1 has rich context and tests to validate against. Session 2 has a spec and nothing else. You’ll feel the difference in how much manual review Session 2 requires.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="agent-prompt-structure" class="slide level2">
+<h2>Agent prompt structure</h2>
+<pre><code>Goal: implement Scenario 2 in `.worktrees/scenario-2`
+
+Constraints:
+  - reuse `_is_fall_back_day` and `validate_cet_record`
+  - negative quotes are valid
+  - do not modify `curve_loader.py`
+
+Output:
+  - `curve_pipeline/validator.py`
+  - `tests/test_validator.py`
+  - green `pytest tests/test_validator.py -v`
+
+Acceptance:
+  - `order=B` only on fall-back day
+  - duplicates are scoped by `quotedDate`</code></pre>
+<div class="fragment">
+<p>Finish with <code>/review-cet-function</code> before accepting the final diff.</p>
+<aside class="notes">
+<p>“Notice the prompt structure: Goal, Constraints, Output, Acceptance. The constraints section is where your domain knowledge lives — the agent has no idea that negative quotes are valid or that it should reuse helpers unless you tell it.”</p>
+<p>If participants already have a helper prompt in their notebook flow, that’s fine. The teaching point is still the same structure.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="session-1-review-checklist" class="slide level2">
+<h2>Session 1 review checklist</h2>
+<p>After the agent finishes — before accepting anything:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">Scenario 1 fixes summer without breaking fall-back order B?</label></li>
+<li><label><input type="checkbox">Scenario 2 reuses <code>_is_fall_back_day</code> and <code>validate_cet_record</code>?</label></li>
+<li><label><input type="checkbox">Duplicate detection is scoped by <code>quotedDate</code>?</label></li>
+<li><label><input type="checkbox">Negative quotes: no error, no warning?</label></li>
+<li><label><input type="checkbox"><code>pytest tests/test_curve_loader.py -v</code> and <code>pytest tests/test_validator.py -v</code> are green?</label></li>
+</ul>
+<div class="fragment">
+<p>Every participant should find at least <strong>2 things the agent assumed wrongly</strong>.</p>
+<aside class="notes">
+<p>“Go through this checklist out loud with the room after everyone’s agent has finished. Ask: who found something wrong with item 3? Item 4?”</p>
+<p>Common agent failures: - Using pytz instead of standard library - Treating negative quotes as warnings - Reimplementing fall-back logic instead of reusing helpers - Duplicate detection ignoring <code>quotedDate</code> - Fixing summer and accidentally shifting order B</p>
+<p>“If your tests all pass — great. But still go through the checklist. Tests are necessary but not sufficient.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="soda-checks-are-a-different-safety-net" class="slide level2">
+<h2>SODA checks are a different safety net</h2>
+<p>Three things <code>/add-soda-checks</code> should give you:</p>
+<ol type="1">
+<li><code>missing_count = 0</code> for <code>cetStartDate</code> and <code>cetStarttime</code></li>
+<li><code>valid_values</code> checks for <code>type</code> and <code>order</code></li>
+<li>A row-count discussion for <code>spring_forward</code></li>
+</ol>
+<div class="fragment">
+<p>Live follow-up:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href=""></a><span class="ex">soda</span> scan <span class="at">-d</span> curves <span class="at">-c</span> soda_checks/curve_quality.yml data/curves_spring_forward.csv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
+<p>The discussion point from the facilitator guide matters here: 23 rows on spring-forward day is correct. If SODA flags it, that is a threshold problem, not a CET code bug.</p>
+<p>Debrief: “What does SODA catch that regression does not? What can regression catch that SODA cannot?”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section></section>
+<section>
+<section id="module-6" class="title-slide slide level1 center" data-background-color="#0f4c81">
+<h1>Module 6</h1>
+
+</section>
+<section id="mcp-airflow-orchestration" class="slide level2">
+<h2>MCP + Airflow Orchestration</h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Participant notebook: <code>M6_MCP_ORCHESTRATION.ipynb</code><br>
+Facilitator notebook: <code>facilitator/M6_facilitator.ipynb</code><br>
+Exercise focus: <code>.vscode/mcp.json</code>, <code>dags/dc_fwd_regression_dag.py</code>, and all 4 seasonal DAG runs</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Transition: “Everything you built today — the validator, the instructions, the tests — now becomes part of a live orchestration loop. This is the step from ‘Copilot suggests’ to ‘Copilot does, then asks you whether to continue.’”</p>
+<p>Key teaching moment: the tool flow is sequential and partially irreversible. Review has to happen before the next trigger, not after.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="what-mcp-is" class="slide level2">
+<h2>What MCP is</h2>
+<p><strong>Model Context Protocol</strong> — an open protocol that lets AI assistants call live tools, not just read code.</p>
+<div class="fragment">
+<pre><code>Copilot Chat
+  ↓  calls
+Airflow MCP tools
+  ↓  trigger / poll / read logs
+dc_fwd_curve_pipeline
+  ↓  runs
+compute_cet  →  regression  →  soda_checks</code></pre>
+</div>
+<div class="fragment">
+<p><code>M6_MCP_ORCHESTRATION.ipynb</code> starts by wiring <code>.vscode/mcp.json</code> to your Airflow environment. If that connection is wrong, the rest of the module cannot start.</p>
+<aside class="notes">
+<p>“MCP is the plumbing. Copilot is the planner. Airflow is the live system.”</p>
+<p>Show <code>.vscode/mcp.json</code> and explain that the environment name arrives only at Module 6. That preserves the flow from the facilitator guide.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="the-season-matrix" class="slide level2">
+<h2>The season matrix</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Season</th>
+<th>Expected first result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>winter</code></td>
+<td>Passes</td>
+</tr>
+<tr class="even">
+<td><code>spring_forward</code></td>
+<td>SODA row-count failure</td>
+</tr>
+<tr class="odd">
+<td><code>summer</code></td>
+<td>75 regression mismatches</td>
+</tr>
+<tr class="even">
+<td><code>fall_back</code></td>
+<td>Remaining mismatches after the summer fix</td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+<p>The DAG parameter is <code>season</code>: <code>winter</code>, <code>spring_forward</code>, <code>summer</code>, <code>fall_back</code>.</p>
+<aside class="notes">
+<p>Use this slide to prime expectations before the triggers start. It makes the later discussion about spring-forward vs summer much easier.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="the-orchestration-loop" class="slide level2">
+<h2>The orchestration loop</h2>
+<p>Using <code>M6_MCP_ORCHESTRATION.ipynb</code>, ask Copilot to:</p>
+<ol type="1">
+<li>trigger <code>dc_fwd_curve_pipeline</code> for all 4 seasons</li>
+<li>poll each run until success or failure</li>
+<li>fetch logs for failed tasks before proposing a fix</li>
+<li>patch the code or the SODA threshold, then re-trigger</li>
+</ol>
+<div class="fragment">
+<p>Watch for: - Does it read logs before guessing? - Does it treat <code>spring_forward</code> as a check issue rather than a CET bug? - Does it ask to re-trigger before you have reviewed the diff?</p>
+<aside class="notes">
+<p>This matches the participant notebook almost exactly. Keep it visible while the room runs. If Copilot starts inventing tool names, use the facilitator response: “What tools are actually available? Ask Copilot to list them first.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="the-closing-exercise" class="slide level2">
+<h2>The closing exercise</h2>
+<p><code>M6_MCP_ORCHESTRATION.ipynb</code> is the runbook.</p>
+<ol type="1">
+<li>Update <code>.vscode/mcp.json</code> with your assigned Airflow environment</li>
+<li>Trigger the DAG for all 4 seasons</li>
+<li>Review every proposed fix before the re-trigger</li>
+<li>End with all 4 seasons green and a short incident summary</li>
+</ol>
+<div class="fragment">
+<p>Expected narrative:</p>
+<p><code>winter</code> passes immediately → <code>summer</code> fails on CET copy-through → <code>fall_back</code> exposes order B → <code>spring_forward</code> exposes an over-strict SODA row count</p>
+<aside class="notes">
+<p>This is where you use the irreversible-action warning from the facilitation script. If Copilot proposes re-triggering before the room has reviewed the diff, stop and force the checkpoint.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="trace-the-arc" class="slide level2">
+<h2>Trace the arc</h2>
+<div class="fragment">
+<p>The DAG called <strong><code>compute_cet_timestamps()</code></strong> and <strong><code>CurveValidator.run_soda_checks()</code></strong></p>
+</div>
+<div class="fragment">
+<p>which you first explained in <strong><code>M1_EXPLORE.ipynb</code></strong></p>
+</div>
+<div class="fragment">
+<p>then fixed in <strong><code>M2_CET_BUG.ipynb</code></strong></p>
+</div>
+<div class="fragment">
+<p>then constrained in <strong><code>M3_COPILOT_INSTRUCTIONS.ipynb</code></strong></p>
+</div>
+<div class="fragment">
+<p>then tested in <strong><code>M4_TDD_VALIDATOR.ipynb</code></strong></p>
+</div>
+<div class="fragment">
+<p>and extended in <strong><code>M5_AGENT_WORKTREES.ipynb</code></strong>.</p>
+</div>
+<div class="fragment">
+<p>At which step would you have caught a bug if you’d skipped the notebook or safety net from the previous module?</p>
+<aside class="notes">
+<p>Read these lines slowly with pauses. Let each one land.</p>
+<p>“This is the answer to ‘what did we actually do today’. Not six disconnected exercises. One thing, built in layers, where each layer made the next one safer.”</p>
+<p>The final question is rhetorical — let the room sit with it for a moment. Then move to the wrap-up.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section></section>
+<section>
+<section id="wrap-up" class="title-slide slide level1 center" data-background-color="#0f4c81">
+<h1>Wrap-up</h1>
+<aside class="notes">
+<p>If time allows, show all 4 seasons green in Airflow and run <code>pytest tests/ -v</code>.</p>
+<p>“The notebook trail matters because every later check depended on an earlier artifact.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="the-progression-you-just-lived" class="slide level2">
+<h2>The progression you just lived</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Notebook</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>M1</td>
+<td><code>M1_EXPLORE.ipynb</code></td>
+</tr>
+<tr class="even">
+<td>M2</td>
+<td><code>M2_CET_BUG.ipynb</code></td>
+</tr>
+<tr class="odd">
+<td>M3</td>
+<td><code>M3_COPILOT_INSTRUCTIONS.ipynb</code></td>
+</tr>
+<tr class="even">
+<td>M4</td>
+<td><code>M4_TDD_VALIDATOR.ipynb</code></td>
+</tr>
+<tr class="odd">
+<td>M5</td>
+<td><code>M5_AGENT_WORKTREES.ipynb</code></td>
+</tr>
+<tr class="even">
+<td>M6</td>
+<td><code>M6_MCP_ORCHESTRATION.ipynb</code></td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<p>“Each of these is a capability upgrade. Most people stop at M2. The people who get the most out of Copilot are operating at M4 and above.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="the-trust-model" class="slide level2">
+<h2>The trust model</h2>
+<pre><code>M1  I talk to it
+M2  I command it
+M3  I configure it
+M4  I verify it
+M5  I delegate to it
+M6  It uses what I built</code></pre>
+<p>Each step gave Copilot more autonomy — only after you had the tools to catch mistakes at that level.</p>
+<aside class="notes">
+<p>“The trust isn’t blind. At each level you built a mechanism to catch failures: - M3: instructions catch convention errors - M4: tests catch logic errors - M5: review checklist catches domain errors - M6: the tool contract catches integration errors</p>
+<p>Trust, but verify. At every level.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="your-commitment-card" class="slide level2">
+<h2>Your commitment card</h2>
+<p>Write down <strong>one specific change</strong> to your workflow this week.</p>
+<p>Not <em>“use Copilot more”</em>.</p>
+<div class="fragment">
+<blockquote>
+<p><em>“I will run <code>/review-data-function</code> before any PR that touches timezone handling.”</em></p>
+</blockquote>
+<blockquote>
+<p><em>“I will write the summer and fall-back tests before asking the agent to implement.”</em></p>
+</blockquote>
+<blockquote>
+<p><em>“I will add the order-B and negative-quote rules to our repo’s <code>copilot-instructions.md</code> today.”</em></p>
+</blockquote>
+<aside class="notes">
+<p>Give people 2 minutes to write this down — physically, not typed.</p>
+<p>“Not ‘use Copilot more’. Specific. Something you can tell me next week whether you did.”</p>
+<p>Collect these on a shared doc or photo them. Follow up in 2 weeks with a quick check-in: “Did you do your thing? What happened?”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="one-thing-to-remember" class="slide level2">
+<h2>One thing to remember</h2>
+<blockquote>
+<p>Winter passing is not proof. Cover summer, spring forward, and fall-back order B.</p>
+<p><strong>Direct Copilot. Verify the missing regime.</strong></p>
+</blockquote>
+<aside class="notes">
+<p>End on this. Tie it back to the regression arc from the facilitator guide.</p>
+<p>“The code was correct in winter and wrong in summer. The tests only ran in winter. What you built today is the workflow that stops that from happening again.”</p>
+<p>“That’s what directing looks like.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="extras" class="slide level2">
+<h2>Extras</h2>
+<p><strong>Copilot CLI</strong> — same smarts, in the terminal:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href=""></a><span class="ex">gh</span> extension install github/gh-copilot</span>
+<span id="cb17-2"><a href=""></a></span>
+<span id="cb17-3"><a href=""></a><span class="ex">gh</span> copilot suggest <span class="st">"find all PT15M records in the last 7 days and count gaps"</span></span>
+<span id="cb17-4"><a href=""></a><span class="ex">gh</span> copilot explain <span class="st">"awk 'NR==FNR{a[</span><span class="va">$1</span><span class="st">]=</span><span class="va">$2</span><span class="st">;next} </span><span class="va">$1</span><span class="st"> in a{print </span><span class="va">$0</span><span class="st">,a[</span><span class="va">$1</span><span class="st">]}' f1 f2"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Cheatsheet: <code>extras/copilot_cli_cheatsheet.md</code></p>
+<aside class="notes">
+<p>Hand out the cheatsheet now. “This is a bonus — if you live in the terminal, gh copilot suggest is worth 5 minutes to set up. Aliases at the bottom.”</p>
+<p>No demo needed — it’s self-explanatory from the cheatsheet.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>energy_pipeline — built step by step</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="slides_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="slides_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'fade',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

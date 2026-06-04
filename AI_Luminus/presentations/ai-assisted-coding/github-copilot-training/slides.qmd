@@ -1,0 +1,20 @@
+---
+title: "Beyond Autocomplete"
+subtitle: "AI-Assisted Coding with GitHub Copilot"
+author: "Full-day workshop"
+notebook-links: false
+format:
+  revealjs:
+    theme: white
+    transition: fade
+    slide-number: true
+    code-block-height: 400px
+    highlight-style: github
+    footer: "energy_pipeline — built step by step"
+    progress: true
+    chalkboard: false
+    logo: ""
+    css: slides-custom.css
+---
+
+{{< include slides.body.qmd >}}

@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "input=$(cat); echo \"$input\" | python3 -c \"import sys, json; data=json.load(sys.stdin); tool=data.get('toolName',''); inp=json.dumps(data.get('toolInput',{})); protected=['facilitator','notebooks']; blocked=any(p in inp for p in protected); exit(0) if not blocked else print(json.dumps({'hookSpecificOutput':{'hookEventName':'PreToolUse','permissionDecision':'deny','permissionDecisionReason':'Access to facilitator/ and notebooks/ is blocked — these folders contain trainer-only solutions and are excluded via .copilotignore.'}})) or exit(2)\"",
+        "timeout": 5
+      }
+    ]
+  }
+}

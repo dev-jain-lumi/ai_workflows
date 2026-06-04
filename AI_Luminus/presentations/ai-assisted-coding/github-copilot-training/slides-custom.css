@@ -1,0 +1,127 @@
+/* Beyond Autocomplete — slide theme customisation */
+
+/* Base font */
+.reveal {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-size: 32px;
+  color: #1a1a1a;
+}
+
+/* Headings */
+.reveal h1, .reveal h2 {
+  color: #0f4c81;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.reveal h3 {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+/* Section title slides (blue background) */
+.reveal section[data-background-color="#0f4c81"] h1,
+.reveal section[data-background-color="#0f4c81"] h2,
+.reveal section[data-background-color="#0f4c81"] p {
+  color: #ffffff;
+}
+
+/* Code blocks */
+.reveal pre {
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  font-size: 0.72em;
+}
+
+.reveal code {
+  background: #f5f5f5;
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  color: #c7254e;
+  font-size: 0.85em;
+}
+
+/* Blockquotes */
+.reveal blockquote {
+  border-left: 4px solid #0f4c81;
+  background: #f0f6ff;
+  padding: 0.6em 1em;
+  color: #1a1a1a;
+  font-style: normal;
+  box-shadow: none;
+  width: 92%;
+}
+
+/* Tables */
+.reveal table {
+  font-size: 0.8em;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.reveal table th {
+  background: #0f4c81;
+  color: white;
+  padding: 0.4em 0.8em;
+}
+
+.reveal table td {
+  padding: 0.35em 0.8em;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.reveal table tr:nth-child(even) td {
+  background: #f7f9fc;
+}
+
+/* Callout boxes */
+.reveal .callout {
+  font-size: 0.85em;
+  border-radius: 6px;
+}
+
+/* Scrollable notebook preview */
+.reveal .notebook-preview {
+  max-height: 560px;
+  overflow-y: auto;
+  padding: 1rem 1.25rem;
+  border: 1px solid #d6e2f0;
+  border-radius: 10px;
+  background: #fbfdff;
+  text-align: left;
+  font-size: 0.7em;
+}
+
+.reveal .notebook-preview h3,
+.reveal .notebook-preview h4 {
+  color: #0f4c81;
+  margin-top: 0.2em;
+}
+
+.reveal .notebook-preview pre {
+  font-size: 0.9em;
+}
+
+.reveal .notebook-preview hr {
+  border: 0;
+  border-top: 1px solid #d6e2f0;
+  margin: 1rem 0;
+}
+
+/* Footer */
+.reveal .footer {
+  font-size: 0.55em;
+  color: #888;
+}
+
+/* Progress bar */
+.reveal .progress {
+  color: #0f4c81;
+  height: 4px;
+}
+
+/* Slide numbers */
+.reveal .slide-number {
+  color: #888;
+  font-size: 0.55em;
+}

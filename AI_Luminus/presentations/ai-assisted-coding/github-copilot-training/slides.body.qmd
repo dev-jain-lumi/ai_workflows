@@ -1,0 +1,494 @@
+
+## The day in one sentence
+
+> Copilot is a fast, confident, well-read junior colleague
+> who has never seen a CET fall-back order B in production.
+>
+> Today you learn how to **direct** it — and how to prove a February-green migration
+> is still safe in June.
+
+
+## What we're building
+
+The **`curve_pipeline`** workshop repo — one connected CET migration story you move through
+with linked deck sections, notebooks, prompts, tests, skills, SODA checks, and dashboard iteration.
+
+::: {.slash-command-table}
+| Time | Module | Primary asset | Output |
+|---|---|---|---|
+| 09:00-09:30 | M0 | [Setting the scene](#part-0) + [Github Copilot Chat](#part-8) | Set the scene and discover GitHub Copilot Chat |
+| 09:30-10:15 | M1 | `M1_EXPLORE.ipynb` | Explain `curve_loader.py` and find the winter-only blind spot |
+| 10:15-11:00 | M2 | `M2_CET_BUG.ipynb` & [Slash Commands](#slash-commands-worth-teaching)  | Diagnose and fix `compute_cet_timestamps` with regression output |
+| 11:15-11:45 | M3 | `M3_COPILOT_INSTRUCTIONS.ipynb` & [Copilot instructions](#part-1) | Encode CET rules in `.github/copilot-instructions.md` |
+| 13:00-14:00 | M4 | `M4_TDD_VALIDATOR.ipynb` & [Agents](#part-2-what-is-an-agent) and [Subagents](#part-5-sub-agents-workflows-orchestration)| Plan and write validator tests before implementation |
+| 14:00-14:30 | M5 | `M5_SODA.ipynb` & [Skills](#part-3-skills-and-hooks) | Generate SODA checks and wire them into `CurveValidator` |
+| 14:55-16:20 | M6 | `M6_VIBE_CODING.ipynb` & [MCP](#part-4-mcp) | Build and critique a dashboard from regression outputs |
+:::
+
+
+# Module 0 {background-color="#0f4c81"}
+## Setting the Scene + Discover GitHub Copilot Chat
+
+::: {.callout-note}
+
+- [Setting the scene](#part-0)
+- [GitHub Copilot Chat in VS Code](#part-8)
+
+:::
+
+
+# Module 1 {background-color="#0f4c81"}
+## Understand the Codebase with Chat
+
+::: {.callout-note}
+Participant notebook: `M1_EXPLORE.ipynb`<br>
+Code focus: `curve_pipeline/curve_loader.py` and `tests/test_curve_loader.py`
+:::
+
+{{< include github-copilot-training/notebook_previews/M1_EXPLORE.preview.qmd >}}
+
+## Exercise 1A — Code path map (20 min)
+
+Open `curve_pipeline/curve_loader.py`.
+The previous notebook embed shortcode was removed because it was causing Quarto render failures in this workshop setup.
+This preview is now generated from `M1_EXPLORE.ipynb` via `scripts/generate_notebook_previews.py`.
+
+1. What does `load_curves_csv` guarantee before downstream code runs?
+2. Why does `filter_valid_curves` keep negative quotes?
+3. What does `group_by_delivery` encode about order A vs order B?
+
+. . .
+
+::: {.callout-tip}
+Write the answers in the notebook, not Chat.
+Paraphrasing is where understanding happens.
+:::
+
+
+## Exercise 1B — Find the blind spot (25 min)
+
+Use Chat plus `tests/test_curve_loader.py`.
+
+1. Which existing checks would still pass if `cetStarttime` just copied `startTime` directly?
+2. Why does winter data hide that bug?
+3. Add one note to `M1_EXPLORE.ipynb`: which seasonal checkpoint is missing?
+
+. . .
+
+Starter prompt:
+```
+"Read #file:curve_pipeline/curve_loader.py and #file:tests/test_curve_loader.py.
+Which assumption makes these checks safe in winter but insufficient for summer?"
+```
+
+
+# Module 2 {background-color="#0f4c81"}
+## Find and Fix the CET Bug
+
+::: {.callout-note}
+Participant notebook: `M2_CET_BUG.ipynb`<br>
+Exercise focus: `curve_pipeline/cet_converter.py`, regression checkpoints, and precise slash-command prompts<br>
+[Slash commands](#slash-commands-worth-teaching)
+:::
+
+
+{{< include github-copilot-training/notebook_previews/M2_CET_BUG.preview.qmd >}}
+
+## The slash command vocabulary
+
+| Command | Use it for |
+|---|---|
+| `/explain` | Understanding what code **does** |
+| `/fix` | Repairing a specific failure |
+| `/doc` | Generating NumPy docstrings |
+| `/tests` | Generating a test suite |
+
+. . .
+
+::: {.callout-warning}
+**`/explain` describes intent, not correctness.**
+It will miss logical bugs.
+You can find others in [Slash Commands](#slash-commands-worth-teaching)
+:::
+
+
+## `/fix` — precision matters
+
+::: columns
+::: {.column width="50%"}
+**Weak**
+```
+/fix
+```
+Chat guesses what to fix.
+Usually wrong.
+:::
+
+::: {.column width="50%"}
+**Strong**
+```
+/fix summer records in compute_cet_timestamps
+must convert Europe/Brussels local time to
+fixed CET (UTC+1). Right now cetStartDate
+and cetStarttime copy startDate/startTime
+through unchanged, which breaks summer rows
+and midnight rollback.
+```
+Chat fixes the right thing.
+:::
+:::
+
+
+## The bug in `cet_converter.py`
+
+```python
+def compute_cet_timestamps(records):
+  result = []
+  for r in records:
+    r = dict(r)
+    r["cetStartDate"] = r["startDate"]   # BUG: ignores CEST rollback
+    r["cetStarttime"] = r["startTime"]   # BUG: summer should subtract 1h
+    result.append(r)
+  return result
+```
+
+. . .
+
+Winter data passes because local time already equals fixed CET.
+
+. . .
+
+Summer rows should subtract 1 hour, and midnight summer rows roll back to the previous CET date.
+
+. . .
+
+Fall-back order B is a separate rule: the repeated 02:00 hour is already CET.
+
+
+## Exercise 2 — Workflow sprint (45 min)
+
+Work through `M2_CET_BUG.ipynb` and `curve_pipeline/cet_converter.py` in order:
+
+1. Run the winter and summer checkpoints. What looks green? What fails immediately?
+2. `/explain` on `compute_cet_timestamps` — does it describe intent or detect the bug?
+3. `/fix` with precise regime context: summer subtracts 1 hour, midnight summer rows can roll back the date, fall-back order B does not
+4. Re-run the summer and october checks. What improved? What still fails?
+
+. . .
+
+::: {.callout-note}
+`/explain` is descriptive. Regression output is proof.
+:::
+
+
+# Module 3 {background-color="#0f4c81"}
+## Write Copilot Instructions
+
+::: {.callout-note}
+Participant notebook: `M3_COPILOT_INSTRUCTIONS.ipynb`<br>
+Exercise focus: `.github/copilot-instructions.md` and CET-specific workshop rules<br>
+[Copilot instructions](#part-1)
+:::
+
+{{< include github-copilot-training/notebook_previews/M3_COPILOT_INSTRUCTIONS.preview.qmd >}}
+
+## The four non-negotiables
+
+1. Negative quotes are valid input.
+2. Reuse helpers from `cet_converter.py` instead of reimplementing DST logic.
+3. Keep `curve_loader.py` unchanged during the workshop.
+4. Prefer NumPy-style docstrings and explicit error vs warning behaviour.
+
+If the instructions do not encode the domain, Copilot will invent one.
+
+
+## Exercise 3 — Custom instructions (30 min)
+
+In `M3_COPILOT_INSTRUCTIONS.ipynb`, refine `.github/copilot-instructions.md`
+so it covers the four non-negotiables.
+
+Use prompts when the task knows this repo's files and CET rules.
+Use skills when the capability should transfer across repositories.
+
+We provide 2 prompts that might be useful for the task.
+
+```text
+/review-cet-function
+/add-numpy-tests
+```
+
+Test it immediately: ask Chat how it would fix `compute_cet_timestamps`.
+Does it preserve negative quotes and order B?
+
+# Module 4 {background-color="#0f4c81"}
+## Plan Mode + TDD + Code Review
+
+::: {.callout-note}
+Participant notebook: `M4_TDD_VALIDATOR.ipynb`<br>
+Exercise focus: `curve_pipeline/validator.py`, `tests/test_validator.py`, and `/review-cet-function`
+[Agents](#part-2-what-is-an-agent) and [Subagents](#part-5-sub-agents-workflows-orchestration)
+:::
+
+## Plan mode makes TDD practical
+
+Most teams ask Copilot for code too early.
+The result: tests that prove the implementation you got, not the contract you wanted.
+More info about the different types of agents might be found in [Agents](#part-2-what-is-an-agent) and [Subagents](#part-5-sub-agents-workflows-orchestration)
+
+. . .
+
+Use plan mode to enumerate the CET regimes before you generate any code:
+
+1. Winter: no conversion
+2. Summer: subtract 1 hour
+3. Summer midnight: roll back to the previous CET date
+4. Fall-back order B: no conversion
+
+. . .
+
+The plan becomes the spec for `tests/test_validator.py`.
+
+
+## The traceback is the prompt
+
+::: columns
+::: {.column width="50%"}
+**Don't do this**
+```
+"validator is broken"
+```
+:::
+
+::: {.column width="50%"}
+**Do this**
+```
+FAILED tests/test_validator.py::test_summer_subtract_one_hour
+AssertionError: expected 23:00:00
+got 00:00:00
+
+#selection ← curve_pipeline/validator.py
+/fix
+```
+:::
+:::
+
+The actual traceback carries more information than any description.
+
+## The negative prices litmus test
+
+If your generated `CurveValidator` flags negative quotes,
+your tests should catch it.
+
+. . .
+
+```python
+def test_negative_quote_is_valid():
+    record = {
+    "quotedDate": "2026-02-05",
+    "startDate": "2026-02-05",
+    "startTime": "13:00:00",
+    "order": "A",
+    "quote": "-45.2",
+    "unit": "EUR/MWH",
+    "type": "INPUT",
+    "cetStartDate": "2026-02-05",
+    "cetStarttime": "13:00:00",
+    }
+    result = validator.validate_record(record)
+    assert result.is_valid
+    assert result.errors == []
+```
+
+. . .
+
+If Copilot's implementation fails this test — that's the lesson working.
+
+
+## Exercise 4 (50 min)
+
+**Part A (20 min):** In `M4_TDD_VALIDATOR.ipynb`, ask for a test plan first, then write
+`tests/test_validator.py`.
+Include winter, summer, midnight rollback, and fall-back order B.
+
+**Part B (15 min):** Implement `curve_pipeline/validator.py` to satisfy the tests.
+Keep `tests/test_validator.py` open as a tab.
+
+**Part C (15 min):** Run `pytest tests/test_validator.py -v`, then `/review-cet-function`.
+Use traceback + `/fix` for any remaining failure. Root cause or symptom?
+
+{{< include github-copilot-training/notebook_previews/M4_TDD_VALIDATOR.preview.qmd >}}
+
+
+# Module 5 {background-color="#0f4c81"}
+## Skills + SODA Quality Checks
+
+::: {.callout-note}
+- Participant notebook: `M5_SODA.ipynb`<br>
+- Exercise focus: `/add-soda-checks`, `soda_checks/curve_quality.yml`, and `curve_pipeline/validator.py`
+- [Skills](#part-3-skills-and-hooks)
+:::
+
+A prompt knows your files and business rules.
+A skill reads the schema you point it at and adapts.
+
+
+## What SODA catches vs regression
+
+| | SODA checks | Regression runner |
+|---|---|---|
+| Detects | Missing values, invalid categories, non-numeric fields | Wrong computed values |
+| Requires | A YAML config | A reference output CSV |
+| Runs | On any dataset | Against expected output |
+| Would have caught the copy-through bug? | No - the value was present, just wrong | Yes - the summer mismatches expose it |
+
+. . .
+
+You need both.
+One protects structure. One protects correctness.
+
+## Exercise 5 — Generate and wire the checks (30 min)
+
+1. Run `/add-soda-checks` and point it at `curve_pipeline/curve_loader.py`
+2. Verify `soda_checks/curve_quality.yml` covers `cetStartDate`, `cetStarttime`, valid values for `type` and `order`, and numeric `quote`
+3. Implement `run_soda_checks(self, records)` in `CurveValidator` with `soda-core-duckdb`
+4. Run it against `data/curve_winter.csv` and `data/curve_with_issues.csv`
+
+{{< include github-copilot-training/notebook_previews/M5_SODA.preview.qmd >}}
+
+# Module 6 {background-color="#0f4c81"}
+## Vibe Coding: Build a Curve Dashboard
+
+::: {.callout-note}
+Participant notebook: `M6_VIBE_CODING.ipynb`<br>
+Exercise focus: `dashboard_mockup.html`, `dashboard.html`, `regression/actual/`, and `regression/checkpoints/`
+[MCP](#part-4-mcp)
+:::
+
+## What vibe coding is
+
+Vibe coding means driving an AI agent with intent rather than a detailed spec.
+
+It is fast.
+
+It also produces polished nonsense if you do not review the output.
+
+. . .
+
+::: {.callout-warning}
+The test in this module is not unit coverage.
+It is whether the dashboard reads the real CSV outputs and tells the CET story accurately.
+:::
+
+## The goal
+
+Build a self-contained `dashboard.html` that tells the CET bug story visually.
+
+Use:
+
+- `dashboard_mockup.html` as the visual target
+- `regression/actual/` for actual outputs
+- `regression/checkpoints/` for expected outputs
+
+The dashboard should make the winter / summer / october differences obvious.
+
+## Exercise 6 — Prompt, review, refine
+
+1. Run the regression to refresh the files in `regression/actual/`
+2. Ask Copilot agent for a self-contained `dashboard.html` using HTML, CSS, and vanilla JS
+3. Open it and compare it with `dashboard_mockup.html`
+4. Iterate with one follow-up prompt and note what the agent improved vs invented
+
+. . .
+
+Starter prompt:
+
+```text
+I have actual output in `regression/actual/` and reference checkpoints in `regression/checkpoints/`.
+Build a self-contained `dashboard.html` that shows the CET conversion mismatches between actual and checkpoint for each season.
+Use only HTML, CSS, and vanilla JS - no server.
+```
+
+## Review checklist
+
+- Summary shows `0 / 75 / 4` mismatches for winter / summer / october
+- Summer makes the 1-hour shift obvious
+- October order B is called out separately
+- Mismatch rows are visually distinct
+- The values come from the CSV files, not invented constants
+
+. . .
+
+If the output looks polished but fails one of these checks, it is still wrong.
+
+## Stress test the agent
+
+Try one of these harder prompts and observe what happens:
+
+**Option A - ambiguous goal:**
+> Make the dashboard more insightful.
+
+**Option B - impossible constraint:**
+> Make it work offline without embedding the CSV data in the HTML.
+
+**Option C - scope expansion:**
+> Add a fourth panel showing what the data would look like if the copy-through bug were still in place.
+
+{{< include github-copilot-training/notebook_previews/M6_VIBE_CODING.preview.qmd >}}
+
+## What did you achieve today ?
+
+. . .
+
+The day touched **`compute_cet_timestamps()`**, **`CurveValidator.run_soda_checks()`**,
+and the dashboard built from regression outputs
+
+. . .
+
+which you first explained in **`M1_EXPLORE.ipynb`**
+
+. . .
+
+then fixed in **`M2_CET_BUG.ipynb`**
+
+. . .
+
+then constrained in **`M3_COPILOT_INSTRUCTIONS.ipynb`**
+
+. . .
+
+then tested in **`M4_TDD_VALIDATOR.ipynb`**
+
+. . .
+
+then extended in **`M5_SODA.ipynb`**
+
+. . .
+
+and finally visualised in **`M6_VIBE_CODING.ipynb`**.
+
+. . .
+
+At which step would you have caught a bug if you'd skipped the notebook or safety net from the previous module?
+
+```
+M1  I talk to it
+M2  I challenge it
+M3  I configure it
+M4  I verify it
+M5  I extend it
+M6  I direct and critique it
+```
+
+## Your commitment card
+
+Write down **one specific change** to your workflow this week.
+
+Not *"use Copilot more"*.
+
+. . .
+
+> *"I will run `/review-cet-function` before any PR that touches CET conversion logic."*
+
+> *"I will write the summer and fall-back tests before asking the agent to implement."*
+
+> *"I will add the order-B and negative-quote rules to our repo's `copilot-instructions.md` today."*
