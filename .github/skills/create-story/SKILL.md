@@ -1,6 +1,6 @@
 ---
-name: create-story
-description: "Create Jira DNAQ stories from user context (single or bulk), enforce quality rules, apply default fields, create correct child-of feature link direction, and append created results to a tracking CSV."
+name: create-story-skill
+description: "Create Jira DNAQ stories from user context (single or bulk), enforce quality rules, apply defaults, enforce child-of feature relation, and append created results to a tracking CSV."
 ---
 
 # Create Story Skill
@@ -24,8 +24,10 @@ Use this skill when the user asks to create one or more stories from free text o
 3. Do not create duplicate links:
 - Read current `issuelinks` first.
 - Create link only if the exact child-of relation is missing.
-4. After each create, fetch created issue data and append one row to `dnaq-story-created.csv`.
-5. Support both single-story and bulk-story creation from:
+4. Do not assign the story to anyone by default:
+- Leave `assignee` and `assignee__account_id` blank unless the user explicitly provides an assignee.
+5. After each create, fetch created issue data and append one row to `dnaq-story-created.csv`.
+6. Support both single-story and bulk-story creation from:
 - Plain text context
 - CSV content/path provided by user
 
@@ -51,6 +53,8 @@ Per-story required columns (no global default):
 - `summary`
 - `us_description__customfield_10513`
 
+`acceptance_criteria__customfield_10536` is optional.
+
 ## Default Field Values (DNAQ stories)
 
 Unless explicitly overridden by user or row input, prepopulate with:
@@ -67,16 +71,6 @@ Unless explicitly overridden by user or row input, prepopulate with:
 - `dedicated_team__customfield_10803`: `DNA DataViz Platform`
 - `dedicated_team__customfield_10803__option_id`: `11911`
 - `story_points__customfield_10105`: `2`
-
-Do not default these values globally; they must come from each story input:
-
-- `parent_epic_key__parent`
-- `parent_feature_key__customfield_12445`
-- `parent_feature_link_key__issue_link_is_child_of`
-- `summary`
-- `us_description__customfield_10513`
-
-`acceptance_criteria__customfield_10536` is optional. If missing, create the story without it.
 
 ## Quality Rules For Generated Content
 
@@ -102,12 +96,28 @@ Do not default these values globally; they must come from each story input:
 
 Before create, validate per story that epic, feature, feature-link direction key, summary, and US description are present. If any is missing, fail that row with a clear error and continue bulk processing.
 
-1. Create issue first with core fields and compatible types.
-2. If `customfield_10513` requires ADF, update it via edit call in ADF format.
-3. If `acceptance_criteria__customfield_10536` is provided and requires ADF, update it via edit call in ADF format.
-4. For `customfield_12445` (Parent Feature URL field), set value as:
+Phase 1: create the issue with only the minimum creation payload.
+
+1. Mandatory in phase 1:
+- `project_key = DNAQ`
+- `summary`
+2. No other fields are required in phase 1. All remaining fields can be populated after the issue exists.
+
+Phase 2: populate the remaining fields after create.
+
+3. If `customfield_10513` requires ADF, update it via edit call in ADF format.
+4. If `acceptance_criteria__customfield_10536` is provided and requires ADF, update it via edit call in ADF format.
+5. For `customfield_12445` (Parent Feature URL field), set value as:
 - `https://luminus.atlassian.net/browse/<feature-key>`
-5. Enforce Parent/Child issue link direction as mandatory (feature -> story child relation).
+6. Enforce Parent/Child issue link direction as mandatory (feature -> story child relation).
+
+## Execution Optimization
+
+1. Read the source CSV or text input once per request.
+2. Create issues with the minimal create payload first.
+3. Only call issue edit when ADF fields are actually needed.
+4. For bulk runs, accumulate created-log rows in memory and write them in one append batch.
+5. Avoid extra verification reads when create/edit responses already provide the needed issue key and URL.
 
 ## Bulk Mode Rules
 
@@ -131,6 +141,7 @@ After each successful create:
 - `created_issue_url`
 - `create_status`
 - `created_at_utc`
+5. Keep `assignee` and `assignee__account_id` blank unless explicitly set by the user.
 
 ## Completion Output
 

@@ -24,13 +24,19 @@ Execution requirements:
 If any is missing for a row, return a row-level error and continue bulk processing.
 3. `acceptance_criteria__customfield_10536` is optional.
 4. If story points are missing, default `story_points__customfield_10105` to `2`.
-5. Never add Jira comments.
-6. Ensure feature relation is child-of (mandatory):
+5. Keep assignee blank unless the user explicitly provides one.
+6. Never add Jira comments.
+7. Ensure feature relation is child-of (mandatory):
 - `Parent/Child` link with `inwardIssue=<feature>` and `outwardIssue=<story>`.
-7. For each created story:
+8. Use the faster execution path in bulk mode:
+- read the source once
+- create with minimal payload first
+- only edit when ADF fields are needed
+- append created-log rows in one batch write
+9. For each created story:
 - Fetch created issue data.
 - Append to `Knowledge/product-context/stories/dnaq-story-created.csv`.
-8. In bulk mode, process independently per row and continue on failures.
+10. In bulk mode, process independently per row and continue on failures.
 
 Return format:
 

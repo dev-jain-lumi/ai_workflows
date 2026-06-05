@@ -1,8 +1,7 @@
 ---
-name: move-stories
+name: move-story
 description: "Move one or many DNAQ stories from source feature/epic to target feature/epic, including mode to move all not-done stories from a feature."
 argument-hint: "Mode, source, target, story keys"
-agent: "move-story"
 model: "GPT-5.4 (copilot)"
 ---
 
@@ -25,14 +24,15 @@ Input mode (choose one):
 Execution requirements:
 
 1. Never add Jira comments.
-2. In feature mode, fetch stories that are child of source feature and exclude Done status category.
+2. In feature mode, fetch candidate stories once, then exclude Done status category.
 3. For each moved story:
 - set parent epic to target epic
 - set parent feature field to target feature URL
 - ensure Parent/Child relation is target feature -> story child
 - remove old source relation/value where possible
 4. Avoid duplicate links.
-5. Return per-story status and clear summary counts.
+5. Read and update only the fields needed for reassignment.
+6. Return per-story status and clear summary counts.
 
 Return format:
 

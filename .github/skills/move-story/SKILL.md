@@ -1,5 +1,5 @@
 ---
-name: move-story
+name: move-story-skill
 description: "Move Jira DNAQ stories from one feature/epic to another for single or bulk operations, with not-done filtering and strict parent/child relation handling."
 ---
 
@@ -76,6 +76,13 @@ For each story to move:
 2. If source link exists, attempt delete by issue link id using Jira REST via mcp_atlassian-mcp_fetch.
 3. If delete is not available/fails, continue with target link creation and mark story as partial-cleanup-required.
 4. Never create duplicate target links.
+
+## Execution Optimization
+
+1. In feature-scope mode, discover candidate stories once.
+2. Read only fields needed for filtering and reassignment: status category, issue links, parent epic, and parent feature field.
+3. Only write fields that actually change.
+4. Return one consolidated result summary instead of interleaving extra verification steps.
 
 ## JQL Guidance
 

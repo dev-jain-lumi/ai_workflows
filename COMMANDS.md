@@ -9,10 +9,8 @@
 - Prepare for this meeting.
 - Convert meeting notes to actions.
 - Review risks and dependencies.
-- /create-story
 - Create story from context.
 - Bulk create stories from text or CSV.
-- /move-stories
 - Move stories from source feature/epic to target feature/epic.
 - Move all not-done stories from feature X to feature Y.
 
