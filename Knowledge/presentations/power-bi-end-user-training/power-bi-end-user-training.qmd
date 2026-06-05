@@ -1,0 +1,852 @@
+---
+title: "Power BI End User Training"
+subtitle: "Slow-paced instructor-led training with live demo for mixed Gen Z and Millennial audiences"
+author: "Devashish Jain"
+format:
+  revealjs:
+    theme: white
+    controls: true
+    keyboard: true
+    navigation-mode: linear
+    hash: true
+    history: true
+    slide-number: true
+    preview-links: auto
+    transition: fade
+    auto-stretch: false
+    center: false
+    footer: "Power BI End User Training"
+---
+
+<style>
+:root {
+  --lum-green: #4EA72E;
+  --lum-green-dark: #2d621f;
+  --lum-orange: #FE5815;
+  --lum-slate: #475569;
+  --lum-bg: #fcfdfe;
+}
+
+.reveal {
+  background: var(--lum-bg);
+}
+
+.reveal h1, .reveal h2, .reveal h3 {
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.reveal h2 {
+  font-size: 1.8em;
+  margin-bottom: 0.2em;
+}
+
+.reveal p, .reveal li, .reveal td, .reveal th {
+  color: var(--lum-slate);
+  font-size: 0.9em;
+  line-height: 1.45;
+}
+
+.reveal ul {
+  display: block;
+  margin-top: 0.5em;
+}
+
+.reveal strong {
+  color: #0f172a;
+}
+
+.topic-tag {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: #eaf5e5;
+  color: var(--lum-green-dark);
+  font-size: 0.5em;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.panel {
+  border: 1px solid #dbe6d4;
+  border-radius: 18px;
+  padding: 1rem 1.1rem;
+  background: white;
+  box-shadow: 0 10px 30px rgba(78, 167, 46, 0.08);
+}
+
+.panel-soft {
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 1rem 1.1rem;
+  background: #f8fafc;
+}
+
+.demo-box {
+  border-left: 6px solid var(--lum-orange);
+  background: #fff4ee;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  margin-top: 0.8rem;
+}
+
+.kicker {
+  color: var(--lum-green);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.45em;
+}
+
+.small-text {
+  font-size: 0.72em;
+}
+
+.compact li {
+  margin-bottom: 0.2rem;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .two-col, .three-col {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+## Training purpose
+
+<span class="topic-tag">Purpose</span>
+
+::: {.panel}
+This session is not about building reports. It is about **using reports correctly, confidently, and responsibly**.
+:::
+
+- Open the right report
+- Apply filters and slicers correctly
+- Understand how visuals react to selections
+- Drill into detail without getting lost
+- Export or share the right way
+- Avoid common interpretation mistakes
+
+## Power BI in simple words
+
+<span class="topic-tag">Foundations</span>
+
+::: {.panel}
+Power BI is Microsoft's analytics and reporting platform used to turn data into interactive reports, dashboards, and business insights.
+:::
+
+1. Data is prepared and published
+2. Reports are built on top of governed data
+3. Users consume reports through Power BI service, apps, or shared links
+
+## Important Power BI terms
+
+<span class="topic-tag">Vocabulary</span>
+
+::: {.small-text}
+| Term | What it means |
+|---|---|
+| Power BI service | The online portal where users open and interact with reports, dashboards, apps, and workspaces |
+| Power BI Desktop | The authoring tool used by report developers. Most end users do not need it |
+| Workspace | Collaborative container where content is managed |
+| App | Controlled way to distribute reports and dashboards |
+| Report | Interactive file with one or more pages |
+| Dashboard | Single-page monitoring canvas made of tiles |
+| Page | One tab or screen inside a report |
+| Visual | Chart, table, KPI, slicer, map, matrix, or other object |
+| Tile | A visual pinned to a dashboard |
+| Semantic model | Governed data model behind the report |
+:::
+
+## Report vs Dashboard vs App
+
+<span class="topic-tag">Structure</span>
+
+::: {.small-text}
+| Item | Best for | Shape | Interactivity | Example |
+|---|---|---|---|---|
+| Report | Detailed analysis | Multiple pages | High | Sales performance report |
+| Dashboard | High-level monitoring | Single page | Medium | Executive KPI overview |
+| App | Controlled distribution | Collection of content | Depends | Finance Analytics app |
+:::
+
+::: {.demo-box}
+**Live demo**
+- Open a Power BI app
+- Show where reports are listed
+- Open one report
+- If available, show a dashboard and explain why it is different
+:::
+
+## How Power BI content is organized
+
+<span class="topic-tag">Navigation</span>
+
+::: {.panel}
+Most business users should access reports through **Apps**, not directly through development workspaces.
+:::
+
+- Power BI service
+- Workspace
+- App
+- Report
+- Report page
+- Visual
+- Data point
+
+::: {.demo-box}
+**Live demo**
+Show Power BI home, Apps, one app, and report navigation inside the app.
+:::
+
+## Opening the right report
+
+<span class="topic-tag">Good habit</span>
+
+::: {.panel}
+Always check report name, app name, page name, and refresh date before using numbers.
+:::
+
+- Am I in the correct app?
+- Am I opening the official report, not an old copy?
+- Am I on the correct page?
+- Is the data refreshed recently?
+- Are filters already applied?
+
+::: {.demo-box}
+**Live demo**
+Open the demo report, point to report title, page tabs, refresh info, and active filters.
+:::
+
+## Report pages
+
+<span class="topic-tag">Page types</span>
+
+- Overview page
+- Trend page
+- Detail page
+- Exception page
+- Comparison page
+- Drillthrough page
+- Glossary or help page
+
+::: {.panel-soft}
+**Rule of thumb:** start from the overview page, then move into detail pages only when you have a specific question.
+:::
+
+## Visuals
+
+<span class="topic-tag">Reading the canvas</span>
+
+::: {.small-text}
+| Visual | What it answers |
+|---|---|
+| Card | One KPI or number |
+| Table | Detailed rows and columns |
+| Matrix | Grouped data like a pivot table |
+| Bar chart | Category comparison |
+| Line chart | Trend over time |
+| Donut or pie | Share of total, used carefully |
+| Map | Geographic distribution |
+| Slicer | Interactive filter control |
+:::
+
+::: {.demo-box}
+**Live demo**
+Point to each visual type in the report and explain the question it answers.
+:::
+
+## KPI cards
+
+<span class="topic-tag">Interpretation</span>
+
+- Always check the selected period
+- Check whether the number is absolute, percentage, average, or variance
+- Check whether the card is affected by slicers
+- Check whether it compares to target, budget, or last year
+
+::: {.demo-box}
+**Live demo**
+Select a date slicer, change a category, and explain one KPI formula in business language.
+:::
+
+## Tables and matrices
+
+<span class="topic-tag">Detail views</span>
+
+::: {.two-col}
+::: {.panel}
+**Table**
+A flat set of rows and columns.
+
+- Sort columns
+- Search if available
+- Export if permitted
+:::
+
+::: {.panel}
+**Matrix**
+Grouped data similar to a pivot table.
+
+- Expand and collapse hierarchy
+- Read totals carefully
+- Open focus mode for easier reading
+:::
+:::
+
+::: {.demo-box}
+**Live demo**
+Sort a column, expand a hierarchy, show the total row, and explain why totals may differ from visible row sums.
+:::
+
+## Slicers
+
+<span class="topic-tag">Interactive filtering</span>
+
+- Dropdown slicer
+- List slicer
+- Button slicer
+- Date range slicer
+- Relative date slicer
+- Search-enabled slicer
+
+::: {.panel-soft}
+Selected values can persist, so always check active selections before trusting the numbers.
+:::
+
+::: {.demo-box}
+**Live demo**
+Select one value, select multiple values, search, clear the slicer, and show how visuals react.
+:::
+
+## Filters
+
+<span class="topic-tag">Filter levels</span>
+
+::: {.small-text}
+| Filter level | Meaning |
+|---|---|
+| Report-level | Applies to the entire report |
+| Page-level | Applies only to the current page |
+| Visual-level | Applies only to one visual |
+| Slicer | Visible on-canvas filtering |
+:::
+
+::: {.panel}
+When numbers look wrong, first check slicers and the filters pane.
+:::
+
+## Filter logic
+
+<span class="topic-tag">Analytical context</span>
+
+::: {.panel}
+Power BI filters usually combine together. The final result reflects **all active filters at the same time**.
+:::
+
+Base question: **What is total revenue?**
+
+Active filters can turn that into:
+- Year = 2026
+- Country = Belgium
+- Customer Segment = Residential
+
+Final question answered:
+**What is total revenue in 2026 for Residential customers in Belgium?**
+
+## Clear filters and reset view
+
+<span class="topic-tag">Recovery</span>
+
+- Clear individual slicers
+- Clear filter pane selections where allowed
+- Use **Reset to default** if available
+- Reopen the report from the original app link if needed
+
+::: {.demo-box}
+**Live demo**
+Apply multiple filters, clear one slicer, use Reset to default, and explain when reset may not be available.
+:::
+
+## Cross-filtering and cross-highlighting
+
+<span class="topic-tag">Clicks change context</span>
+
+::: {.two-col}
+::: {.panel}
+**Cross-filtering**
+Other visuals are filtered down to the selected value.
+:::
+
+::: {.panel}
+**Cross-highlighting**
+Other visuals keep full context but highlight the selected share.
+:::
+:::
+
+::: {.panel-soft}
+Clicking a chart is not just visual selection. It can temporarily change the analytical context.
+:::
+
+## Drill down and drill up
+
+<span class="topic-tag">Hierarchy</span>
+
+Typical hierarchy:
+- Year
+- Quarter
+- Month
+- Day
+
+Common controls:
+- Drill down one level
+- Go to next level
+- Expand all down one level
+- Drill up
+
+::: {.demo-box}
+**Live demo**
+Drill from year to quarter to month, then drill back up and compare this with page navigation.
+:::
+
+## Drillthrough
+
+<span class="topic-tag">Dedicated detail view</span>
+
+::: {.two-col}
+::: {.panel}
+**Drill down**
+More detail inside the same visual.
+:::
+
+::: {.panel}
+**Drillthrough**
+Navigate to another page with context passed through.
+:::
+:::
+
+Example: right-click Customer A, then drill through to a customer detail page.
+
+## Tooltips
+
+<span class="topic-tag">Hover for detail</span>
+
+Tooltips can show:
+- Exact values
+- Additional KPIs
+- Breakdowns
+- Definitions
+- Contextual explanations
+
+::: {.panel-soft}
+Hover before exporting or asking for more detail. The answer may already be in the tooltip.
+:::
+
+## Sorting
+
+<span class="topic-tag">Display order</span>
+
+- Sort sales from high to low
+- Sort customers alphabetically
+- Sort months chronologically
+
+::: {.panel}
+Sorting changes the display order, not the underlying data.
+:::
+
+## Focus mode
+
+<span class="topic-tag">Easier reading</span>
+
+Useful for:
+- Large tables
+- Dense matrices
+- Charts with many labels
+- Presenting one visual in a meeting
+
+::: {.panel-soft}
+Focus mode does not create a new report. It simply enlarges the selected visual.
+:::
+
+## Bookmarks and buttons
+
+<span class="topic-tag">Author-designed navigation</span>
+
+::: {.two-col}
+::: {.panel}
+**Bookmark**
+A saved report state or view created by the report author.
+:::
+
+::: {.panel}
+**Button**
+A clickable object used for navigation, reset, help, or switching views.
+:::
+:::
+
+Common uses:
+- Navigate between pages
+- Switch between chart and table view
+- Open help panel
+- Reset filters
+- Show or hide explanations
+
+## Personal bookmarks
+
+<span class="topic-tag">Your own saved view</span>
+
+Useful for:
+- Saving frequently used filter combinations
+- Returning to a preferred view
+- Preparing a recurring meeting view
+
+::: {.panel-soft}
+Personal bookmarks are user-specific and may not represent the official default view.
+:::
+
+## Export options
+
+<span class="topic-tag">Take data out carefully</span>
+
+::: {.small-text}
+| Export type | Notes |
+|---|---|
+| Export data from a visual | Limited by permissions and settings |
+| Summarized data | Most common end-user export |
+| Underlying data | Only if permitted |
+| Export to PowerPoint | Useful for presentation snapshots |
+| Export to PDF | Good for static sharing |
+| Analyze in Excel | Only where enabled |
+:::
+
+- Exported numbers still reflect active filters
+- Some exports may be blocked by settings or permissions
+- Exported files may contain confidential data
+
+## Subscribe and alerts
+
+<span class="topic-tag">Passive monitoring</span>
+
+::: {.two-col}
+::: {.panel}
+**Subscription**
+Scheduled email notification with a report or dashboard snapshot and link.
+:::
+
+::: {.panel}
+**Alert**
+Notification triggered when a dashboard metric crosses a condition, where supported.
+:::
+:::
+
+Use cases:
+- Monthly management reporting
+- Weekly KPI review
+- Exception monitoring
+
+## Comments and sharing
+
+<span class="topic-tag">Collaboration</span>
+
+- Prefer sharing official app links
+- Do not share screenshots when the receiver needs live data
+- Do not assume everyone has access
+- Access may depend on license, app permission, workspace role, semantic model permission, and row-level security
+
+::: {.panel-soft}
+Sharing content can expose data depending on permissions and security configuration.
+:::
+
+## Row-level security
+
+<span class="topic-tag">Why users may see different numbers</span>
+
+Examples:
+- Sales manager sees only their region
+- HR user sees only their business unit
+- Finance user sees only permitted company codes
+
+Impact on users:
+- Two users may see different numbers in the same report
+- Missing data may be due to security, not a report defect
+- Screenshots from another user may not match your view
+
+## Data refresh
+
+<span class="topic-tag">Freshness check</span>
+
+- Last refresh: when the report data was last updated
+- Scheduled refresh: automatic updates at defined times
+- Real-time or near real-time: more frequent updates depending on architecture
+
+::: {.panel}
+Always check refresh date before using Power BI numbers in decisions.
+:::
+
+## Semantic model
+
+<span class="topic-tag">Trusted data brain</span>
+
+The semantic model contains:
+- Tables
+- Relationships
+- Measures
+- Business calculations
+- Security rules
+- Refresh configuration
+
+::: {.panel-soft}
+The report is the screen. The semantic model is the trusted data brain behind it.
+:::
+
+## Measures and KPIs
+
+<span class="topic-tag">Calculated meaning</span>
+
+- A **measure** is a dynamic calculation such as Revenue, Margin %, or Customer Count
+- A **KPI** is a business-critical measure used to monitor performance
+- Measures recalculate dynamically based on filters, slicers, and permissions
+
+::: {.demo-box}
+**Live demo**
+Show one KPI card, apply filters, and explain how the measure recalculates.
+:::
+
+## Understanding totals
+
+<span class="topic-tag">Totals are not always simple sums</span>
+
+Reasons totals may differ:
+- Ratio measures
+- Distinct counts
+- Business-rule calculations
+- Hidden rows from filters or security
+
+Examples:
+- Margin % total is not the sum of row percentages
+- Distinct customer count is not the sum across regions when customers repeat
+- Average price totals may be weighted
+
+## Common user actions
+
+<span class="topic-tag">Walkthrough scenario</span>
+
+Business question:
+**Which region had the highest revenue this year, and which product category drove the change?**
+
+Steps:
+1. Open correct report
+2. Check refresh date
+3. Select current year
+4. Use region slicer or chart selection
+5. Sort revenue descending
+6. Drill down into product category
+7. Use tooltip for exact value
+8. Export detail table if needed
+
+## Common mistakes
+
+<span class="topic-tag">Avoidable errors</span>
+
+::: {.small-text}
+| Mistake | Better action |
+|---|---|
+| Forgetting active filters | Check slicers and filters pane |
+| Using old report links | Access reports through the official app |
+| Confusing dashboard and report | Use dashboards for monitoring, reports for analysis |
+| Comparing screenshots from different users | Check RLS, filters, and refresh date |
+| Exporting filtered data without realizing it | Reset or document filters before export |
+| Assuming totals are simple sums | Check the measure definition or ask report owner |
+:::
+
+## When the number looks wrong
+
+<span class="topic-tag">Troubleshooting checklist</span>
+
+- Am I in the correct report?
+- Am I using the official app version?
+- Is the data refreshed?
+- Are slicers applied?
+- Are filters applied in the filter pane?
+- Did I click a chart and accidentally cross-filter the page?
+- Is row-level security limiting my view?
+- Is the KPI definition different from what I assumed?
+- Is the visual showing percentage, average, count, or absolute value?
+- Is the total a special calculation?
+
+## Access and permissions
+
+<span class="topic-tag">Who can do what</span>
+
+::: {.small-text}
+| Access type | Meaning |
+|---|---|
+| Viewer access | Permission to view and interact |
+| Build permission | Permission to create new content using the semantic model |
+| Workspace role | Role inside a workspace, usually for creators or admins |
+| App access | Permission to consume packaged reports through an app |
+:::
+
+::: {.panel}
+Most end users need app access, not workspace access.
+:::
+
+## Power BI licenses
+
+<span class="topic-tag">Capability depends on setup</span>
+
+::: {.small-text}
+| License term | Simple meaning |
+|---|---|
+| Free | Can consume shared content in qualifying capacity setups |
+| Pro | Common license for sharing and collaboration |
+| Premium Per User | User-based license for advanced premium features |
+| Fabric capacity / Premium capacity | Organization-level capacity affecting sharing and scale |
+:::
+
+Company configuration still matters.
+
+## Mobile usage
+
+<span class="topic-tag">Use on the go</span>
+
+Good for:
+- Quick KPI checks
+- Management reviews
+- Alerts and subscriptions
+
+Limitations:
+- Small screens can hide context
+- Not ideal for detailed table analysis
+- Some interactions feel different from desktop browser
+
+## Good usage habits
+
+<span class="topic-tag">Practical discipline</span>
+
+- Start from the official app
+- Check refresh date
+- Check active filters
+- Use slicers before asking for custom extracts
+- Use drillthrough before requesting manual detail reports
+- Use export carefully
+- Do not circulate screenshots without context
+- Report issues with clear filter state, page name, screenshot, and expected result
+
+## How to report an issue
+
+<span class="topic-tag">Make support faster</span>
+
+Include:
+- Report name
+- Page name
+- App or workspace link
+- Date and time observed
+- Selected slicers
+- Filters applied
+- Screenshot
+- Expected result
+- Actual result
+- Business impact
+
+::: {.panel-soft}
+Good issue reports reduce back-and-forth and speed up resolution.
+:::
+
+## Hands-on exercise
+
+<span class="topic-tag">Practice</span>
+
+Exercise steps:
+- Open the official app
+- Open the assigned report
+- Go to the overview page
+- Set date range to current year
+- Filter to one business unit or region
+- Find the top category by revenue or volume
+- Drill down to monthly trend
+- Use tooltip to find exact value
+- Drill through to detail page
+- Reset the report view
+
+## Knowledge check
+
+<span class="topic-tag">Quick recap</span>
+
+::: {.small-text}
+| Question | Expected answer |
+|---|---|
+| Report vs dashboard? | Report has multiple interactive pages; dashboard is a single monitoring canvas |
+| First thing to check when a number looks wrong? | Filters, slicers, selections, refresh date, and correct report |
+| What is a semantic model? | Governed data layer behind the report |
+| What is drillthrough used for? | Navigate to a detail page filtered to the selected item |
+| Why can two users see different numbers? | Filters, bookmarks, refresh timing, or row-level security |
+:::
+
+## Final takeaway
+
+<span class="topic-tag">Remember this</span>
+
+::: {.panel}
+Power BI is interactive. Every click, filter, slicer, and security rule can change what you see.
+:::
+
+Remember:
+- Use the official app
+- Check refresh date
+- Check filters
+- Understand the KPI definition
+- Use drillthrough and tooltips before asking for manual extracts
+
+## Trainer notes
+
+<span class="topic-tag">Delivery style</span>
+
+::: {.two-col}
+::: {.panel}
+**Audience fit**
+- Mixed Gen Z and Millennial audience
+- Keep pace calm and instructor-led
+- Use real examples before jargon
+- Alternate theory and demo frequently
+:::
+
+::: {.panel}
+**Recommended demo report**
+- At least 3 pages
+- Date slicer and dropdown slicer
+- KPI cards, bar chart, line chart
+- Matrix or table
+- Drillthrough page
+- Tooltip
+- Bookmarks or navigation buttons
+- Export-enabled visual
+:::
+:::
+
+## Closing slide
+
+<span class="topic-tag">Outcome</span>
+
+::: {.panel}
+By the end of this session, participants should be able to open the right Power BI report, interpret it correctly, interact safely with filters and visuals, and troubleshoot common issues before escalating.
+:::
+
+### Next step
+
+Use the hands-on exercise immediately after the walkthrough so learners practice while the concepts are still fresh.

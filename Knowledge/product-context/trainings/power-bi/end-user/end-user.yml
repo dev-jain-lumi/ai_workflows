@@ -1,0 +1,905 @@
+training_deck:
+  title: "Power BI End User Training"
+  subtitle: "How to use dashboards, reports, filters, visuals, and navigation confidently"
+  audience: "Business end users who consume Power BI content but do not build reports"
+  format: "Instructor-led training with theory + live demo"
+  duration: "90-120 minutes"
+  training_goal: >
+    Enable users to open, navigate, filter, interact with, interpret, and export Power BI reports
+    and dashboards confidently, while understanding the common Power BI naming used in the organization.
+
+  learning_objectives:
+    - "Understand the difference between Power BI service, workspace, app, report, dashboard, page, visual, tile, and semantic model."
+    - "Navigate Power BI content using apps, workspace links, report pages, bookmarks, buttons, and drillthrough."
+    - "Use slicers, filters, search, sorting, focus mode, drill down, drill up, cross-filtering, and cross-highlighting."
+    - "Interpret KPI cards, tables, matrices, charts, tooltips, legends, totals, and trends correctly."
+    - "Know what can and cannot be exported, shared, subscribed to, or personalized."
+    - "Recognize common issues such as stale data, wrong filters, missing access, RLS restrictions, and unexpected totals."
+
+  instructor_notes:
+    separation_principle:
+      theory: "Explain concepts, terminology, governance, and interpretation rules."
+      demo: "Show the same concept live inside a real Power BI report or training report."
+    recommended_demo_report:
+      name: "Sample Sales / Finance / Operations dashboard"
+      requirements:
+        - "At least 3 report pages"
+        - "Date slicer"
+        - "Dropdown slicer"
+        - "KPI cards"
+        - "Bar chart"
+        - "Line chart"
+        - "Matrix or table"
+        - "Drillthrough page"
+        - "Tooltip"
+        - "Bookmarks or navigation buttons"
+        - "Export-enabled visual"
+        - "At least one page-level and visual-level filter"
+
+  deck_structure:
+
+    - slide: 1
+      title: "Training purpose"
+      type: "theory"
+      content:
+        key_message: "This session is not about building reports. It is about using reports correctly."
+        bullets:
+          - "How to open the right report."
+          - "How to apply filters and slicers."
+          - "How visuals respond to selections."
+          - "How to drill into details."
+          - "How to export or share correctly."
+          - "How to avoid common interpretation mistakes."
+      demo_required: false
+
+    - slide: 2
+      title: "Power BI in simple words"
+      type: "theory"
+      content:
+        definition: >
+          Power BI is Microsoft’s analytics and reporting platform used to turn data into
+          interactive reports, dashboards, and business insights.
+        simple_model:
+          - "Data is prepared and published."
+          - "Reports are built on top of the data."
+          - "Users consume reports through Power BI service, apps, or shared links."
+      demo_required: false
+
+    - slide: 3
+      title: "Important Power BI terms"
+      type: "theory"
+      content:
+        terms:
+          - term: "Power BI service"
+            definition: "The online Power BI portal where users open and interact with reports, dashboards, apps, and workspaces."
+          - term: "Power BI Desktop"
+            definition: "The authoring tool used by report developers to build reports. Most end users do not need it."
+          - term: "Workspace"
+            definition: "A collaborative container where Power BI content such as reports, dashboards, semantic models, and apps are managed."
+          - term: "App"
+            definition: "A packaged and controlled way to distribute Power BI reports and dashboards to business users."
+          - term: "Report"
+            definition: "An interactive Power BI file with one or more pages containing visuals connected to a semantic model."
+          - term: "Dashboard"
+            definition: "A single-page canvas made of tiles, often used for high-level monitoring."
+          - term: "Page"
+            definition: "One tab or screen inside a Power BI report."
+          - term: "Visual"
+            definition: "A chart, table, KPI card, map, matrix, slicer, or other object shown on a report page."
+          - term: "Tile"
+            definition: "A visual pinned to a dashboard."
+          - term: "Semantic model"
+            definition: "The governed data model behind a report. It contains tables, relationships, measures, and business logic."
+      demo_required: false
+
+    - slide: 4
+      title: "Report vs Dashboard vs App"
+      type: "theory"
+      content:
+        comparison:
+          - item: "Report"
+            purpose: "Detailed analysis"
+            structure: "Multiple pages"
+            interactivity: "High"
+            example: "Sales performance report with filters, charts, drillthrough, and detail pages"
+          - item: "Dashboard"
+            purpose: "High-level monitoring"
+            structure: "Single page"
+            interactivity: "Medium"
+            example: "Executive KPI overview"
+          - item: "App"
+            purpose: "Controlled distribution"
+            structure: "Collection of reports and dashboards"
+            interactivity: "Depends on included content"
+            example: "Finance Analytics app"
+      demo_required: true
+      demo_instruction:
+        - "Open a Power BI app."
+        - "Show where reports are listed."
+        - "Open one report."
+        - "If available, show a dashboard and explain that it is not the same as a report."
+
+    - slide: 5
+      title: "How Power BI content is organized"
+      type: "theory"
+      content:
+        hierarchy:
+          - "Power BI service"
+          - "Workspace"
+          - "App"
+          - "Report"
+          - "Report page"
+          - "Visual"
+          - "Data point"
+        key_message: "Most business users should access reports through Apps, not directly through development workspaces."
+      demo_required: true
+      demo_instruction:
+        - "Show Power BI home."
+        - "Show Apps section."
+        - "Show one app."
+        - "Show report navigation inside the app."
+
+    - slide: 6
+      title: "Opening the right report"
+      type: "demo"
+      content:
+        key_message: "Always check report name, app name, page name, and refresh date before using numbers."
+        checklist:
+          - "Am I in the correct app?"
+          - "Am I opening the official report, not an old copy?"
+          - "Am I on the correct report page?"
+          - "Is the data refreshed recently?"
+          - "Are filters already applied?"
+      demo_required: true
+      demo_instruction:
+        - "Open the demo report."
+        - "Point to the report title."
+        - "Show page tabs."
+        - "Show refresh information if visible."
+        - "Show filters pane and active slicers."
+
+    - slide: 7
+      title: "Report pages"
+      type: "theory"
+      content:
+        definition: "A report page is one screen or tab inside a Power BI report."
+        common_page_types:
+          - "Overview page"
+          - "Trend page"
+          - "Detail page"
+          - "Exception page"
+          - "Comparison page"
+          - "Drillthrough page"
+          - "Glossary or help page"
+        user_rule: "Start from the overview page, then move into detail pages only when you have a specific question."
+      demo_required: true
+      demo_instruction:
+        - "Navigate through report pages."
+        - "Explain the purpose of each page."
+        - "Show page tabs or custom navigation buttons."
+
+    - slide: 8
+      title: "Visuals"
+      type: "theory"
+      content:
+        definition: "A visual is any chart, table, matrix, card, slicer, or object used to display or control data."
+        common_visuals:
+          - name: "Card"
+            purpose: "Shows one KPI or number."
+          - name: "Table"
+            purpose: "Shows detailed rows and columns."
+          - name: "Matrix"
+            purpose: "Shows grouped data, similar to a pivot table."
+          - name: "Bar chart"
+            purpose: "Compares categories."
+          - name: "Line chart"
+            purpose: "Shows trends over time."
+          - name: "Donut or pie chart"
+            purpose: "Shows share of total, but should be used carefully."
+          - name: "Map"
+            purpose: "Shows geographical distribution."
+          - name: "Slicer"
+            purpose: "Lets users filter the report."
+      demo_required: true
+      demo_instruction:
+        - "Point to each visual type in the demo report."
+        - "Explain what question each visual answers."
+
+    - slide: 9
+      title: "KPI cards"
+      type: "theory"
+      content:
+        definition: "A KPI card shows a single important metric, such as revenue, volume, margin, count, or percentage."
+        interpretation_rules:
+          - "Always check the selected period."
+          - "Check whether the number is absolute, percentage, average, or variance."
+          - "Check whether the card is affected by slicers."
+          - "Check whether the card has comparison logic, such as vs last year, vs target, or vs budget."
+      demo_required: true
+      demo_instruction:
+        - "Select a date slicer and show how KPI cards change."
+        - "Select a category and show whether the KPI card reacts."
+        - "Explain one KPI formula in business language."
+
+    - slide: 10
+      title: "Tables and matrices"
+      type: "theory"
+      content:
+        definitions:
+          table: "A visual showing flat rows and columns."
+          matrix: "A visual showing grouped rows and columns, similar to a pivot table."
+        key_actions:
+          - "Sort columns."
+          - "Expand and collapse hierarchy."
+          - "Use search if available."
+          - "Open focus mode for easier reading."
+          - "Export data if permitted."
+        common_misunderstanding: "A matrix total may not always equal a simple sum of visible rows if the measure has special business logic."
+      demo_required: true
+      demo_instruction:
+        - "Sort a column."
+        - "Expand and collapse a hierarchy."
+        - "Show total row."
+        - "Explain why totals should be interpreted carefully."
+
+    - slide: 11
+      title: "Slicers"
+      type: "theory"
+      content:
+        definition: "A slicer is an on-page filter control that lets users interactively filter report data."
+        common_slicer_types:
+          - "Dropdown slicer"
+          - "List slicer"
+          - "Button slicer"
+          - "Date range slicer"
+          - "Relative date slicer"
+          - "Search-enabled slicer"
+        rules:
+          - "Slicers usually affect all visuals on the same page."
+          - "Some slicers may be configured to affect only selected visuals."
+          - "Multiple slicers combine together."
+          - "Selected values can persist, so always check active selections."
+      demo_required: true
+      demo_instruction:
+        - "Select one slicer value."
+        - "Select multiple values."
+        - "Use slicer search."
+        - "Clear slicer selection."
+        - "Show how visuals update."
+
+    - slide: 12
+      title: "Filters"
+      type: "theory"
+      content:
+        definition: "Filters narrow down the data shown in a report, page, or visual."
+        filter_levels:
+          - level: "Report-level filter"
+            meaning: "Applies to the entire report."
+          - level: "Page-level filter"
+            meaning: "Applies only to the current page."
+          - level: "Visual-level filter"
+            meaning: "Applies only to one visual."
+          - level: "Slicer"
+            meaning: "A visible filter placed directly on the report canvas."
+        user_rule: "When numbers look wrong, first check slicers and the filters pane."
+      demo_required: true
+      demo_instruction:
+        - "Open the filters pane."
+        - "Show visual-level filters by selecting one visual."
+        - "Show page-level filters."
+        - "Explain locked or hidden filters if present."
+
+    - slide: 13
+      title: "Filter logic"
+      type: "theory"
+      content:
+        key_message: "Power BI filters usually combine together. The final number reflects all active filters at the same time."
+        example:
+          base_question: "What is total revenue?"
+          filters_applied:
+            - "Year = 2026"
+            - "Country = Belgium"
+            - "Customer Segment = Residential"
+          final_question_answered: "What is total revenue in 2026 for Residential customers in Belgium?"
+        common_issue: "Users forget one active slicer and think the report is wrong."
+      demo_required: true
+      demo_instruction:
+        - "Apply date filter."
+        - "Apply category filter."
+        - "Apply region filter."
+        - "Show how the result becomes narrower."
+
+    - slide: 14
+      title: "Clear filters and reset view"
+      type: "demo"
+      content:
+        key_message: "Before concluding that data is wrong, reset the report view."
+        actions_to_show:
+          - "Clear individual slicers."
+          - "Clear filter pane selections where allowed."
+          - "Use Reset to default if available."
+          - "Reopen the report from the original app link if needed."
+      demo_required: true
+      demo_instruction:
+        - "Apply multiple filters."
+        - "Clear one slicer."
+        - "Use Reset to default."
+        - "Explain when reset may not be visible or allowed."
+
+    - slide: 15
+      title: "Cross-filtering and cross-highlighting"
+      type: "theory"
+      content:
+        definition: >
+          Selecting a data point in one visual can filter or highlight related data in other visuals
+          on the same page.
+        cross_filtering: "Other visuals are filtered down to the selected value."
+        cross_highlighting: "Other visuals keep the full context but highlight the selected portion."
+        user_rule: "Clicking a chart is not just visual selection; it can temporarily change the analytical context."
+      demo_required: true
+      demo_instruction:
+        - "Click one bar in a bar chart."
+        - "Show how other visuals change."
+        - "Click blank space to remove the selection."
+        - "Compare cross-filtering vs cross-highlighting if both exist."
+
+    - slide: 16
+      title: "Drill down and drill up"
+      type: "theory"
+      content:
+        definition: "Drill down lets users move from a higher-level category to a lower-level category within the same visual hierarchy."
+        example_hierarchy:
+          - "Year"
+          - "Quarter"
+          - "Month"
+          - "Day"
+        common_controls:
+          - "Drill down one level"
+          - "Go to next level"
+          - "Expand all down one level"
+          - "Drill up"
+        user_rule: "Use drill down when you want more detail inside the same chart."
+      demo_required: true
+      demo_instruction:
+        - "Enable drill mode on a chart."
+        - "Drill from year to quarter to month."
+        - "Drill back up."
+        - "Explain difference between drill down and page navigation."
+
+    - slide: 17
+      title: "Drillthrough"
+      type: "theory"
+      content:
+        definition: "Drillthrough opens a detail page filtered to the specific item selected by the user."
+        example: "Right-click Customer A, then drill through to a customer detail page."
+        difference_from_drill_down:
+          drill_down: "More detail inside the same visual."
+          drillthrough: "Navigate to another page with context passed through."
+        user_rule: "Use drillthrough when you want a dedicated detail view for a selected item."
+      demo_required: true
+      demo_instruction:
+        - "Right-click a data point."
+        - "Select Drillthrough."
+        - "Show the target page filtered by selected value."
+        - "Use Back button to return."
+
+    - slide: 18
+      title: "Tooltips"
+      type: "theory"
+      content:
+        definition: "A tooltip is extra information shown when hovering over a data point."
+        can_show:
+          - "Exact values"
+          - "Additional KPIs"
+          - "Breakdowns"
+          - "Definitions"
+          - "Contextual explanations"
+        user_rule: "Hover before exporting or asking for more detail; the answer may already be in the tooltip."
+      demo_required: true
+      demo_instruction:
+        - "Hover over chart data points."
+        - "Show standard tooltip."
+        - "Show custom report-page tooltip if available."
+
+    - slide: 19
+      title: "Sorting"
+      type: "theory"
+      content:
+        definition: "Sorting changes the order in which data is displayed."
+        examples:
+          - "Sort sales from high to low."
+          - "Sort customers alphabetically."
+          - "Sort months chronologically."
+        user_rule: "Sorting changes display order, not the underlying data."
+      demo_required: true
+      demo_instruction:
+        - "Sort a bar chart."
+        - "Sort a table column."
+        - "Show ascending vs descending order."
+
+    - slide: 20
+      title: "Focus mode"
+      type: "theory"
+      content:
+        definition: "Focus mode enlarges one visual so it can be inspected more easily."
+        useful_for:
+          - "Large tables"
+          - "Dense matrices"
+          - "Charts with many labels"
+          - "Presenting one visual in a meeting"
+        limitation: "Focus mode does not create a new report; it only enlarges the selected visual."
+      demo_required: true
+      demo_instruction:
+        - "Open focus mode on a table or chart."
+        - "Interact with the enlarged visual."
+        - "Exit focus mode."
+
+    - slide: 21
+      title: "Bookmarks and buttons"
+      type: "theory"
+      content:
+        definitions:
+          bookmark: "A saved report state or view created by the report author."
+          button: "A clickable object used for navigation, reset, help, or switching views."
+        common_uses:
+          - "Navigate between pages."
+          - "Switch between chart and table view."
+          - "Open help panel."
+          - "Reset filters."
+          - "Show or hide explanations."
+      demo_required: true
+      demo_instruction:
+        - "Click navigation buttons."
+        - "Show a bookmark-driven view change if available."
+        - "Explain that buttons may behave differently depending on report design."
+
+    - slide: 22
+      title: "Personal bookmarks"
+      type: "theory"
+      content:
+        definition: "A personal bookmark saves a user's own view of a report, including filters and slicers, where enabled."
+        useful_for:
+          - "Saving frequently used filter combinations."
+          - "Returning to a preferred view."
+          - "Preparing a recurring meeting view."
+        caution: "Personal bookmarks are user-specific and may not represent the official default view."
+      demo_required: true
+      demo_instruction:
+        - "Apply filters."
+        - "Create a personal bookmark if enabled."
+        - "Return to the bookmark."
+        - "Delete or manage bookmark if appropriate."
+
+    - slide: 23
+      title: "Export options"
+      type: "theory"
+      content:
+        definition: "Export allows users to take data or report content out of Power BI, depending on permissions and admin settings."
+        common_export_types:
+          - "Export data from a visual"
+          - "Export summarized data"
+          - "Export underlying data, if permitted"
+          - "Export to PowerPoint"
+          - "Export to PDF"
+          - "Analyze in Excel, if permitted"
+        cautions:
+          - "Exported data may be limited."
+          - "Exported numbers still reflect active filters."
+          - "Some exports may be blocked by sensitivity labels, tenant settings, or permissions."
+          - "Exported files may contain confidential data."
+      demo_required: true
+      demo_instruction:
+        - "Export data from a table visual."
+        - "Show summarized vs underlying data if available."
+        - "Export page to PowerPoint or PDF if allowed."
+        - "Explain data confidentiality."
+
+    - slide: 24
+      title: "Subscribe and alerts"
+      type: "theory"
+      content:
+        definitions:
+          subscription: "A scheduled email notification containing a report or dashboard snapshot/link."
+          alert: "A notification triggered when a dashboard metric crosses a defined condition, where supported."
+        use_cases:
+          - "Monthly management reporting."
+          - "Weekly KPI review."
+          - "Exception monitoring."
+        caution: "Subscriptions are not a replacement for checking live report context and refresh status."
+      demo_required: true
+      demo_instruction:
+        - "Show Subscribe button if available."
+        - "Explain frequency and recipients."
+        - "Mention alerts only if the dashboard/report supports them."
+
+    - slide: 25
+      title: "Comments and sharing"
+      type: "theory"
+      content:
+        definitions:
+          comment: "A discussion note attached to Power BI content."
+          share: "Giving another user access to a report, dashboard, or app."
+        rules:
+          - "Prefer sharing official app links."
+          - "Do not share screenshots when the receiver needs live data."
+          - "Do not assume everyone has access."
+          - "Access may depend on license, app permission, workspace role, semantic model permission, and row-level security."
+        security_warning: "Sharing content can expose data depending on permissions and security configuration."
+      demo_required: true
+      demo_instruction:
+        - "Show Share button."
+        - "Explain official sharing route."
+        - "Show how a copied link works."
+        - "Explain why access requests may occur."
+
+    - slide: 26
+      title: "Row-level security"
+      type: "theory"
+      content:
+        definition: "Row-level security limits which rows of data a user can see based on their identity or role."
+        examples:
+          - "Sales manager sees only their region."
+          - "HR user sees only their business unit."
+          - "Finance user sees only permitted company codes."
+        user_impact:
+          - "Two users may see different numbers in the same report."
+          - "Missing data may be due to security, not a report defect."
+          - "Screenshots from another user may not match your view."
+      demo_required: false
+
+    - slide: 27
+      title: "Data refresh"
+      type: "theory"
+      content:
+        definition: "Refresh is the process of updating the report data from source systems."
+        important_terms:
+          - term: "Last refresh"
+            meaning: "The last time the semantic model or report data was updated."
+          - term: "Scheduled refresh"
+            meaning: "Automatic refresh at defined times."
+          - term: "Real-time or near real-time"
+            meaning: "Data updates more frequently, depending on architecture."
+        user_rule: "Always check refresh date before using Power BI numbers in decisions."
+      demo_required: true
+      demo_instruction:
+        - "Show refresh timestamp if visible."
+        - "Explain expected refresh frequency."
+        - "Clarify whom to contact if data is stale."
+
+    - slide: 28
+      title: "Semantic model"
+      type: "theory"
+      content:
+        definition: "A semantic model is the governed data layer behind Power BI reports."
+        contains:
+          - "Tables"
+          - "Relationships"
+          - "Measures"
+          - "Business calculations"
+          - "Security rules"
+          - "Refresh configuration"
+        end_user_relevance:
+          - "It defines the meaning of KPIs."
+          - "It controls which data is available."
+          - "It can be reused by multiple reports."
+          - "It affects performance and consistency."
+        simple_explanation: "The report is the screen; the semantic model is the trusted data brain behind it."
+      demo_required: false
+
+    - slide: 29
+      title: "Measures and KPIs"
+      type: "theory"
+      content:
+        definitions:
+          measure: "A calculation defined in the semantic model, such as Total Sales, Margin %, or Number of Customers."
+          KPI: "A business-critical measure used to monitor performance."
+        examples:
+          - "Revenue"
+          - "Gross margin"
+          - "Volume"
+          - "Conversion rate"
+          - "Open cases"
+          - "Budget variance"
+        caution: "Measures are calculated dynamically based on filters, slicers, and user permissions."
+      demo_required: true
+      demo_instruction:
+        - "Show one KPI card."
+        - "Apply filters."
+        - "Explain how the measure recalculates."
+
+    - slide: 30
+      title: "Understanding totals"
+      type: "theory"
+      content:
+        key_message: "Power BI totals are not always simple sums of visible rows."
+        why:
+          - "Some measures calculate ratios."
+          - "Some measures use distinct counts."
+          - "Some measures apply business rules."
+          - "Some rows are hidden by filters or security."
+        examples:
+          - "Margin % total is not the sum of row percentages."
+          - "Distinct customer count total is not the sum of customers per region if customers appear in multiple regions."
+          - "Average price total may be weighted differently."
+      demo_required: true
+      demo_instruction:
+        - "Show a matrix with totals."
+        - "Explain one non-additive measure."
+        - "Compare row-level values with total value."
+
+    - slide: 31
+      title: "Common user actions"
+      type: "demo"
+      content:
+        scenario: "Answer a business question using the report."
+        example_question: "Which region had the highest revenue this year, and which product category drove the change?"
+        actions:
+          - "Open correct report."
+          - "Check refresh date."
+          - "Select current year."
+          - "Use region slicer or chart selection."
+          - "Sort revenue descending."
+          - "Drill down into product category."
+          - "Use tooltip for exact value."
+          - "Export detail table if needed."
+      demo_required: true
+
+    - slide: 32
+      title: "Common mistakes"
+      type: "theory"
+      content:
+        mistakes:
+          - mistake: "Forgetting active filters"
+            fix: "Check slicers and filters pane."
+          - mistake: "Using old report links"
+            fix: "Access reports through the official app."
+          - mistake: "Confusing dashboard and report"
+            fix: "Use dashboards for monitoring, reports for analysis."
+          - mistake: "Comparing screenshots from different users"
+            fix: "Check RLS, filters, and refresh date."
+          - mistake: "Exporting filtered data without realizing it"
+            fix: "Reset or document filters before export."
+          - mistake: "Assuming totals are simple sums"
+            fix: "Check measure definition or ask report owner."
+      demo_required: false
+
+    - slide: 33
+      title: "When the number looks wrong"
+      type: "theory"
+      content:
+        troubleshooting_checklist:
+          - "Am I in the correct report?"
+          - "Am I using the official app version?"
+          - "Is the data refreshed?"
+          - "Are slicers applied?"
+          - "Are filters applied in the filter pane?"
+          - "Did I click a chart and accidentally cross-filter the page?"
+          - "Is row-level security limiting my view?"
+          - "Is the KPI definition different from what I assumed?"
+          - "Is the visual showing percentage, average, count, or absolute value?"
+          - "Is the total a special calculation?"
+      demo_required: true
+      demo_instruction:
+        - "Create an intentionally filtered view."
+        - "Ask users why the number looks lower."
+        - "Reveal active filters and visual selection."
+        - "Reset view."
+
+    - slide: 34
+      title: "Access and permissions"
+      type: "theory"
+      content:
+        definitions:
+          viewer_access: "Permission to view and interact with content."
+          build_permission: "Permission to build new content using the semantic model."
+          workspace_role: "Role assigned inside a workspace, usually for creators or admins."
+          app_access: "Permission to consume packaged reports through an app."
+        user_rule: "Most end users need app access, not workspace access."
+        common_access_issues:
+          - "Cannot open report."
+          - "Can open app but not one report."
+          - "Can see report but not data."
+          - "Cannot export."
+          - "Cannot share."
+      demo_required: false
+
+    - slide: 35
+      title: "Power BI licenses"
+      type: "theory"
+      content:
+        simple_explanation: "What a user can do depends on license, capacity, permissions, and tenant settings."
+        common_license_terms:
+          - term: "Free"
+            meaning: "Can consume shared content in qualifying Premium/Fabric capacity scenarios."
+          - term: "Pro"
+            meaning: "Common license for sharing and collaboration in Power BI."
+          - term: "Premium Per User"
+            meaning: "User-based license for advanced Premium features."
+          - term: "Fabric capacity / Premium capacity"
+            meaning: "Organization-level capacity that affects sharing, scale, and feature availability."
+        note: "Exact capabilities depend on company configuration."
+      demo_required: false
+
+    - slide: 36
+      title: "Mobile usage"
+      type: "theory"
+      content:
+        definition: "Power BI reports and dashboards can be consumed on mobile devices through the Power BI mobile app."
+        use_cases:
+          - "Quick KPI checks."
+          - "Management reviews."
+          - "Alerts and subscriptions."
+        limitations:
+          - "Small screen may hide context."
+          - "Not ideal for detailed table analysis."
+          - "Some interactions may feel different from desktop browser."
+      demo_required: false
+
+    - slide: 37
+      title: "Good usage habits"
+      type: "theory"
+      content:
+        habits:
+          - "Start from the official app."
+          - "Check refresh date."
+          - "Check active filters."
+          - "Use slicers before asking for custom extracts."
+          - "Use drillthrough before requesting manual detail reports."
+          - "Use export carefully."
+          - "Do not circulate screenshots without context."
+          - "Report issues with clear filter state, page name, screenshot, and expected result."
+      demo_required: false
+
+    - slide: 38
+      title: "How to report an issue"
+      type: "theory"
+      content:
+        issue_template:
+          - "Report name"
+          - "Page name"
+          - "App or workspace link"
+          - "Date and time observed"
+          - "Selected slicers"
+          - "Filters applied"
+          - "Screenshot"
+          - "Expected result"
+          - "Actual result"
+          - "Business impact"
+        good_example: >
+          In Finance Analytics app > Revenue Overview page, Revenue for Belgium in May 2026 shows €2.1M.
+          I expected around €2.8M based on SAP extract. Filters applied: Year 2026, Month May, Country Belgium.
+          Screenshot attached.
+      demo_required: false
+
+    - slide: 39
+      title: "Hands-on exercise"
+      type: "demo"
+      content:
+        exercise_goal: "Users practice the main report interactions themselves."
+        tasks:
+          - "Open the official app."
+          - "Open the assigned report."
+          - "Go to the overview page."
+          - "Set date range to current year."
+          - "Filter to one business unit or region."
+          - "Find the top category by revenue or volume."
+          - "Drill down to monthly trend."
+          - "Use tooltip to find exact value."
+          - "Drill through to detail page."
+          - "Reset the report view."
+        expected_outcome: "Users can independently answer a basic business question using the dashboard."
+      demo_required: true
+
+    - slide: 40
+      title: "Knowledge check"
+      type: "theory"
+      content:
+        questions:
+          - question: "What is the difference between a report and a dashboard?"
+            expected_answer: "A report usually has multiple interactive pages; a dashboard is a single-page monitoring canvas made of tiles."
+          - question: "What should you check first when a number looks wrong?"
+            expected_answer: "Active slicers, filters, visual selections, refresh date, and whether you are in the correct report."
+          - question: "What is a semantic model?"
+            expected_answer: "The governed data model behind the report containing data, relationships, calculations, and security logic."
+          - question: "What is drillthrough used for?"
+            expected_answer: "To navigate to a detailed page filtered to the selected item."
+          - question: "Why can two users see different numbers?"
+            expected_answer: "Different filters, personal bookmarks, refresh timing, or row-level security."
+      demo_required: false
+
+    - slide: 41
+      title: "Final takeaway"
+      type: "theory"
+      content:
+        key_message: "Power BI is interactive. Every click, filter, slicer, and security rule can change what you see."
+        remember:
+          - "Use the official app."
+          - "Check refresh date."
+          - "Check filters."
+          - "Understand the KPI definition."
+          - "Use drillthrough and tooltips before asking for manual extracts."
+          - "Share links responsibly."
+          - "When reporting issues, include context."
+      demo_required: false
+
+  glossary:
+    - term: "App"
+      definition: "Packaged Power BI content distributed to business users."
+    - term: "Bookmark"
+      definition: "Saved report view or state."
+    - term: "Card"
+      definition: "Visual showing one important number."
+    - term: "Cross-filter"
+      definition: "Interaction where selecting one visual filters other visuals."
+    - term: "Cross-highlight"
+      definition: "Interaction where selecting one visual highlights related portions in other visuals."
+    - term: "Dashboard"
+      definition: "Single-page monitoring canvas made of tiles."
+    - term: "Data point"
+      definition: "One selected value or mark inside a visual, such as one bar or one dot."
+    - term: "Drill down"
+      definition: "Move from higher-level to lower-level detail inside a visual hierarchy."
+    - term: "Drillthrough"
+      definition: "Navigate to a detail page filtered by the selected data point."
+    - term: "Filter"
+      definition: "Condition that limits the data shown."
+    - term: "Focus mode"
+      definition: "Expanded view of one visual."
+    - term: "KPI"
+      definition: "Key performance indicator used to measure business performance."
+    - term: "Measure"
+      definition: "Reusable calculation defined in the semantic model."
+    - term: "Page"
+      definition: "One tab or screen inside a report."
+    - term: "Report"
+      definition: "Interactive multi-page analytical content built on a semantic model."
+    - term: "Row-level security"
+      definition: "Security rule controlling which rows of data a user can see."
+    - term: "Semantic model"
+      definition: "Governed data layer behind Power BI reports."
+    - term: "Slicer"
+      definition: "Visible on-page filter control."
+    - term: "Tile"
+      definition: "Visual pinned to a dashboard."
+    - term: "Tooltip"
+      definition: "Extra information shown when hovering over a data point."
+    - term: "Visual"
+      definition: "Chart, table, matrix, card, slicer, or other object on a report page."
+    - term: "Workspace"
+      definition: "Container where Power BI content is created, managed, and collaborated on."
+
+  recommended_appendix_slides:
+    - title: "Company-specific Power BI support model"
+      type: "theory"
+      suggested_content:
+        - "Who owns the report?"
+        - "Who owns the data?"
+        - "Who grants access?"
+        - "Who handles defects?"
+        - "Who handles enhancement requests?"
+    - title: "Dashboard-specific KPI definitions"
+      type: "theory"
+      suggested_content:
+        - "KPI name"
+        - "Business definition"
+        - "Calculation logic"
+        - "Source system"
+        - "Refresh frequency"
+        - "Owner"
+    - title: "Dashboard-specific navigation map"
+      type: "demo"
+      suggested_content:
+        - "Page name"
+        - "Purpose"
+        - "Main filters"
+        - "Main visuals"
+        - "Recommended user action"
+    - title: "Known limitations"
+      type: "theory"
+      suggested_content:
+        - "Data latency"
+        - "Export limitations"
+        - "Security restrictions"
+        - "Mobile limitations"
+        - "Performance limitations"
+        - "Unavailable source-system fields"
