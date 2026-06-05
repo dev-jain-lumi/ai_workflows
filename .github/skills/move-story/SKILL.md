@@ -1,145 +1,106 @@
 ---
-name: move-story-skill
-description: "Move Jira DNAQ stories from one feature/epic to another for single or bulk operations, with not-done filtering and strict parent/child relation handling."
+name: move-story
+description: "Skill: move an existing DNAQ story to a target epic and feature using a strict, repeatable Jira MCP sequence."
 ---
 
 # Move Story Skill
 
-Use when the user asks to move existing stories from one feature to another, with optional epic replacement.
-
-Core safety rule:
-- NEVER EVER create a new Jira story in this workflow.
-- This workflow only fetches existing stories and replaces existing feature/epic relationships with the provided target values.
+Use this skill when the user asks to move an existing story to a different epic and feature.
 
 ## Jira Config
 
-- Cloud ID: 3270ee18-7e41-4e45-bede-c73944762da0
-- Project: DNAQ
-- Story issue type: Story
+- Cloud ID: `3270ee18-7e41-4e45-bede-c73944762da0`
+- Story project: `DNAQ`
+- Link type for feature relation: `Parent/Child`
 
-## Supported Input Modes
+## Required Inputs Per Request
 
-### Mode A: Feature-scope move (bulk)
+1. `story_key` (example: `DNAQ-823`)
+2. `target_epic_key__parent` (example: `LUMI-10671`)
+3. `target_feature_key__customfield_12445` (example: `LUMI-10670`)
 
-User provides:
-- source feature key
-- source epic key (optional)
-- target feature key
-- target epic key (optional)
-- move scope: all not-done stories
+If any input is missing, fail with a clear validation error and do not perform partial updates.
 
-Behavior:
-1. Find stories currently related as child of source feature.
-2. Read each story status category.
-3. Exclude status category Done.
-4. Move remaining stories to target feature.
-5. Replace epic only when target epic is explicitly provided.
+## Scope Guardrail
 
-### Mode B: Story-key move (single or bulk)
+Only these parameters may be changed:
 
-User provides:
-- one or many story keys
-- target feature key
-- target epic key (optional)
+1. `parent` (epic parent field)
+2. `customfield_12445` (Parent Feature URL field)
+3. `Parent/Child` issue link for feature-child relation
 
-Behavior:
-1. Fetch each listed story directly.
-2. Do not require the current/source feature or current/source epic as input in this mode.
-3. Read the current feature and epic from the existing issue.
-4. Replace the feature with the target feature.
-5. Replace epic only when target epic is explicitly provided.
-6. Do not apply status-based filtering in this mode.
+Do not update summary, description, assignee, priority, story points, labels, status, comments, or any other fields.
 
-## Mandatory Inputs For Move
+## Jira Field and Link Mapping
 
-- target feature key
-- at least one source selector:
-  - source feature key with not-done mode, or
-  - one or many story keys
+1. Epic parent field:
+- Workflow alias: `target_epic_key__parent`
+- Jira field: `parent`
 
-Target epic is optional. If it is not provided, do not change epic.
-In story-key mode, current/source feature and current/source epic are not required inputs.
+2. Parent feature field:
+- Workflow alias: `target_feature_key__customfield_12445`
+- Jira field: `customfield_12445`
+- Value format: `https://luminus.atlassian.net/browse/<feature-key>`
 
-If any mandatory input is missing, stop and ask for only missing fields.
+3. Feature child relation:
+- Link type: `Parent/Child`
+- Direction: `inwardIssue = <target feature key>`, `outwardIssue = <story key>`
 
-## Move Operation Contract
+## Explicit Tool Sequence (Mandatory)
 
-For each story to move:
+Use this exact sequence and do not substitute alternate orchestration paths:
 
-0. Fetch the existing story first.
+1. `mcp_atlassian-mcp_getJiraIssue`
+- Read current `parent`, `customfield_12445`, and `issuelinks`.
+- Validate story exists and capture pre-change state.
 
-1. Update epic parent field only when target epic is explicitly provided and differs from the current epic:
-- parent = target epic key
+2. `mcp_atlassian-mcp_editJiraIssue`
+- Update only:
+  - `parent.key = <target_epic_key__parent>`
+  - `customfield_12445 = https://luminus.atlassian.net/browse/<target_feature_key__customfield_12445>`
 
-2. Update parent feature URL field:
-- `parent_feature_key__customfield_12445` = `https://luminus.atlassian.net/browse/<target-feature-key>`
+3. `mcp_atlassian-mcp_createIssueLink`
+- Ensure `Parent/Child` relation to target feature exists using:
+  - `inwardIssue = <target feature key>`
+  - `outwardIssue = <story key>`
 
-3. Ensure final parent/child relation to target feature:
-- link type: Parent/Child
-- direction: inwardIssue = <target feature>, outwardIssue = <story>
+4. `mcp_atlassian-mcp_getJiraIssue`
+- Re-read `parent`, `customfield_12445`, and `issuelinks` to verify the move result.
 
-4. Remove current source feature relation and replace it with the target feature relation:
-- replace current `parent_feature_key__customfield_12445` with the target feature URL
-- remove the current source feature Parent/Child link where story is child of source
-- add the new target feature Parent/Child link where story is child of target feature
+## Link Replacement Behavior
 
-5. Never create a new issue as part of move:
-- if the referenced story does not already exist, fail that row
-- do not create placeholders, probes, test issues, or fallback stories
+Current MCP tools available in this workflow can create links but may not delete old links directly.
 
-## Link Cleanup Rules
+1. Always create or ensure the target `Parent/Child` link.
+2. If an old feature `Parent/Child` link remains, report it explicitly as residual state.
+3. Do not attempt unsupported delete workarounds.
 
-1. Read issue links first and detect Parent/Child links to source and target features.
-2. Remove the current feature Parent/Child link.
-3. Add the new target feature Parent/Child link.
-4. If source-link removal is not available/fails, continue with target link creation and mark story as partial-cleanup-required.
-5. Never create duplicate target links.
+## Connection and Tool Transparency (Mandatory)
 
-## Execution Optimization
+Every execution response must explicitly include:
 
-1. In feature-scope mode, discover candidate stories once.
-2. Read only fields needed for filtering and reassignment: status category, issue links, current epic, and `parent_feature_key__customfield_12445`.
-3. Only write fields that actually change.
-4. Return one consolidated result summary instead of interleaving extra verification steps.
+1. Connection used:
+- Atlassian MCP cloudId: `3270ee18-7e41-4e45-bede-c73944762da0`
 
-## JQL Guidance
+2. Exact tool calls used, in order.
 
-For feature-scope discovery, prefer JQL similar to:
-- issue in linkedIssues("<source-feature-key>", "is the parent of") AND issuetype = Story
+3. Exact fields and link directions touched.
 
-If linkedIssues function behavior is limited in site config, use fallback:
-1. Search project stories by recent window and check issuelinks in issue payload.
-2. Keep only stories with Parent/Child link where inwardIssue/outwardIssue implies child-of source feature.
+4. Pre vs post values for:
+- `parent`
+- `customfield_12445`
+- feature `Parent/Child` links
 
-## Status Filter Rule
+## Completion Output
 
-In feature-scope mode:
-- Keep only stories where statusCategory != Done.
+Return a concise report with:
 
-## Output Format
-
-Return:
-1. Summary
-- total candidates
-- moved
-- skipped done
-- failed
-- partial cleanup required
-
-2. Per-story result rows
-- story_key
-- from_feature
-- to_feature
-- from_epic
-- to_epic
-- status_category
-- move_status (moved | skipped_done | failed | partial_cleanup_required)
-- notes
-
-## Safety Rules
-
-- Never add comments.
-- Never create a new Jira issue in this workflow under any circumstance.
-- Never change summary, description, US description, acceptance criteria, or story points.
-- Only change fields and links needed for reassignment.
-- Move is simple: fetch existing story -> replace `parent_feature_key__customfield_12445` -> remove current Parent/Child feature link -> add new Parent/Child feature link -> optionally update epic only if explicitly provided and different.
+1. `story_key`
+2. `target_epic_key`
+3. `target_feature_key`
+4. `move_status` (`moved`, `partially_moved`, or `failed`)
+5. `connections_used`
+6. `tools_used_in_order`
+7. `changed_parameters_only`
+8. `residual_links` (if any)
+9. `story_url`

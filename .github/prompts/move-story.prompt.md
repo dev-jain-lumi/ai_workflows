@@ -1,47 +1,36 @@
 ---
 name: move-story
-description: "Move one or many DNAQ stories to a new parent feature, optionally updating epic when explicitly provided."
-argument-hint: "Mode, source, target, story keys"
-model: "GPT-5.4 (copilot)"
+description: "Prompt: move an existing DNAQ story to a target epic and feature while changing only parent and feature-link parameters."
+argument-hint: "Story key, target feature key, target epic key"
 ---
 
-Move Jira stories using rules in [.github/skills/move-story/SKILL.md](../skills/move-story/SKILL.md).
+Move a Jira story by following the strict workflow in [.github/skills/move-story/SKILL.md](../skills/move-story/SKILL.md).
 
-Input mode (choose one):
+Inputs (required):
 
-- Feature mode (bulk not-done):
-  - source feature: ${input:Source feature key}
-  - source epic (optional): ${input:Source epic key}
-  - target feature: ${input:Target feature key}
-  - target epic (optional): ${input:Target epic key}
-  - scope: move all not-done stories
-
-- Story-key mode (single or bulk):
-  - story key(s): ${input:Story key or comma-separated keys}
-  - target feature: ${input:Target feature key}
-  - target epic (optional): ${input:Target epic key}
-
-Notes:
-- In story-key mode, you do not need to provide the current/source feature or current/source epic.
-- The workflow fetches the existing story and reads the current values before replacing them.
+- Story key: ${input:Story key (example DNAQ-823)}
+- Target feature key: ${input:Target feature key (example LUMI-10670)}
+- Target epic key: ${input:Target epic key (example LUMI-10671)}
 
 Execution requirements:
 
-1. Never add Jira comments.
-2. NEVER EVER create a new story in this workflow.
-3. This workflow only fetches existing stories and replaces existing feature relationships with the provided values.
-4. In feature mode, fetch candidate stories once, then exclude Done status category.
-5. For each moved story:
-- if target epic is explicitly provided and different, set parent epic to target epic
-- set `parent_feature_key__customfield_12445` to `https://luminus.atlassian.net/browse/<target-feature-key>`
-- remove the current Parent/Child feature relation
-- add the new `Parent/Child` relation with `inwardIssue=<feature>` and `outwardIssue=<story>`
-6. If a referenced story does not exist, fail it. Do not create a replacement, placeholder, probe, or test issue.
-7. Avoid duplicate links.
-8. Read and update only the fields needed for reassignment.
-9. Return per-story status and clear summary counts.
+1. Validate all three inputs before making changes.
+2. Change only these parameters:
+- `parent`
+- `customfield_12445`
+- feature `Parent/Child` link direction (`inwardIssue=<feature>`, `outwardIssue=<story>`)
+3. Do not modify any other issue fields.
+4. Use the exact tool sequence defined in the skill.
+5. Always include explicit connection and tool transparency in the result.
 
 Return format:
 
-1. Summary: candidates, moved, skipped done, failed, partial cleanup required
-2. Per-story rows: story key, move status, notes
+1. `story_key`
+2. `target_epic_key`
+3. `target_feature_key`
+4. `move_status`
+5. `connections_used`
+6. `tools_used_in_order`
+7. `changed_parameters_only`
+8. `residual_links` (if old feature links remain)
+9. `story_url`

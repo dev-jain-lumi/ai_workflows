@@ -1,8 +1,7 @@
 ---
 name: create-story
-description: "Create one or many DNAQ Jira stories from context text or CSV, apply default field values, enforce story quality rules, and append created results to the created-story log CSV."
+description: "Prompt: execute the DNAQ create-story workflow from context text or CSV and write created results to the created-story log CSV."
 argument-hint: "Single context or bulk context/CSV"
-model: "GPT-5.4 (copilot)"
 ---
 
 Create Jira story items using the rules in [.github/skills/create-story/SKILL.md](../skills/create-story/SKILL.md).
@@ -37,6 +36,12 @@ If any is missing for a row, return a row-level error and continue bulk processi
 - Fetch created issue data.
 - Append to `Knowledge/product-context/stories/dnaq-story-created.csv`.
 10. In bulk mode, process independently per row and continue on failures.
+11. Enforce the simple tool path only:
+- Follow the explicit sequence from the skill without reordering or substitution.
+- Use Jira MCP tools for Jira operations.
+- Use direct file edit tooling (for example apply_patch) to append `Knowledge/product-context/stories/dnaq-story-created.csv`.
+- Do not use terminal scripting for CSV appends.
+- Do not switch to alternate workflows or helper-agent logic when the explicit sequence is available.
 
 Return format:
 
