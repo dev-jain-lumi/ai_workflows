@@ -1,0 +1,11 @@
+title: DNAQ Story Created Log
+date: 2026-06-05
+owner: Devashish Jain
+approver: Devashish Jain
+status: draft
+confidentiality: internal
+initiative: DNA DataViz Platform
+review_date: 2026-07-05
+artifact_type: csv
+artifact_path: Knowledge/product-context/stories/dnaq-story-created.csv
+description: Cumulative log of Jira stories created by the create-story workflow, including source fields and created issue metadata.
