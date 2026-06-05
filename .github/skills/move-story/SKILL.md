@@ -5,7 +5,11 @@ description: "Move Jira DNAQ stories from one feature/epic to another for single
 
 # Move Story Skill
 
-Use when the user asks to move existing stories from source feature/epic to target feature/epic.
+Use when the user asks to move existing stories from one feature to another, with optional epic replacement.
+
+Core safety rule:
+- NEVER EVER create a new Jira story in this workflow.
+- This workflow only fetches existing stories and replaces existing feature/epic relationships with the provided target values.
 
 ## Jira Config
 
@@ -19,35 +23,42 @@ Use when the user asks to move existing stories from source feature/epic to targ
 
 User provides:
 - source feature key
-- source epic key (optional but recommended)
+- source epic key (optional)
 - target feature key
-- target epic key
+- target epic key (optional)
 - move scope: all not-done stories
 
 Behavior:
 1. Find stories currently related as child of source feature.
 2. Read each story status category.
 3. Exclude status category Done.
-4. Move remaining stories to target feature/epic.
+4. Move remaining stories to target feature.
+5. Replace epic only when target epic is explicitly provided.
 
 ### Mode B: Story-key move (single or bulk)
 
 User provides:
 - one or many story keys
 - target feature key
-- target epic key
+- target epic key (optional)
 
 Behavior:
-1. Move each listed story directly.
-2. Do not apply status-based filtering in this mode.
+1. Fetch each listed story directly.
+2. Do not require the current/source feature or current/source epic as input in this mode.
+3. Read the current feature and epic from the existing issue.
+4. Replace the feature with the target feature.
+5. Replace epic only when target epic is explicitly provided.
+6. Do not apply status-based filtering in this mode.
 
 ## Mandatory Inputs For Move
 
 - target feature key
-- target epic key
 - at least one source selector:
   - source feature key with not-done mode, or
   - one or many story keys
+
+Target epic is optional. If it is not provided, do not change epic.
+In story-key mode, current/source feature and current/source epic are not required inputs.
 
 If any mandatory input is missing, stop and ask for only missing fields.
 
@@ -55,32 +66,39 @@ If any mandatory input is missing, stop and ask for only missing fields.
 
 For each story to move:
 
-1. Update epic parent field:
+0. Fetch the existing story first.
+
+1. Update epic parent field only when target epic is explicitly provided and differs from the current epic:
 - parent = target epic key
 
 2. Update parent feature URL field:
-- customfield_12445 = https://luminus.atlassian.net/browse/<target-feature-key>
+- `parent_feature_key__customfield_12445` = `https://luminus.atlassian.net/browse/<target-feature-key>`
 
 3. Ensure final parent/child relation to target feature:
 - link type: Parent/Child
 - direction: inwardIssue = <target feature>, outwardIssue = <story>
 
-4. Remove old source relation/value:
-- replace old epic with target epic
-- replace old customfield_12445 with target feature URL
-- remove source feature Parent/Child link where story is child of source
+4. Remove current source feature relation and replace it with the target feature relation:
+- replace current `parent_feature_key__customfield_12445` with the target feature URL
+- remove the current source feature Parent/Child link where story is child of source
+- add the new target feature Parent/Child link where story is child of target feature
+
+5. Never create a new issue as part of move:
+- if the referenced story does not already exist, fail that row
+- do not create placeholders, probes, test issues, or fallback stories
 
 ## Link Cleanup Rules
 
 1. Read issue links first and detect Parent/Child links to source and target features.
-2. If source link exists, attempt delete by issue link id using Jira REST via mcp_atlassian-mcp_fetch.
-3. If delete is not available/fails, continue with target link creation and mark story as partial-cleanup-required.
-4. Never create duplicate target links.
+2. Remove the current feature Parent/Child link.
+3. Add the new target feature Parent/Child link.
+4. If source-link removal is not available/fails, continue with target link creation and mark story as partial-cleanup-required.
+5. Never create duplicate target links.
 
 ## Execution Optimization
 
 1. In feature-scope mode, discover candidate stories once.
-2. Read only fields needed for filtering and reassignment: status category, issue links, parent epic, and parent feature field.
+2. Read only fields needed for filtering and reassignment: status category, issue links, current epic, and `parent_feature_key__customfield_12445`.
 3. Only write fields that actually change.
 4. Return one consolidated result summary instead of interleaving extra verification steps.
 
@@ -121,5 +139,7 @@ Return:
 ## Safety Rules
 
 - Never add comments.
+- Never create a new Jira issue in this workflow under any circumstance.
 - Never change summary, description, US description, acceptance criteria, or story points.
 - Only change fields and links needed for reassignment.
+- Move is simple: fetch existing story -> replace `parent_feature_key__customfield_12445` -> remove current Parent/Child feature link -> add new Parent/Child feature link -> optionally update epic only if explicitly provided and different.
