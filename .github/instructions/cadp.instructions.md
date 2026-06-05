@@ -1,5 +1,5 @@
 ---
-applyTo: "AI_Luminus/how-to-CADP/**"
+applyTo: "Knowledge/processes/how-to-CADP/**"
 description: "Use when working in the how-to-CADP folder: building CADPs, generating dbt models, writing Soda contracts, updating CADP process docs, or answering questions about the NEO data product workflow."
 ---
 
@@ -13,11 +13,11 @@ Key distinction: **SADP = source-aligned input; CADP = consumer-aligned output.*
 
 ## Authoritative References (read before generating artifacts)
 
-- [cadp-process.yaml](../AI_Luminus/how-to-CADP/docs/cadp-process.yaml) — canonical 15-step process (steps 0–14), tool responsibilities per step
-- [Process-Tool Flow.csv](../AI_Luminus/how-to-CADP/docs/Process-Tool%20Flow%20v2.csv) — matrix view of steps × tools
-- [cadp-checklist.yaml](../AI_Luminus/how-to-CADP/checklists/cadp-checklist.yaml) — gating checklist (before-setup, before-build, during-build, before-publish, publish-and-operate)
-- [cadp-tooling-architecture.puml](../AI_Luminus/how-to-CADP/docs/cadp-tooling-architecture.puml) — tooling architecture diagram (PlantUML)
-- [fact_example.sql](../AI_Luminus/how-to-CADP/examples/dbt/fact_example.sql) — canonical dbt fact model pattern
+- [cadp-process.yaml](../../Knowledge/processes/how-to-CADP/docs/cadp-process.yaml) — canonical 15-step process (steps 0–14), tool responsibilities per step
+- [Process-Tool Flow.csv](../../Knowledge/processes/how-to-CADP/docs/Process-Tool%20Flow.csv) — matrix view of steps × tools
+- [cadp-checklist.yaml](../../Knowledge/processes/how-to-CADP/checklists/cadp-checklist.yaml) — gating checklist (before-setup, before-build, during-build, before-publish, publish-and-operate)
+- [cadp-tooling-architecture.puml](../../Knowledge/processes/how-to-CADP/docs/cadp-tooling-architecture.puml) — tooling architecture diagram (PlantUML)
+- [fact_example.sql](../../Knowledge/processes/how-to-CADP/examples/dbt/fact_example.sql) — canonical dbt fact model pattern
 
 ## Process Summary (Steps 0–14)
 

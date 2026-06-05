@@ -15,7 +15,7 @@ Digital Transformation Roadshow series.
 
 ## Repository Quarto Default
 
-For this repository, prefer a **Quarto revealjs deck** under `AI_Luminus/presentations/<deck>/`
+For this repository, prefer a **Quarto revealjs deck** under `Knowledge/presentations/<deck>/`
 unless the user explicitly asks for a standalone hand-authored HTML presentation.
 
 Default contract for generated decks in this repo:

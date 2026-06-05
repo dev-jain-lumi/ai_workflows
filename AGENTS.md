@@ -44,7 +44,7 @@ Read before generating any artifact:
 
 ### Domain-Specific Instructions
 
-- CADP workflows in AI_Luminus/how-to-CADP/: [.github/instructions/cadp.instructions.md](.github/instructions/cadp.instructions.md)
+- CADP workflows in Knowledge/processes/how-to-CADP/: [.github/instructions/cadp.instructions.md](.github/instructions/cadp.instructions.md)
 - Jira + Confluence feature intake: [.github/skills/jira-confluence-intake/](.github/skills/jira-confluence-intake/)
 - Automatic data-product documentation: [.github/instructions/data-product-automatic-documentation.instructions.md](.github/instructions/data-product-automatic-documentation.instructions.md)
 - Shared capability skills:

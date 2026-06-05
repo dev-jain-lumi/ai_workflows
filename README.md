@@ -49,16 +49,16 @@ Generated outputs: HTML (shareable), CSV (exchange), Markdown (stakeholder-facin
 
 Quarto source and includes for AI-assisted coding training live in:
 
-- AI_Luminus/presentations/ai-assisted-coding/vscode_agents_concepts.qmd
-- AI_Luminus/presentations/ai-assisted-coding/github-copilot-training/
+- Knowledge/presentations/ai-assisted-coding/vscode_agents_concepts.qmd
+- Knowledge/presentations/ai-assisted-coding/github-copilot-training/
 
 Local render commands:
 
 ```bash
-quarto render AI_Luminus/presentations/ai-assisted-coding/vscode_agents_concepts.qmd --to revealjs
+quarto render Knowledge/presentations/ai-assisted-coding/vscode_agents_concepts.qmd --to revealjs
 python3 -m http.server 8000
 ```
 
 Open in browser:
 
-- http://127.0.0.1:8000/AI_Luminus/presentations/ai-assisted-coding/vscode_agents_concepts.html
+- http://127.0.0.1:8000/Knowledge/presentations/ai-assisted-coding/vscode_agents_concepts.html
